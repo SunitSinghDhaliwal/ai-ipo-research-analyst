@@ -317,7 +317,17 @@ async def research(req: ResearchRequest):
     try:
         from groq import Groq
         client = Groq(api_key=api_key)
-        model_name = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+
+        # Primary model and resilient fallback candidates for Groq
+        configured_model = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+        model_candidates = [
+            configured_model,
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-20b",
+            "qwen/qwen3.8-27b"
+        ]
+        # Deduplicate while preserving order
+        unique_models = list(dict.fromkeys([m for m in model_candidates if m]))
 
         company_info = KNOWN_COMPANIES.get(ipo_id, {})
         company_name = company_info.get("name", ipo_id)
@@ -337,17 +347,37 @@ async def research(req: ResearchRequest):
             "Provide a clear, analytical answer with page citations."
         )
 
-        completion = client.chat.completions.create(
-            model=model_name,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_content}
-            ],
-            temperature=0.1,
-            max_tokens=int(os.getenv("GROQ_MAX_TOKENS", "1500"))
-        )
+        completion = None
+        last_err = None
+        used_model = unique_models[0]
 
-        answer = completion.choices[0].message.content or "No answer received."
+        for m_name in unique_models:
+            try:
+                completion = client.chat.completions.create(
+                    model=m_name,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_content}
+                    ],
+                    temperature=0.1,
+                    max_tokens=int(os.getenv("GROQ_MAX_TOKENS", "1500"))
+                )
+                used_model = m_name
+                break
+            except Exception as model_err:
+                last_err = model_err
+                err_str = str(model_err).lower()
+                # If model not found or deprecated, try next candidate
+                if "model_not_found" in err_str or "does not exist" in err_str or "404" in err_str:
+                    continue
+                else:
+                    raise model_err
+
+        if completion is None and last_err is not None:
+            raise last_err
+
+        msg = completion.choices[0].message
+        answer = msg.content or getattr(msg, "reasoning", None) or "No answer generated."
 
         return ResearchResponse(
             query=query,
@@ -357,7 +387,7 @@ async def research(req: ResearchRequest):
             answer=answer,
             sources=sources,
             route_confidence=0.95,
-            route_reasoning=f"Handled via {route} pipeline on {company_name}."
+            route_reasoning=f"Handled via {route} pipeline on {company_name} (Model: {used_model})."
         )
 
     except Exception as e:
