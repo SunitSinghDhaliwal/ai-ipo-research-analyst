@@ -1,3 +1,10 @@
+import os
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src" / "retrieval"))
+
 import json
 from collections import defaultdict
 
@@ -18,11 +25,8 @@ from embeddings import get_embedding_model
 # Configuration
 # --------------------------------------------------
 
-VECTORSTORE_DIR = (
-    "data/vectorstore/maharashtra_oil_extractions"
-)
-
-COLLECTION_NAME = "maharashtra_oil_extractions"
+VECTORSTORE_DIR = "data/vectorstore/ipo_knowledge_base"
+COLLECTION_NAME = "ipo_knowledge_base"
 
 TOP_K = 10
 

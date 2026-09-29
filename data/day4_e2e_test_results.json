@@ -1,0 +1,296 @@
+[
+  {
+    "id": "TC1",
+    "category": "Financial",
+    "query": "What was the company's revenue from operations and restated profit after tax in Fiscal 2026?",
+    "expected_route": "financial",
+    "actual_route": "financial",
+    "confidence": 1.0,
+    "reasoning": "The user explicitly asks for the company's revenue from operations and restated profit after tax for a specific fiscal year, which is a request for financial performance figures.",
+    "sources": [
+      {
+        "source_id": "drhp_p463_c1",
+        "page": 463,
+        "content_type": "text",
+        "section": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS"
+      },
+      {
+        "source_id": "drhp_p86_c1",
+        "page": 86,
+        "content_type": "text",
+        "section": "SECTION III \u2013 INTRODUCTION > COMPREHENSIVE INCOME)"
+      },
+      {
+        "source_id": "drhp_p465_c3",
+        "page": 465,
+        "content_type": "text",
+        "section": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS"
+      },
+      {
+        "source_id": "drhp_p464_c1",
+        "page": 464,
+        "content_type": "text",
+        "section": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS"
+      },
+      {
+        "source_id": "drhp_p272_c4",
+        "page": 272,
+        "content_type": "text",
+        "section": "SECTION IV \u2013 ABOUT OUR COMPANY > EBITDA(2)"
+      }
+    ],
+    "answer": "Based on the retrieved DRHP context, the financial figures for Maharashtra Oil Extractions Limited for Fiscal 2026 are as follows:\n\n**Revenue from Operations**\nThe company's revenue from operations (net) for Fiscal 2026 was **\u20b9 22,115.37 million** [drhp_p463_c1, Page 463]. This figure is consistent across the summary of the restated statement of profit and loss [drhp_p86_c1, Page 86] and the detailed results of operations section, which notes an increase of \u20b9 3,282.38 million (17.43%) from Fiscal 2025 [drhp_p464_c1, Page 464].\n\n**Restated Profit After Tax**\nThe company recorded a restated profit after tax (profit for the year) of **\u20b9 862.22 million** in Fiscal 2026 [drhp_p465_c3, Page 465]. This is derived from the restated profit before tax of \u20b9 1,166.22 million [drhp_p86_c1, Page 86] less tax expenses. The DRHP explicitly states that the company recorded a profit for the year of \u20b9 862.22 million in Fiscal 2026 [drhp_p465_c3, Page 465].\n\n### Sources Cited\n\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| drhp_p463_c1 | 463 | Text |\n| drhp_p86_c1 | 86 | Text |\n| drhp_p465_c3 | 465 | Text |\n| drhp_p464_c1 | 464 | Text |"
+  },
+  {
+    "id": "TC2",
+    "category": "Risk",
+    "query": "What are the major internal risk factors regarding raw material supply and price volatility?",
+    "expected_route": "risk",
+    "actual_route": "risk",
+    "confidence": 1.0,
+    "reasoning": "The query explicitly asks for major internal risk factors related to raw material supply and price volatility, which aligns with the definition of the 'risk' category (business risks, operational vulnerabilities, commodity price fluctuations).",
+    "sources": [
+      {
+        "source_id": "drhp_p439_c4",
+        "page": 439,
+        "content_type": "text",
+        "section": "SECTION V \u2013 FINANCIAL INFORMATION > SIGNIFICANT FACTORS AFFECTING OUR RESULT OF OPERATIONS"
+      },
+      {
+        "source_id": "drhp_p31_c5",
+        "page": 31,
+        "content_type": "text",
+        "section": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS"
+      },
+      {
+        "source_id": "drhp_p31_c3",
+        "page": 31,
+        "content_type": "text",
+        "section": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS"
+      },
+      {
+        "source_id": "drhp_p439_c5",
+        "page": 439,
+        "content_type": "text",
+        "section": "SECTION V \u2013 FINANCIAL INFORMATION > SIGNIFICANT FACTORS AFFECTING OUR RESULT OF OPERATIONS"
+      },
+      {
+        "source_id": "drhp_p32_c1",
+        "page": 32,
+        "content_type": "text",
+        "section": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS"
+      }
+    ],
+    "answer": "Based on the provided DRHP context, the major internal risk factors regarding raw material supply and price volatility for Maharashtra Oil Extractions Limited are detailed below:\n\n**1. Dependence on Third-Party Suppliers and Lack of Long-Term Agreements**\nThe Company relies heavily on third parties for raw materials, packaging materials, and other consumables, which collectively accounted for **77.11%**, **81.20%**, and **80.87%** of total expenses for Fiscals 2026, 2025, and 2024, respectively [drhp_p439_c5, Page 439]. A significant internal vulnerability is that the Company **does not enter into long-term supply agreements** for a significant portion of its raw material procurement [drhp_p31_c3, Page 31]. This lack of contractual security exposes the Company to immediate market price fluctuations and supply uncertainties [drhp_p31_c3, Page 31].\n\n**2. Volatility in Raw Material Prices and Inability to Pass On Costs**\nRaw material prices are volatile and depend on global economic conditions, industry cycles, seasonality, and supply-and-demand dynamics [drhp_p439_c4, Page 439]. The Company faces the risk that it may be unable to resist price increases imposed by suppliers or may be required to pay prevailing market prices [drhp_p439_c4, Page 439]. Furthermore, any significant increase in input costs may **not be capable of being passed on to customers** in a timely manner, or at all, due to competitive and market factors [drhp_p31_c5, Page 31].\n\n**3. Time Lag Between Procurement and Sale**\nThere is a specific operational risk associated with the **time lag between the procurement of raw materials and the sale of finished products** [drhp_p31_c5, Page 31]. Fluctuations in input costs during this period may adversely affect the Company\u2019s margins and profitability [drhp_p31_c5, Page 31]. Similar risks apply to trading operations where market movements impact pricing and margins [drhp_p31_c5, Page 31].\n\n**4. Specific Vulnerability to Soybean Seed Supply**\nThe availability and pricing of **soybean seeds** are significantly impacted by agricultural output, harvesting conditions, adverse weather events, crop failures, reduced acreage, diversion of land to alternative crops, and hoarding by farmers and traders [drhp_p31_c3, Page 31]. Domestic soybean prices are also influenced by international commodity markets, global supply-demand dynamics, trade restrictions, and pricing trends, making the Indian market susceptible to global agricultural and economic developments [drhp_p31_c3, Page 31].\n\n**5. Supplier Prioritization and Supply Disruption Risks**\nSuppliers may choose to prioritize supplies to other customers, including competitors, which could affect the availability of critical inputs [drhp_p32_c1, Page 32]. Any shortage, interruption, delay, or significant increase in the cost of raw materials could disrupt manufacturing operations, increase production costs, and reduce demand for products [drhp_p32_c1, Page 32]. Although the Company has not experienced material supply disruptions during Fiscals 2024\u20132026, it cannot assure that such disruptions or adverse price movements will not occur in the future [drhp_p32_c1, Page 32].\n\n**6. Inventory Management Risks**\nWhile the Company maintains an adequate inventory of raw materials, a failure to maintain this inventory or a continuous supply of stock at stable prices may result in the inability to manufacture and supply products to customers in accordance with contracts and on a timely basis"
+  },
+  {
+    "id": "TC3",
+    "category": "Litigation",
+    "query": "What outstanding litigation cases and material legal proceedings are pending against the company?",
+    "expected_route": "litigation",
+    "actual_route": "litigation",
+    "confidence": 1.0,
+    "reasoning": "The user explicitly asks for information on outstanding litigation cases and material legal proceedings pending against the company, which directly falls under the 'litigation' category.",
+    "sources": [
+      {
+        "source_id": "drhp_p481_c2",
+        "page": 481,
+        "content_type": "text",
+        "section": "SECTION VI \u2013 LEGAL AND OTHER INFORMATION > OUTSTANDING LITIGATION AND MATERIAL DEVELOPMENTS"
+      },
+      {
+        "source_id": "drhp_p45_c2",
+        "page": 45,
+        "content_type": "text",
+        "section": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS"
+      },
+      {
+        "source_id": "drhp_p477_c3",
+        "page": 477,
+        "content_type": "text",
+        "section": "SECTION VI \u2013 LEGAL AND OTHER INFORMATION > OUTSTANDING LITIGATION AND MATERIAL DEVELOPMENTS"
+      },
+      {
+        "source_id": "drhp_p476_c1",
+        "page": 476,
+        "content_type": "text",
+        "section": "SECTION VI \u2013 LEGAL AND OTHER INFORMATION > OUTSTANDING LITIGATION AND MATERIAL DEVELOPMENTS"
+      },
+      {
+        "source_id": "drhp_p476_c2",
+        "page": 476,
+        "content_type": "text",
+        "section": "SECTION VI \u2013 LEGAL AND OTHER INFORMATION > OUTSTANDING LITIGATION AND MATERIAL DEVELOPMENTS"
+      }
+    ],
+    "answer": "Based on the provided DRHP context, the following outstanding litigation cases and material legal proceedings are pending against Maharashtra Oil Extractions Limited:\n\n**1. Tax-Related Litigation**\nThe Company is involved in tax-related litigation that is currently pending. The DRHP notes that in the event of adverse rulings or consequent levy of penalties, the Company may need to make payments or provisions for future payments, which could increase expenses and current or contingent liabilities [drhp_p45_c2, Page 45].\n\n**2. Proceedings under Section 204 of the Companies Act, 2013**\nThere is an application pending adjudication before the Registrar of Companies, Mumbai, Maharashtra, regarding an alleged default by the Managing Director during a specific period. Under Section 204(4) of the Companies Act, 2013, the Company, every officer in default, and the practising company secretary are each liable to a maximum penalty of \u20b9 0.20 million in the event of contravention [drhp_p477_c3, Page 477].\n\n**3. Absence of Other Material Litigations**\n*   **Civil Litigation:** As on the date of the DRHP, there are no outstanding material civil litigations filed against the Company [drhp_p477_c3, Page 477].\n*   **Criminal Proceedings:** There are no outstanding criminal proceedings filed against the Company, its Directors, Promoters, KMPs, or SMPs [drhp_p476_c1, Page 476].\n*   **Regulatory Actions:** There are no outstanding actions taken by statutory or regulatory authorities against the Company\u2019s KMPs or SMPs [drhp_p481_c2, Page 481].\n*   **Group Companies:** There are no pending litigation proceedings involving Group Companies that will have a material impact on the Company [drhp_p481_c2, Page 481].\n\n**Note on Litigation Filed *by* the Company:**\nThe context mentions that Manoj Basantlal Agrawal, the Promoter and Managing Director, filed a criminal miscellaneous application (No. 849 of 2024) before the Court of the Judicial Magistrate First Class, Dhule, seeking release of funds [drhp_p477_c3, Page 477]. However, this is a proceeding filed *by* the Company/Promoter, not *against* the Company.\n\n### Sources Cited\n\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| drhp_p45_c2 | 45 | Text |\n| drhp_p476_c1 | 476 | Text |\n| drhp_p477_c3 | 477 | Text |\n| drhp_p481_c2 | 481 | Text |"
+  },
+  {
+    "id": "TC4",
+    "category": "Related-Party",
+    "query": "What related-party transactions has the company entered into with promoters and group entities?",
+    "expected_route": "related_party",
+    "actual_route": "related_party",
+    "confidence": 1.0,
+    "reasoning": "The user explicitly asks for details on related\u2011party transactions with promoters and group entities, which directly matches the 'related_party' category.",
+    "sources": [
+      {
+        "source_id": "drhp_p357_c4",
+        "page": 357,
+        "content_type": "text",
+        "section": "SECTION IV \u2013 ABOUT OUR COMPANY > AAKPA3899B"
+      },
+      {
+        "source_id": "drhp_p71_c2",
+        "page": 71,
+        "content_type": "text",
+        "section": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS"
+      },
+      {
+        "source_id": "drhp_p331_c2",
+        "page": 331,
+        "content_type": "text",
+        "section": "SECTION IV \u2013 ABOUT OUR COMPANY > OUR SUBSIDIARY"
+      },
+      {
+        "source_id": "drhp_p361_c1",
+        "page": 361,
+        "content_type": "text",
+        "section": "SECTION IV \u2013 ABOUT OUR COMPANY > GROUP COMPANIES"
+      },
+      {
+        "source_id": "drhp_p357_c1",
+        "page": 357,
+        "content_type": "text",
+        "section": "SECTION IV \u2013 ABOUT OUR COMPANY > AAKPA3899B"
+      }
+    ],
+    "answer": "Based on the provided DRHP context, the following related-party transactions and interests have been identified:\n\n**1. Inter-Facility Sharing Understanding with Subsidiary (BNPL)**\nThe Company entered into an \u2018inter-facility sharing understanding\u2019 dated April 01, 2025, with its subsidiary, BNPL [drhp_p331_c2, Page 331]. Under this agreement, the Company permits BNPL to use the following facilities on a non-exclusive basis:\n*   Steam generation and supply\n*   Weighbridge facilities\n*   Quality control and testing laboratory\n*   Accounting ERP\n*   Utility infrastructure (including water)\n*   Common amenities connected with the preceding facilities\n\nIn return, BNPL agreed to pay the Company \u20b975,000 per month (excluding applicable GST) for a period of three years, effective from the date of the understanding, unless terminated mutually [drhp_p331_c2, Page 331].\n\n**2. General Related Party Transactions with Group Entities**\nThe Company has entered into related party transactions with entities in which its Individual Promoters, Manoj Basantlal Agrawal and Alkesh Basantlal Agrawal, serve as directors, shareholders, or kartas [drhp_p357_c1, Page 357]. The context explicitly mentions **Samruddhi Proteins Private Limited** as an entity with which the Company has had related party transactions [drhp_p357_c1, Page 357]. The Promoters are deemed interested in these transactions to the extent of payments made by the Company to these entities [drhp_p357_c1, Page 357].\n\n**3. Disclosure of Specific Financial Details**\nThe provided context does not contain the specific financial figures, volumes, or detailed nature of the transactions with Samruddhi Proteins Private Limited or other group entities. The DRHP directs readers to \u201cRestated Financial Information \u2013 Note No. 33 - Related Party Transactions\u201d on page 409 for further details [drhp_p357_c1, Page 357], [drhp_p357_c4, Page 357], [drhp_p331_c2, Page 331]. As this specific note is not included in the retrieved excerpts, the precise monetary values of these transactions cannot be stated.\n\n**4. Absence of Other Specific Conflicts**\n*   The Promoters are not related to any entity from which the Company has acquired or proposes to acquire land in the five immediately preceding years [drhp_p357_c4, Page 357].\n*   There is no conflict of interest between the lessors of the Company\u2019s immovable properties and the Promoters or members of the Promoter Group [drhp_p357_c4, Page 357].\n*   Except for the inter-facility sharing understanding with BNPL and transactions disclosed in Note No. 33, there are no other related party transactions between the Company, its Promoters, and its Subsidiary [drhp_p331_c2, Page 331].\n\n### Sources Cited\n\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| drhp_p331_c2 | 331 | Text |\n| drhp_p357_c1 | 357 | Text |\n| drhp_p357_c4 | 357 | Text |"
+  },
+  {
+    "id": "TC5",
+    "category": "General",
+    "query": "Where is the registered and corporate office of the company located?",
+    "expected_route": "general",
+    "actual_route": "general",
+    "confidence": 1.0,
+    "reasoning": "The user asks specifically for the location of the registered and corporate office, which is a request for general corporate information about the company's address, fitting the 'general' category.",
+    "sources": [
+      {
+        "source_id": "moe_p5_t1",
+        "page": 5,
+        "content_type": "table",
+        "section": "SECTION I \u2013 GENERAL > DEFINITIONS AND ABBREVIATIONS"
+      },
+      {
+        "source_id": "drhp_p101_c1",
+        "page": 101,
+        "content_type": "text",
+        "section": "SECTION III \u2013 INTRODUCTION > GENERAL INFORMATION"
+      },
+      {
+        "source_id": "drhp_p528_c2",
+        "page": 528,
+        "content_type": "text",
+        "section": "SECTION VII \u2013 OFFER RELATED INFORMATION > OFFER PROCEDURE"
+      },
+      {
+        "source_id": "drhp_p10_c1",
+        "page": 10,
+        "content_type": "text",
+        "section": "SECTION I \u2013 GENERAL > DEFINITIONS AND ABBREVIATIONS"
+      },
+      {
+        "source_id": "drhp_p3_c2",
+        "page": 3,
+        "content_type": "text",
+        "section": "GENERAL > MAHARASHTRA OIL EXTRACTIONS LIMITED"
+      }
+    ],
+    "answer": "Based on the provided DRHP context, the registered and corporate office of Maharashtra Oil Extractions Limited is located at **E-140, MIDC, Awdhan, Dhule \u2013 424001, Maharashtra, India** [moe_p5_t1, Page 5] [drhp_p101_c1, Page 101] [drhp_p3_c2, Page 3].\n\nThe document confirms this address in multiple sections, including the definitions table, the general information section, and the cover page details [moe_p5_t1, Page 5] [drhp_p101_c1, Page 101] [drhp_p3_c2, Page 3]. Additionally, the context notes that the company is registered with the Registrar of Companies, Mumbai-II at Navi Mumbai, located at 100, Everest, Marine Drive, Mumbai - 400002, Maharashtra [drhp_p101_c1, Page 101].\n\n### Sources Cited\n\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| moe_p5_t1 | 5 | Table |\n| drhp_p101_c1 | 101 | Text |\n| drhp_p3_c2 | 3 | Text |"
+  },
+  {
+    "id": "TC6",
+    "category": "Ambiguous",
+    "query": "Tell me about the general things and numbers in the filing.",
+    "expected_route": "ambiguous",
+    "actual_route": "multi_intent",
+    "confidence": 0.97,
+    "reasoning": "The user requests both general corporate information ('general things') and numerical data ('numbers'), which correspond to the 'general' and 'financial' categories. Since the query spans these two distinct intents, it should be classified as 'multi_intent'.",
+    "sources": [
+      {
+        "source_id": "drhp_p25_c4",
+        "page": 25,
+        "content_type": "text",
+        "section": "SECTION I \u2013 GENERAL > EBITDA"
+      },
+      {
+        "source_id": "drhp_p267_c3",
+        "page": 267,
+        "content_type": "text",
+        "section": "SECTION IV \u2013 ABOUT OUR COMPANY > COMPETITIVE STRENGTH"
+      },
+      {
+        "source_id": "drhp_p535_c3",
+        "page": 535,
+        "content_type": "text",
+        "section": "SECTION VIII \u2013 DESCRIPTION OF EQUITY SHARES AND TERMS OF THE ARTICLES OF > SHARE CAPITAL AND VARIATION OF RIGHTS"
+      },
+      {
+        "source_id": "drhp_p24_c2",
+        "page": 24,
+        "content_type": "text",
+        "section": "SECTION I \u2013 GENERAL > EBITDA"
+      },
+      {
+        "source_id": "moe_p57_t1",
+        "page": 57,
+        "content_type": "table",
+        "section": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS"
+      }
+    ],
+    "answer": "Based on the provided DRHP context for Maharashtra Oil Extractions Limited, here are the general details and financial figures available:\n\n**General Information and Definitions**\n*   **Financial Year Definition:** The Company\u2019s Financial Year commences on April 1 of the immediately preceding calendar year and ends on March 31 of that particular calendar year [drhp_p24_c2, Page 24].\n*   **Currency and Rounding:** Financial figures are presented in \u20b9 million, where one million represents 10 lakh (1,000,000) and ten million represents 1 crore (10,000,000) [drhp_p25_c4, Page 25]. Figures are generally rounded to two decimals, though discrepancies may occur due to rounding off [drhp_p25_c4, Page 25].\n*   **Business Transition:** The Company has transitioned from traditional soybean crushing to the production of food-grade soybean meal and value-added products such as soybean flour and TSP [drhp_p267_c3, Page 267].\n*   **Market Context:** According to a CARE Report cited in the DRHP, the Indian soybean processing market expanded from Rs 908 billion in FY19 to Rs 1,833 billion in FY26 [drhp_p267_c3, Page 267].\n\n**Financial Data (FY2024, FY2025, and FY2026)**\nThe following financial metrics are extracted from the table provided in the context. Note that the table headers indicate the fiscal years 2024, 2025, and 2026 [moe_p57_t1, Page 57].\n\n*   **Inventories:**\n    *   FY2026: \u20b9 4,531.94 million\n    *   FY2025: \u20b9 3,369.21 million\n    *   FY2024: \u20b9 3,303.77 million\n    *   [moe_p57_t1, Page 57]\n\n*   **Trade Receivables:**\n    *   FY2026: \u20b9 1,147.55 million\n    *   FY2025: \u20b9 707.67 million\n    *   FY2024: \u20b9 736.08 million\n    *   [moe_p57_t1, Page 57]\n\n*   **Cash and Cash Equivalents:**\n    *   FY2026: \u20b9 276.80 million\n    *   FY2025: \u20b9 402.21 million\n    *   FY2024: \u20b9 9.02 million\n    *   [moe_p57_t1, Page 57]\n\n*   **Bank Balance (other than cash equivalents):**\n    *   FY2026: \u20b9 5.01 million\n    *   FY2025: \u20b9 1.55 million\n    *   FY2024: \u20b9 3,096.45 million\n    *   [moe_p57_t1, Page 57]\n\n*   **Total Current Assets:**\n    *   FY2026: \u20b9 6,688.22 million\n    *   FY2025: \u20b9 4,650.20 million\n    *   FY2024: \u20b9 7,471.49 million\n    *   ["
+  },
+  {
+    "id": "TC7",
+    "category": "Unanswerable / Hallucination Refusal",
+    "query": "What is the company's planned investment in artificial intelligence, blockchain, and cryptocurrency trading?",
+    "expected_route": "general",
+    "actual_route": "financial",
+    "confidence": 0.99,
+    "reasoning": "The query asks for the amount the company intends to invest in specific technologies, which is a request for planned financial allocation (capital expenditure) and thus falls under the 'financial' category.",
+    "sources": [
+      {
+        "source_id": "drhp_p48_c6",
+        "page": 48,
+        "content_type": "text",
+        "section": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS"
+      },
+      {
+        "source_id": "drhp_p448_c3",
+        "page": 448,
+        "content_type": "text",
+        "section": "SECTION V \u2013 FINANCIAL INFORMATION > MATERIAL ACCOUNTING POLICIES"
+      },
+      {
+        "source_id": "drhp_p494_c2",
+        "page": 494,
+        "content_type": "text",
+        "section": "SECTION VI \u2013 LEGAL AND OTHER INFORMATION > CAPITAL"
+      },
+      {
+        "source_id": "drhp_p260_c6",
+        "page": 260,
+        "content_type": "text",
+        "section": "SECTION IV \u2013 ABOUT OUR COMPANY > OUR BUSINESS"
+      },
+      {
+        "source_id": "drhp_p111_c4",
+        "page": 111,
+        "content_type": "text",
+        "section": "SECTION III \u2013 INTRODUCTION > CAPITAL STRUCTURE"
+      }
+    ],
+    "answer": "Insufficient evidence in the provided DRHP context to answer this question.\n\nThe retrieved excerpts do not contain any information regarding the company's planned investment in artificial intelligence, blockchain, or cryptocurrency trading. The provided sources discuss general risk factors related to capital expenditure and business plans [drhp_p48_c6, Page 48], accounting policies for control over investees [drhp_p448_c3, Page 448], a table of shareholding details for various entities [drhp_p494_c2, Page 494], details regarding a report by CARE Analytics [drhp_p260_c6, Page 260], and capital structure/offer authorizations [drhp_p111_c4, Page 111]. None of these sections mention specific investments in AI, blockchain, or cryptocurrency.\n\n### Sources Cited\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| drhp_p48_c6 | 48 | Text |\n| drhp_p448_c3 | 448 | Text |\n| drhp_p494_c2 | 494 | Text |\n| drhp_p260_c6 | 260 | Text |\n| drhp_p111_c4 | 111 | Text |"
+  }
+]

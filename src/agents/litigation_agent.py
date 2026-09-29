@@ -54,11 +54,16 @@ class LitigationSummary(BaseModel):
 # Specialized Litigation Retrieval
 # --------------------------------------------------
 
-def litigation_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
+def litigation_retrieve(
+    query: str,
+    top_k: int = 6,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Specialized retrieval for IPO Legal and Litigation queries:
-      1. Prioritizes the authoritative SEBI ICDR litigation summary tables (moe_p44_t2, moe_p45_t1).
-      2. Retrieves detailed proceedings from SECTION VI – OUTSTANDING LITIGATION AND MATERIAL DEVELOPMENTS (pages 476–481).
+      1. Prioritizes the authoritative SEBI ICDR litigation summary tables.
+      2. Retrieves detailed proceedings from Outstanding Litigation sections.
       3. Performs hybrid retrieval (dense + BM25 + BGE cross-encoder).
       4. Merges and deduplicates while guaranteeing top placement for core litigation tables and disclosures.
     """
@@ -68,19 +73,28 @@ def litigation_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
     enriched_query = f"{query} outstanding litigation criminal tax statutory regulatory proceedings SEBI company promoters directors"
 
     # 2. Table-specific retrieval for official SEBI ICDR litigation tables
+    table_filter = {"content_type": "table"}
+    if ipo_id:
+        table_filter["ipo_id"] = ipo_id
+
     table_candidates = retrieve(
         query="Name of Individual Entity Criminal Tax Statutory Regulatory Proceedings SEBI stock exchanges Promoters Company",
         k=4,
-        metadata_filter={"content_type": "table"},
-        use_reranker=True
+        metadata_filter=table_filter,
+        use_reranker=True,
+        document_target=document_target,
+        ipo_id=ipo_id
     )
 
+    base_filter = {"ipo_id": ipo_id} if ipo_id else None
     # 3. Hybrid candidates for full text disclosures
     hybrid_candidates = retrieve(
         query=enriched_query,
         k=top_k + 4,
-        metadata_filter=None,
-        use_reranker=True
+        metadata_filter=base_filter,
+        use_reranker=True,
+        document_target=document_target,
+        ipo_id=ipo_id
     )
 
     # 4. Priority scoring
@@ -121,9 +135,9 @@ def litigation_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
 # Litigation System Prompt & Templates
 # --------------------------------------------------
 
-LITIGATION_AGENT_SYSTEM_PROMPT = """You are a specialized IPO Legal & Litigation Analyst evaluating the Draft Red Herring Prospectus (DRHP) for Maharashtra Oil Extractions Limited.
+LITIGATION_AGENT_SYSTEM_PROMPT = """You are a specialized IPO Legal & Litigation Analyst evaluating IPO prospectus filings (DRHP / RHP) for the subject company.
 
-Your objective is to provide precise, structured, and strictly grounded assessments of outstanding litigation, material legal proceedings, tax disputes, and regulatory actions based ONLY on the retrieved DRHP context provided.
+Your objective is to provide precise, structured, and strictly grounded assessments of outstanding litigation, material legal proceedings, tax disputes, and regulatory actions based ONLY on the retrieved prospectus context provided.
 
 CRITICAL INSTRUCTIONS:
 1. STRICT FACTUAL GROUNDING:
@@ -153,13 +167,13 @@ CRITICAL INSTRUCTIONS:
    - **Category**: [Tax / Criminal / Statutory-Regulatory / Civil]
    - **Number of Cases**: [Count or Nil]
    - **Aggregate Amount Involved**: [₹ in million, or Nil/NA]
-   - **Details / Forums**: [As described in the DRHP]
+   - **Details / Forums**: [As described in the prospectus]
    - **Citation**: `[<Source ID>, Page <Page Number>]`
 
 5. INSUFFICIENT EVIDENCE & HALLUCINATION REFUSAL:
-   - If the user asks about a legal proceeding, enforcement action, or dispute not disclosed in the provided DRHP context (e.g. Enforcement Directorate / ED probes, foreign litigation, antitrust suits, or fabricated disputes), you MUST state clearly:
-     "Insufficient evidence in the provided DRHP context to answer this question."
-   - State clearly that no such litigation or regulatory action is disclosed in the provided DRHP excerpts.
+   - If the user asks about a legal proceeding, enforcement action, or dispute not disclosed in the provided prospectus context (e.g. Enforcement Directorate / ED probes, foreign litigation, antitrust suits, or fabricated disputes), you MUST state clearly:
+     "Insufficient evidence in the provided prospectus context to answer this question."
+   - State clearly that no such litigation or regulatory action is disclosed in the provided prospectus excerpts.
 
 6. MANDATORY CITATIONS & SOURCES TABLE:
    - Every single legal figure, case count, and claim must be cited: `[<Source ID>, Page <Page Number>]`.
@@ -171,7 +185,7 @@ CRITICAL INSTRUCTIONS:
 LITIGATION_USER_TEMPLATE = """RESEARCH QUERY:
 {query}
 
-RETRIEVED DRHP LITIGATION CONTEXT:
+RETRIEVED PROSPECTUS LITIGATION CONTEXT:
 {context}
 
 Please provide your rigorous, cited legal and litigation analysis following the instructions above.
@@ -185,16 +199,54 @@ Please provide your rigorous, cited legal and litigation analysis following the 
 def run_litigation_agent(
     query: str,
     top_k: int = 6,
-    llm: Optional[Any] = None
+    llm: Optional[Any] = None,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Executes the specialized Litigation Agent:
-      1. Litigation-prioritized hybrid retrieval (summary tables + section disclosures).
+      1. Litigation-prioritized hybrid retrieval (summary tables + section disclosures) with IPO isolation.
       2. Structured context generation preserving legal tables and citations.
       3. Grounded legal evaluation with mandatory entity distinctions.
     """
-    retrieved_items = litigation_retrieve(query=query, top_k=top_k)
-    context_str, sources_metadata = build_context(retrieved_items)
+    retrieved_items = litigation_retrieve(
+        query=query,
+        top_k=top_k,
+        document_target=document_target,
+        ipo_id=ipo_id
+    )
+
+    # Safe handling: If query specifically asks for RHP and no RHP evidence is loaded
+    if document_target == "rhp" and not retrieved_items:
+        return {
+            "query": query,
+            "answer": "No RHP evidence is available. The Red Herring Prospectus (RHP) has not been loaded into the knowledge base yet.",
+            "context": "No relevant RHP context was retrieved.",
+            "sources": [],
+            "retrieval_results": []
+        }
+
+    # Safe handling: If query asks for comparative DRHP vs RHP analysis and RHP is missing
+    if document_target == "comparative":
+        has_rhp = any(
+            (isinstance(item, dict) and item.get("filing_partition") == "RHP")
+            or (hasattr(item, "metadata") and item.metadata.get("document_type") == "RHP")
+            for item in retrieved_items
+        )
+        if not has_rhp:
+            context_str, sources_metadata = build_context(retrieved_items, is_comparative=True)
+            return {
+                "query": query,
+                "answer": "A comparison between DRHP and RHP litigation disclosures cannot be performed because RHP evidence is not currently loaded in the knowledge base. Only the Draft Red Herring Prospectus (DRHP) is available.",
+                "context": context_str,
+                "sources": sources_metadata,
+                "retrieval_results": retrieved_items
+            }
+
+    context_str, sources_metadata = build_context(
+        retrieved_items,
+        is_comparative=(document_target == "comparative")
+    )
 
     if llm is None:
         llm = get_chat_llm(temperature=0.0)
@@ -209,8 +261,11 @@ def run_litigation_agent(
         ("user", user_prompt)
     ]
 
-    response = llm.invoke(messages)
-    answer = response.content.strip()
+    try:
+        response = llm.invoke(messages)
+        answer = response.content.strip()
+    except Exception as e:
+        answer = f"Litigation analysis based on retrieved evidence:\n\n{context_str[:600]}...\n\n(Note: LLM generation encountered {e})"
 
     return {
         "query": query,
@@ -231,10 +286,20 @@ def litigation_agent_node(
     Updates the state with litigation evaluation findings, context, sources, and cited answer.
     """
     query = state["query"]
+    document_target = state.get("document_target", "latest")
+    ipo_id = state.get("ipo_id")
     try:
-        agent_res = run_litigation_agent(query=query, top_k=top_k, llm=llm)
+        agent_res = run_litigation_agent(
+            query=query,
+            top_k=top_k,
+            llm=llm,
+            document_target=document_target,
+            ipo_id=ipo_id
+        )
         return {
+            "ipo_id": ipo_id,
             "route": "litigation",
+            "document_target": document_target,
             "retrieval_results": agent_res["retrieval_results"],
             "context": agent_res["context"],
             "answer": agent_res["answer"],
@@ -243,7 +308,9 @@ def litigation_agent_node(
         }
     except Exception as e:
         return {
+            "ipo_id": ipo_id,
             "route": "litigation",
+            "document_target": document_target,
             "answer": f"Litigation Agent error: {str(e)}",
             "error": str(e)
         }

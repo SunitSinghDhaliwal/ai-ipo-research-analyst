@@ -14,11 +14,8 @@ from reranker import rerank
 # Configuration
 # --------------------------------------------------
 
-VECTORSTORE_DIR = (
-    "data/vectorstore/maharashtra_oil_extractions"
-)
-
-COLLECTION_NAME = "maharashtra_oil_extractions"
+VECTORSTORE_DIR = "data/vectorstore/ipo_knowledge_base"
+COLLECTION_NAME = "ipo_knowledge_base"
 
 RRF_K = 60
 
@@ -131,6 +128,31 @@ def reciprocal_rank_fusion(
 
 
 # --------------------------------------------------
+# Document Scope Resolution Helper
+# --------------------------------------------------
+
+def resolve_document_filter(document_target="latest", metadata_filter=None, ipo_id=None):
+    """
+    Combines caller metadata filter with version-aware document scoping and company isolation.
+      - 'latest': filters for is_latest=True (authoritative current filing)
+      - 'drhp': filters for document_type='DRHP'
+      - 'rhp': filters for document_type='RHP'
+    """
+    merged = dict(metadata_filter or {})
+    if ipo_id:
+        merged.setdefault("ipo_id", ipo_id)
+    target = (document_target or "latest").lower()
+
+    if target == "latest":
+        merged.setdefault("is_latest", True)
+    elif target == "drhp":
+        merged["document_type"] = "DRHP"
+    elif target == "rhp":
+        merged["document_type"] = "RHP"
+    return merged
+
+
+# --------------------------------------------------
 # Main retrieval interface
 # --------------------------------------------------
 
@@ -142,7 +164,9 @@ def hybrid_search(
     vector_top_k=20,
     bm25_top_k=20,
     rrf_candidate_k=20,
-    final_top_k=None
+    final_top_k=None,
+    document_target="latest",
+    ipo_id=None
 ):
     """
     Unified hybrid retrieval pipeline interface.
@@ -157,6 +181,15 @@ def hybrid_search(
     if final_top_k is not None:
         top_k = final_top_k
 
+    effective_filter = resolve_document_filter(
+        document_target=document_target,
+        metadata_filter=metadata_filter,
+        ipo_id=ipo_id
+    ) if document_target != "none" else metadata_filter
+
+    if ipo_id and effective_filter is not None:
+        effective_filter.setdefault("ipo_id", ipo_id)
+
     # ----------------------------------------------
     # Candidate pool sizing: ensure candidate pool is larger than top_k
     # ----------------------------------------------
@@ -167,11 +200,15 @@ def hybrid_search(
     # ----------------------------------------------
     # 1. Chroma dense retrieval
     # ----------------------------------------------
-    vector_results = vector_store.similarity_search_with_score(
-        query,
-        k=v_k,
-        filter=metadata_filter
-    )
+    try:
+        vector_results = vector_store.similarity_search_with_score(
+            query,
+            k=v_k,
+            filter=effective_filter
+        )
+    except Exception:
+        # Fallback if vectorstore encounters filtering incompatibility on empty collection
+        vector_results = []
 
     # ----------------------------------------------
     # 2. BM25 sparse retrieval
@@ -181,7 +218,7 @@ def hybrid_search(
         bm25=bm25,
         documents=documents,
         k=b_k,
-        metadata_filter=metadata_filter
+        metadata_filter=effective_filter
     )
 
     # ----------------------------------------------
@@ -193,6 +230,9 @@ def hybrid_search(
         k=RRF_K,
         top_k=candidate_k
     )
+
+    if not rrf_candidates:
+        return []
 
     if not use_reranker:
         return rrf_candidates[:top_k]
@@ -219,13 +259,73 @@ def retrieve(
     query,
     k=10,
     metadata_filter=None,
-    use_reranker=True
+    use_reranker=True,
+    document_target="latest",
+    ipo_id=None
 ):
+    """
+    Version-aware and company-isolated retrieval dispatcher supporting:
+      - 'latest': (default) queries authoritative filing (is_latest=True)
+      - 'drhp': queries DRHP only (document_type='DRHP')
+      - 'rhp': queries RHP only (document_type='RHP')
+      - 'comparative': dual-partition retrieval across DRHP and RHP independently
+    """
+    target = (document_target or "latest").lower()
+
+    if target == "comparative":
+        half_k = max(2, k // 2)
+
+        # If query is asking what changed generally, enrich query so retrieval targets substantive updates
+        q_low = query.lower()
+        search_query = query
+        if any(k in q_low for k in ["what changed", "difference", "between drhp and rhp", "drhp vs rhp", "compare"]):
+            search_query = f"{query} revenue profit PAT financial performance restated statements offer details risk factors"
+
+        # DRHP partition
+        drhp_filter = dict(metadata_filter or {})
+        if ipo_id:
+            drhp_filter["ipo_id"] = ipo_id
+        drhp_filter["document_type"] = "DRHP"
+        drhp_results = hybrid_search(
+            query=search_query,
+            top_k=half_k,
+            use_reranker=use_reranker,
+            metadata_filter=drhp_filter,
+            document_target="none",
+            ipo_id=ipo_id
+        )
+        for item in drhp_results:
+            item["filing_partition"] = "DRHP"
+
+        # RHP partition
+        rhp_filter = dict(metadata_filter or {})
+        if ipo_id:
+            rhp_filter["ipo_id"] = ipo_id
+        rhp_filter["document_type"] = "RHP"
+        rhp_results = hybrid_search(
+            query=search_query,
+            top_k=half_k,
+            use_reranker=use_reranker,
+            metadata_filter=rhp_filter,
+            document_target="none",
+            ipo_id=ipo_id
+        )
+        for item in rhp_results:
+            item["filing_partition"] = "RHP"
+
+        return drhp_results + rhp_results
+
+    effective_filter = dict(metadata_filter or {})
+    if ipo_id:
+        effective_filter["ipo_id"] = ipo_id
+
     return hybrid_search(
         query=query,
         top_k=k,
         use_reranker=use_reranker,
-        metadata_filter=metadata_filter
+        metadata_filter=effective_filter,
+        document_target=target,
+        ipo_id=ipo_id
     )
 
 

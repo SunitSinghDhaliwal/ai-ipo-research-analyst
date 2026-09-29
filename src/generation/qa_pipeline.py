@@ -26,6 +26,7 @@ def answer_query(
     top_k: int = 5,
     use_reranker: bool = True,
     metadata_filter: Optional[Dict[str, Any]] = None,
+    document_target: str = "latest",
     llm: Optional[Any] = None,
     provider: Optional[str] = None,
     model_name: Optional[str] = None,
@@ -42,11 +43,42 @@ def answer_query(
         query=query,
         k=top_k,
         metadata_filter=metadata_filter,
-        use_reranker=use_reranker
+        use_reranker=use_reranker,
+        document_target=document_target
     )
 
+    # Safety handling: RHP requested but missing
+    if document_target == "rhp" and not retrieved_items:
+        return {
+            "query": query,
+            "answer": "No RHP evidence is available. The Red Herring Prospectus (RHP) has not been loaded into the knowledge base yet.",
+            "context": "No relevant RHP context was retrieved.",
+            "sources": [],
+            "num_sources": 0
+        }
+
+    # Safety handling: Comparative query requested but RHP missing
+    if document_target == "comparative":
+        has_rhp = any(
+            (isinstance(item, dict) and item.get("filing_partition") == "RHP")
+            or (hasattr(item, "metadata") and item.metadata.get("document_type") == "RHP")
+            for item in retrieved_items
+        )
+        if not has_rhp:
+            context_str, sources_metadata = build_context(retrieved_items, is_comparative=True)
+            return {
+                "query": query,
+                "answer": "A comparison between the DRHP and RHP cannot be performed because RHP evidence is not currently loaded in the knowledge base. Only the Draft Red Herring Prospectus (DRHP) is available.",
+                "context": context_str,
+                "sources": sources_metadata,
+                "num_sources": len(sources_metadata)
+            }
+
     # 2. Build structured context
-    context_str, sources_metadata = build_context(retrieved_items)
+    context_str, sources_metadata = build_context(
+        retrieved_items,
+        is_comparative=(document_target == "comparative")
+    )
 
     # 3. Generate answer strictly grounded in context
     answer = generate_answer(

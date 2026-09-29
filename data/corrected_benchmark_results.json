@@ -1,0 +1,1233 @@
+{
+  "summary": {
+    "chroma": {
+      "hit5": 11,
+      "hit10": 16
+    },
+    "bm25": {
+      "hit5": 8,
+      "hit10": 11
+    },
+    "hybrid_rrf": {
+      "hit5": 12,
+      "hit10": 14
+    },
+    "hybrid_rerank": {
+      "hit5": 10,
+      "hit10": 16
+    }
+  },
+  "queries": [
+    {
+      "id": "Q1",
+      "category": "Risk Factors",
+      "query": "What are the key internal risk factors regarding raw material supply and price volatility?",
+      "expected_ids": [
+        "drhp_p30_c1",
+        "drhp_p32_c1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p439_c4",
+            "drhp_p31_c4",
+            "drhp_p31_c5",
+            "drhp_p65_c3",
+            "drhp_p304_c4",
+            "drhp_p304_c5",
+            "drhp_p255_c1",
+            "drhp_p52_c1",
+            "drhp_p32_c1",
+            "drhp_p226_c1"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p439_c4",
+            "drhp_p30_c6",
+            "drhp_p439_c3",
+            "drhp_p304_c4",
+            "drhp_p32_c1",
+            "drhp_p30_c5",
+            "drhp_p1_c5",
+            "drhp_p52_c1",
+            "drhp_p31_c3",
+            "drhp_p31_c4"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p439_c4",
+            "drhp_p304_c4",
+            "drhp_p31_c4",
+            "drhp_p32_c1",
+            "drhp_p52_c1",
+            "drhp_p439_c3",
+            "drhp_p439_c5",
+            "drhp_p31_c3",
+            "drhp_p30_c6",
+            "drhp_p31_c5"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p439_c4",
+            "drhp_p31_c3",
+            "drhp_p31_c5",
+            "drhp_p439_c5",
+            "drhp_p30_c5",
+            "drhp_p32_c1",
+            "drhp_p304_c5",
+            "drhp_p65_c3",
+            "drhp_p52_c1",
+            "drhp_p226_c1"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "category": "Risk Factors",
+      "query": "What are the risks related to the geographic concentration of the company's business operations in Maharashtra?",
+      "expected_ids": [
+        "drhp_p32_c2",
+        "drhp_p32_c3"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p32_c5",
+            "drhp_p32_c2",
+            "drhp_p59_c4",
+            "drhp_p62_c6",
+            "drhp_p76_c5",
+            "drhp_p30_c2",
+            "drhp_p51_c1",
+            "drhp_p51_c5",
+            "drhp_p79_c2",
+            "drhp_p56_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p469_c3",
+            "drhp_p65_c5",
+            "drhp_p324_c4",
+            "drhp_p470_c1",
+            "drhp_p386_c6",
+            "drhp_p436_c1",
+            "drhp_p552_c2",
+            "drhp_p32_c5",
+            "drhp_p51_c5",
+            "drhp_p50_c6"
+          ],
+          "hit@5": false,
+          "hit@10": false
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p32_c5",
+            "drhp_p51_c5",
+            "drhp_p56_c1",
+            "drhp_p469_c3",
+            "drhp_p32_c2",
+            "drhp_p65_c5",
+            "drhp_p59_c4",
+            "drhp_p324_c4",
+            "drhp_p62_c6",
+            "drhp_p470_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p32_c2",
+            "drhp_p51_c1",
+            "drhp_p32_c5",
+            "drhp_p56_c1",
+            "drhp_p30_c2",
+            "drhp_p62_c6",
+            "drhp_p51_c5",
+            "drhp_p469_c3",
+            "drhp_p436_c1",
+            "drhp_p50_c6"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "category": "Litigation",
+      "query": "What outstanding litigation cases and material legal proceedings are pending against the company?",
+      "expected_ids": [
+        "drhp_p44_c3",
+        "drhp_p45_c2",
+        "drhp_p476_c3",
+        "drhp_p477_c3"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p480_c5",
+            "drhp_p479_c4",
+            "drhp_p476_c3",
+            "drhp_p478_c2",
+            "drhp_p45_c2",
+            "drhp_p476_c6",
+            "drhp_p477_c1",
+            "drhp_p478_c1",
+            "drhp_p481_c1",
+            "drhp_p481_c3"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p481_c2",
+            "drhp_p478_c1",
+            "drhp_p478_c2",
+            "drhp_p481_c1",
+            "drhp_p480_c1",
+            "drhp_p478_c3",
+            "drhp_p476_c1",
+            "drhp_p476_c2",
+            "drhp_p480_c5",
+            "drhp_p477_c3"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p478_c2",
+            "drhp_p480_c5",
+            "drhp_p478_c1",
+            "drhp_p479_c4",
+            "drhp_p481_c1",
+            "drhp_p476_c3",
+            "drhp_p481_c2",
+            "drhp_p477_c3",
+            "drhp_p45_c2",
+            "drhp_p476_c2"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p481_c2",
+            "drhp_p45_c2",
+            "drhp_p477_c3",
+            "drhp_p476_c1",
+            "drhp_p476_c2",
+            "drhp_p479_c4",
+            "drhp_p476_c7",
+            "drhp_p44_c3",
+            "drhp_p480_c1",
+            "drhp_p480_c5"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "category": "Litigation",
+      "query": "What are the pending direct tax and indirect tax litigation matters involving the company?",
+      "expected_ids": [
+        "drhp_p477_c3",
+        "drhp_p478_c1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p478_c3",
+            "drhp_p88_c2",
+            "drhp_p45_c2",
+            "drhp_p43_c1",
+            "moe_p478_t2",
+            "moe_p478_t1",
+            "moe_p481_t1",
+            "moe_p480_t1",
+            "drhp_p196_c2",
+            "drhp_p478_c1"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p478_c1",
+            "drhp_p478_c3",
+            "drhp_p480_c1",
+            "drhp_p481_c1",
+            "drhp_p476_c2",
+            "drhp_p191_c3",
+            "drhp_p476_c4",
+            "moe_p481_t1",
+            "moe_p480_t1",
+            "moe_p478_t1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p478_c3",
+            "drhp_p478_c1",
+            "drhp_p88_c2",
+            "moe_p481_t1",
+            "moe_p478_t2",
+            "moe_p478_t1",
+            "moe_p480_t1",
+            "drhp_p196_c2",
+            "drhp_p191_c3",
+            "drhp_p196_c3"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p480_c1",
+            "drhp_p476_c2",
+            "drhp_p45_c2",
+            "drhp_p478_c3",
+            "drhp_p481_c1",
+            "drhp_p88_c2",
+            "moe_p478_t1",
+            "drhp_p478_c1",
+            "moe_p480_t1",
+            "moe_p478_t2"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "category": "Financial Information",
+      "query": "What was the company's revenue from operations and restated profit after tax for the latest fiscal years?",
+      "expected_ids": [
+        "drhp_p404_c4",
+        "drhp_p464_c1",
+        "moe_p444_t1",
+        "moe_p86_t1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p463_c1",
+            "drhp_p462_c1",
+            "drhp_p86_c2",
+            "drhp_p487_c5",
+            "moe_p444_t1",
+            "drhp_p264_c3",
+            "drhp_p173_c3",
+            "drhp_p182_c1",
+            "moe_p444_t2",
+            "moe_p435_t1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p272_c4",
+            "drhp_p265_c4",
+            "drhp_p182_c2",
+            "drhp_p465_c3",
+            "drhp_p182_c5",
+            "drhp_p266_c2",
+            "drhp_p443_c3",
+            "drhp_p22_c4",
+            "drhp_p22_c3",
+            "drhp_p466_c4"
+          ],
+          "hit@5": false,
+          "hit@10": false
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p272_c4",
+            "drhp_p265_c4",
+            "drhp_p462_c1",
+            "drhp_p23_c3",
+            "drhp_p463_c1",
+            "drhp_p86_c2",
+            "drhp_p182_c2",
+            "drhp_p487_c5",
+            "drhp_p465_c3",
+            "moe_p444_t1"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p272_c4",
+            "drhp_p265_c4",
+            "drhp_p182_c2",
+            "drhp_p443_c3",
+            "drhp_p463_c1",
+            "moe_p444_t1",
+            "drhp_p22_c3",
+            "drhp_p487_c5",
+            "drhp_p22_c4",
+            "drhp_p266_c2"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q6",
+      "category": "Financial Information",
+      "query": "What are the details of the company's total borrowings and financial indebtedness?",
+      "expected_ids": [
+        "drhp_p474_c1",
+        "moe_p474_t1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p468_c3",
+            "drhp_p474_c1",
+            "drhp_p424_c5",
+            "moe_p88_t1",
+            "moe_p469_t1",
+            "drhp_p58_c7",
+            "drhp_p487_c2",
+            "drhp_p372_c5",
+            "moe_p42_t1",
+            "drhp_p469_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p183_c4",
+            "drhp_p552_c2",
+            "drhp_p23_c3",
+            "drhp_p469_c3",
+            "drhp_p420_c8",
+            "drhp_p272_c5",
+            "drhp_p184_c2",
+            "drhp_p265_c5",
+            "drhp_p443_c4",
+            "drhp_p182_c3"
+          ],
+          "hit@5": false,
+          "hit@10": false
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p443_c4",
+            "drhp_p182_c3",
+            "drhp_p468_c3",
+            "drhp_p183_c4",
+            "drhp_p474_c1",
+            "drhp_p552_c2",
+            "drhp_p424_c5",
+            "drhp_p23_c3",
+            "moe_p88_t1",
+            "drhp_p469_c3"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p468_c3",
+            "drhp_p443_c4",
+            "drhp_p372_c5",
+            "drhp_p272_c5",
+            "drhp_p474_c1",
+            "drhp_p23_c3",
+            "drhp_p469_c3",
+            "drhp_p265_c5",
+            "drhp_p182_c3",
+            "drhp_p58_c7"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q7",
+      "category": "Related-Party Transactions",
+      "query": "What related-party transactions has the company entered into with promoters and group entities?",
+      "expected_ids": [
+        "drhp_p71_c3",
+        "drhp_p474_c1",
+        "moe_p474_t1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p357_c4",
+            "drhp_p71_c2",
+            "drhp_p356_c4",
+            "drhp_p358_c1",
+            "drhp_p356_c5",
+            "drhp_p356_c3",
+            "drhp_p357_c1",
+            "drhp_p71_c3",
+            "drhp_p361_c1",
+            "drhp_p554_c2"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p71_c3",
+            "drhp_p356_c4",
+            "drhp_p71_c4",
+            "drhp_p177_c5",
+            "drhp_p554_c2",
+            "drhp_p141_c1",
+            "drhp_p357_c5",
+            "drhp_p517_c3",
+            "drhp_p331_c2",
+            "drhp_p71_c2"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p356_c4",
+            "drhp_p71_c3",
+            "drhp_p71_c2",
+            "drhp_p357_c4",
+            "drhp_p554_c2",
+            "drhp_p357_c5",
+            "drhp_p420_c8",
+            "drhp_p71_c4",
+            "drhp_p358_c1",
+            "drhp_p177_c5"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p357_c4",
+            "drhp_p71_c2",
+            "drhp_p331_c2",
+            "drhp_p361_c1",
+            "drhp_p357_c1",
+            "drhp_p71_c3",
+            "drhp_p356_c4",
+            "drhp_p177_c5",
+            "drhp_p361_c2",
+            "drhp_p358_c1"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q8",
+      "category": "Related-Party Transactions",
+      "query": "Who are the promoters and promoter group entities of the company?",
+      "expected_ids": [
+        "drhp_p349_c1",
+        "drhp_p349_c2",
+        "moe_p7_t1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p356_c5",
+            "drhp_p7_c1",
+            "drhp_p357_c4",
+            "drhp_p274_c2",
+            "drhp_p353_c1",
+            "drhp_p71_c2",
+            "drhp_p356_c3",
+            "moe_p7_t1",
+            "drhp_p493_c2",
+            "drhp_p356_c4"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p358_c3",
+            "drhp_p523_c2",
+            "drhp_p7_c1",
+            "drhp_p517_c3",
+            "drhp_p141_c3",
+            "drhp_p356_c4",
+            "drhp_p493_c2",
+            "drhp_p62_c1",
+            "drhp_p353_c1",
+            "drhp_p357_c5"
+          ],
+          "hit@5": false,
+          "hit@10": false
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p7_c1",
+            "drhp_p353_c1",
+            "drhp_p358_c3",
+            "drhp_p356_c4",
+            "drhp_p493_c2",
+            "drhp_p357_c5",
+            "drhp_p356_c3",
+            "drhp_p48_c1",
+            "drhp_p356_c5",
+            "drhp_p523_c2"
+          ],
+          "hit@5": false,
+          "hit@10": false
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p353_c1",
+            "drhp_p7_c1",
+            "drhp_p48_c1",
+            "moe_p7_t1",
+            "drhp_p177_c5",
+            "drhp_p493_c2",
+            "drhp_p356_c5",
+            "drhp_p357_c4",
+            "drhp_p357_c5",
+            "drhp_p274_c2"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q9",
+      "category": "Management",
+      "query": "Who are the members of the Board of Directors of the company and their designations?",
+      "expected_ids": [
+        "drhp_p334_c1",
+        "drhp_p334_c2",
+        "moe_p334_t1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "moe_p347_t2",
+            "moe_p349_t1",
+            "moe_p347_t1",
+            "moe_p346_t1",
+            "moe_p342_t1",
+            "drhp_p347_c5",
+            "drhp_p334_c1",
+            "drhp_p340_c2",
+            "drhp_p101_c2",
+            "drhp_p356_c5"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p340_c2",
+            "drhp_p140_c5",
+            "drhp_p346_c3",
+            "drhp_p549_c3",
+            "drhp_p546_c1",
+            "drhp_p340_c1",
+            "drhp_p545_c2",
+            "drhp_p547_c2",
+            "drhp_p549_c2",
+            "drhp_p486_c4"
+          ],
+          "hit@5": false,
+          "hit@10": false
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p340_c2",
+            "drhp_p546_c1",
+            "moe_p347_t2",
+            "moe_p349_t1",
+            "drhp_p140_c5",
+            "moe_p347_t1",
+            "drhp_p346_c3",
+            "moe_p346_t1",
+            "drhp_p549_c3",
+            "moe_p342_t1"
+          ],
+          "hit@5": false,
+          "hit@10": false
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "moe_p347_t1",
+            "moe_p347_t2",
+            "moe_p349_t1",
+            "moe_p342_t1",
+            "moe_p346_t1",
+            "drhp_p347_c5",
+            "drhp_p546_c1",
+            "drhp_p101_c2",
+            "drhp_p334_c1",
+            "drhp_p340_c3"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q10",
+      "category": "Management",
+      "query": "Who are the Key Managerial Personnel (KMP) including the CFO and Company Secretary?",
+      "expected_ids": [
+        "drhp_p6_c1",
+        "drhp_p350_c1",
+        "drhp_p350_c2"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p350_c1",
+            "drhp_p351_c3",
+            "drhp_p352_c2",
+            "moe_p127_t2",
+            "drhp_p414_c3",
+            "drhp_p92_c2",
+            "drhp_p351_c1",
+            "moe_p349_t1",
+            "drhp_p127_c2",
+            "drhp_p350_c3"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p351_c3",
+            "drhp_p352_c1",
+            "drhp_p52_c4",
+            "drhp_p352_c2",
+            "drhp_p78_c2",
+            "drhp_p350_c1",
+            "drhp_p6_c3",
+            "drhp_p52_c5",
+            "drhp_p351_c1",
+            "drhp_p350_c2"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p351_c3",
+            "drhp_p350_c1",
+            "drhp_p352_c2",
+            "drhp_p352_c1",
+            "drhp_p351_c1",
+            "drhp_p127_c2",
+            "drhp_p351_c2",
+            "drhp_p352_c3",
+            "drhp_p52_c4",
+            "moe_p127_t2"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p350_c1",
+            "drhp_p414_c3",
+            "drhp_p352_c3",
+            "drhp_p92_c2",
+            "drhp_p351_c1",
+            "drhp_p127_c2",
+            "drhp_p351_c2",
+            "drhp_p350_c2",
+            "drhp_p52_c4",
+            "drhp_p6_c3"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q11",
+      "category": "IPO / Issue Information",
+      "query": "What are the main objects of the offer and how will the net proceeds be utilized?",
+      "expected_ids": [
+        "drhp_p142_c1",
+        "drhp_p142_c4",
+        "moe_p142_t1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p46_c2",
+            "drhp_p66_c2",
+            "drhp_p142_c1",
+            "drhp_p143_c1",
+            "drhp_p49_c1",
+            "drhp_p3_c10",
+            "drhp_p144_c4",
+            "drhp_p15_c1",
+            "drhp_p506_c2",
+            "drhp_p3_c5"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p143_c1",
+            "drhp_p142_c1",
+            "drhp_p143_c4",
+            "drhp_p145_c3",
+            "drhp_p46_c2",
+            "drhp_p177_c4",
+            "drhp_p177_c5",
+            "drhp_p49_c1",
+            "drhp_p324_c3",
+            "drhp_p142_c2"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p143_c1",
+            "drhp_p142_c1",
+            "drhp_p46_c2",
+            "drhp_p49_c1",
+            "drhp_p177_c5",
+            "drhp_p144_c4",
+            "drhp_p66_c2",
+            "drhp_p143_c4",
+            "drhp_p145_c3",
+            "drhp_p3_c10"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p143_c1",
+            "drhp_p177_c5",
+            "drhp_p177_c4",
+            "drhp_p142_c1",
+            "drhp_p144_c4",
+            "drhp_p15_c1",
+            "drhp_p145_c3",
+            "drhp_p46_c2",
+            "drhp_p143_c4",
+            "drhp_p49_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q12",
+      "category": "IPO / Issue Information",
+      "query": "What is the breakdown of the Fresh Issue and Offer for Sale in the IPO?",
+      "expected_ids": [
+        "drhp_p1_c2",
+        "drhp_p3_c4",
+        "drhp_p111_c1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p13_c1",
+            "drhp_p3_c5",
+            "drhp_p15_c3",
+            "drhp_p142_c2",
+            "drhp_p1_c2",
+            "moe_p142_t1",
+            "moe_p13_t1",
+            "drhp_p14_c2",
+            "moe_p494_t1",
+            "drhp_p530_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p142_c1",
+            "drhp_p1_c2",
+            "drhp_p500_c2",
+            "drhp_p530_c3",
+            "drhp_p530_c1",
+            "drhp_p507_c1",
+            "drhp_p505_c5",
+            "drhp_p14_c1",
+            "drhp_p488_c4",
+            "moe_p14_t1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p1_c2",
+            "drhp_p530_c1",
+            "drhp_p142_c2",
+            "drhp_p142_c1",
+            "moe_p13_t1",
+            "moe_p14_t1",
+            "drhp_p13_c1",
+            "drhp_p3_c5",
+            "drhp_p15_c3",
+            "drhp_p500_c2"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p142_c1",
+            "drhp_p14_c1",
+            "moe_p142_t1",
+            "moe_p14_t1",
+            "drhp_p500_c2",
+            "moe_p13_t1",
+            "drhp_p507_c1",
+            "drhp_p1_c2",
+            "drhp_p13_c1",
+            "drhp_p15_c3"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q13",
+      "category": "Business",
+      "query": "What are the primary business activities, products, and solvent extraction operations of the company?",
+      "expected_ids": [
+        "drhp_p279_c1",
+        "drhp_p280_c2"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p304_c1",
+            "drhp_p279_c1",
+            "drhp_p222_c2",
+            "drhp_p377_c6",
+            "moe_p282_t1",
+            "drhp_p196_c2",
+            "drhp_p148_c3",
+            "drhp_p164_c2",
+            "drhp_p290_c2",
+            "drhp_p275_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p377_c6",
+            "drhp_p324_c4",
+            "drhp_p279_c1",
+            "drhp_p280_c2",
+            "drhp_p32_c5",
+            "drhp_p164_c5",
+            "drhp_p319_c5",
+            "drhp_p294_c2",
+            "drhp_p293_c1",
+            "drhp_p290_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p377_c6",
+            "drhp_p279_c1",
+            "drhp_p324_c4",
+            "drhp_p164_c2",
+            "drhp_p290_c1",
+            "drhp_p184_c3",
+            "drhp_p304_c1",
+            "drhp_p222_c2",
+            "drhp_p280_c2",
+            "moe_p282_t1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p304_c1",
+            "moe_p282_t1",
+            "drhp_p184_c3",
+            "drhp_p279_c1",
+            "drhp_p280_c2",
+            "drhp_p294_c2",
+            "drhp_p148_c3",
+            "drhp_p222_c2",
+            "drhp_p290_c2",
+            "drhp_p293_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q14",
+      "category": "Business",
+      "query": "Where are the company's manufacturing facilities located and what are their operational details?",
+      "expected_ids": [
+        "drhp_p289_c1",
+        "drhp_p289_c2",
+        "drhp_p153_c3"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p5_c5",
+            "drhp_p262_c3",
+            "drhp_p289_c1",
+            "drhp_p438_c2",
+            "drhp_p51_c1",
+            "drhp_p308_c5",
+            "moe_p289_t2",
+            "drhp_p438_c3",
+            "drhp_p262_c2",
+            "drhp_p263_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p483_c4",
+            "drhp_p255_c6",
+            "drhp_p268_c1",
+            "drhp_p438_c2",
+            "drhp_p32_c2",
+            "drhp_p483_c5",
+            "drhp_p289_c1",
+            "drhp_p262_c2",
+            "drhp_p268_c2",
+            "drhp_p267_c4"
+          ],
+          "hit@5": false,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p438_c2",
+            "drhp_p289_c1",
+            "drhp_p262_c3",
+            "drhp_p268_c1",
+            "drhp_p262_c2",
+            "drhp_p268_c2",
+            "drhp_p263_c1",
+            "drhp_p5_c5",
+            "drhp_p483_c4",
+            "drhp_p255_c6"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p289_c1",
+            "drhp_p262_c2",
+            "drhp_p51_c1",
+            "drhp_p255_c6",
+            "drhp_p438_c2",
+            "drhp_p267_c4",
+            "drhp_p483_c5",
+            "drhp_p268_c2",
+            "moe_p289_t2",
+            "drhp_p484_c1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q15",
+      "category": "General Company Information",
+      "query": "Where is the registered and corporate office of the company located?",
+      "expected_ids": [
+        "drhp_p101_c1",
+        "moe_p5_t1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p101_c1",
+            "drhp_p324_c2",
+            "drhp_p361_c3",
+            "drhp_p308_c5",
+            "drhp_p101_c2",
+            "moe_p353_t2",
+            "moe_p324_t1",
+            "drhp_p102_c4",
+            "drhp_p3_c2",
+            "moe_p5_t1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p101_c1",
+            "drhp_p3_c2",
+            "drhp_p9_c5",
+            "drhp_p3_c7",
+            "drhp_p528_c4",
+            "drhp_p10_c1",
+            "drhp_p500_c5",
+            "drhp_p15_c4",
+            "drhp_p528_c2",
+            "drhp_p9_c4"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p101_c1",
+            "drhp_p3_c2",
+            "drhp_p324_c2",
+            "drhp_p361_c3",
+            "drhp_p59_c4",
+            "drhp_p9_c5",
+            "drhp_p308_c5",
+            "drhp_p3_c7",
+            "drhp_p101_c2",
+            "drhp_p528_c4"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "moe_p5_t1",
+            "drhp_p101_c1",
+            "drhp_p528_c2",
+            "drhp_p10_c1",
+            "drhp_p3_c2",
+            "drhp_p324_c2",
+            "drhp_p9_c4",
+            "drhp_p528_c4",
+            "drhp_p15_c4",
+            "drhp_p59_c4"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    },
+    {
+      "id": "Q16",
+      "category": "General Company Information",
+      "query": "What is the history of the company's incorporation and name changes?",
+      "expected_ids": [
+        "drhp_p3_c2",
+        "drhp_p101_c1"
+      ],
+      "methods": {
+        "chroma": {
+          "ids": [
+            "drhp_p324_c2",
+            "drhp_p324_c1",
+            "drhp_p3_c2",
+            "moe_p391_t3",
+            "drhp_p389_c3",
+            "drhp_p113_c1",
+            "moe_p324_t1",
+            "moe_p37_t1",
+            "moe_p105_t1",
+            "moe_p326_t1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "bm25": {
+          "ids": [
+            "drhp_p324_c1",
+            "drhp_p113_c1",
+            "drhp_p3_c2",
+            "drhp_p552_c2",
+            "drhp_p324_c4",
+            "drhp_p3_c1",
+            "drhp_p379_c4",
+            "drhp_p324_c3",
+            "drhp_p469_c3",
+            "drhp_p324_c2"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rrf": {
+          "ids": [
+            "drhp_p324_c1",
+            "drhp_p3_c2",
+            "drhp_p113_c1",
+            "drhp_p324_c2",
+            "drhp_p3_c1",
+            "drhp_p554_c3",
+            "moe_p391_t3",
+            "drhp_p552_c2",
+            "drhp_p389_c3",
+            "drhp_p324_c4"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        },
+        "hybrid_rerank": {
+          "ids": [
+            "drhp_p324_c1",
+            "drhp_p113_c1",
+            "drhp_p324_c2",
+            "drhp_p3_c1",
+            "drhp_p3_c2",
+            "moe_p391_t3",
+            "drhp_p389_c3",
+            "drhp_p538_c3",
+            "drhp_p554_c3",
+            "moe_p105_t1"
+          ],
+          "hit@5": true,
+          "hit@10": true
+        }
+      }
+    }
+  ]
+}

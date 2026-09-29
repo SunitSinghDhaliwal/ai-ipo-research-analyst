@@ -1,0 +1,527 @@
+[
+  {
+    "id": "TEST 1",
+    "query": "What was the company's revenue in FY2026?",
+    "route": "financial",
+    "answer": "**Report**\n\nMetric: Revenue from Operations  \nFY2026: \u20b9\u202f22,115.37\u202fmillion  \nSource: [moe_p444_t1, Page\u202f444]  \n\n---\n\n### Sources Cited\n\n| Source ID | Page | Description |\n|-----------|------|-------------|\n| moe_p444_t1 | 444 | Table of EBITDA and related figures, including Revenue from Operations for FY2026 |\n| moe_p86_t1 | 86 | Consolidated revenue table confirming Revenue from Operations for FY2026 |\n| drhp_p463_c1 | 463 | Textual confirmation of Revenue from Operations for FY2026 |\n| drhp_p464_c1 | 464 | Narrative confirming Revenue from Operations for FY2026 |",
+    "sources": [
+      {
+        "source_id": "moe_p444_t1",
+        "page": 444,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | 2025 | - | - | 2024 | -\nRow 2: Revenue from Operations (A) | 22,115.37 | - | - | 18,832.99 | - | - | 17,449.01 | - | -\nRow 3: Other Income (B) | 55.57 | - | - | 139.26 | - | - | 220.14 | - | -\nRow 4: Total Income (C) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 5: Restated Profit / (Loss) for the period/ fiscal year (D) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 6: Finance costs (E) | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -\nRow 7: Total tax expense (F) | 304.00 | - | - | 302.03 | - | - | 64.02 | - | -\nRow 8: Depreciation/Amortization/ Impairment expense (G) | 111.10 | - | - | 99.69 | - | - | 50.87 | - | -\nRow 9: EBITDA [H= (D+E+F+G-B)] | 1,321.35 | - | - | 1,256.73 | - | - | 458.68 | - | -\nRow 10: EBITDA Margin (%) (I=H/A) | 5.97 | - | - | 6.67 | - | - | 2.63 | - | -",
+        "rrf_score": 0.0136986301369863,
+        "rerank_score": 0.9036718606948853
+      },
+      {
+        "source_id": "moe_p173_t1",
+        "page": 173,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > MSEDCL",
+        "text": "Headers: - | Particulars | - | - | Assumptions | -\nRow 1: - | - | - | Financial Information, which reflects the credit terms extended to our customers and the collection cycle. For Fiscal 2027, 2028, and 2029, our Company has assumed trade receivable holding levels of 22 days, 21 days, and 21 days, respectively. In Fiscal 2026, trade receivable days reached up to 19 days, with a mean of 16 days over the last three fiscals. This assumption is consistent with our experience in managing customer credit and collections. The projected levels of trade receivables for the forecast period have been prepared in line with historical trends, with no significant variation, thereby ensuring alignment with our working capital requirements and expected business operations. | - | -\nRow 2: Cash and Cash Equivalents | - | - | Cash and cash equivalents have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028, and 2029, our Company has assumed cash and cash equivalent holding levels of 3 days, 3 days, and 3 days of revenue from operations, respectively. In Fiscal 2024, cash and bank balances together increased up to 65 days due to fixed deposit overdraft (FD-OD) facilities. Cash and cash equivalents have been projected and maintained in line with expected sales for the respective fiscal years pursuant to proposed expansion, ensuring sufficient liquidity to support ongoing business operations. | - | -\nRow 3: Other Current Assets | - | - | Other current assets have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028 and 2029, our Company has assumed a holding level for other current assets equivalent to 13 days, 12 days and 12 days of revenue from operations. In Fiscal 2026, it reached up to 12 days, with a mean of 6 days over the last three fiscals. Other current assets have been projected and maintained in line with the proposed expansion plan and the expected business activity for Fiscal 2027, 2028, and 2029. | - | -\nRow 4: - | II) Current Liabilities | - | - | - | -\nRow 5: Trade Payables | - | - | Our trade payables are maintained at modest levels due to the nature of our business model. The holding levels for trade payable have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028, and 2029, our Company has assumed trade payable holding levels of 5 days, 5 days, and 5 days of cost of material consumed, respectively, with a mean of approximately 6 days over the three fiscals. Trade payable levels have been projected in line with the expected sales for the respective fiscal years, envisaging timely and prudent payments of liabilities with improved utilization of working capital balancing the need for uninterrupted raw material supply ensuring consistency with our working capital requirements and overall business operations. | - | -\nRow 6: Other Current Liabilities | - | - | Other current liabilities have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028, and 2029, our Company has assumed holding levels for other current liabilities of 1 day, 1 day, and 1 day of revenue from operations, respectively, with a mean of approximately 1 day over the three fiscals. Other current liabilities have been projected and maintained in line with the expected business activity for the respective fiscal years, ensuring consistency with our working capital requirements and operational needs. | - | -",
+        "rrf_score": 0.014285714285714285,
+        "rerank_score": 0.8277453184127808
+      },
+      {
+        "source_id": "moe_p373_t1",
+        "page": 373,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > MAHARASHTRA OIL EXTRACTIONS LIMITED",
+        "text": "Headers: Particulars | Notes | For the year ended March 31, 2026 | For the year ended March 31, 2025 | For the year ended March 31, 2024\nRow 1: - | - | Consolidated | Consolidated | Standalone\nRow 2: REVENUE Revenue from operations (net) 21 Other income 22 | - | - | - | 1 7,449.01 2 20.14\nRow 3: - | - | 2 2,115.37 | 1 8,832.99 | -\nRow 4: - | - | 5 5.57 | 1 39.26 | -\nRow 5: Total revenue (I) | - | 2 2,170.94 | 1 8,972.25 | 1 7,669.15\nRow 6: EXPENSES Purchase of Stock-in-Trade Cost of materials consumed 23 Changes in inventories of finished goods and stock in trade 24 Employee benefits expense 25 Finance costs 26 Depreciation and amortisation expense 27 Other expenses 28 | - | - | - | 2 ,178.29 1 4,097.04 ( 4.98) 1 93.02 3 90.41 5 0.87 5 26.96\nRow 7: - | - | 3 ,733.80 | 2 ,339.46 | -\nRow 8: - | - | 1 6,197.23 | 1 4,453.88 | -\nRow 9: - | - | ( 69.47) | ( 34.36) | -\nRow 10: - | - | 2 24.05 | 1 98.14 | -\nRow 11: - | - | 9 9.60 | 1 23.46 | -\nRow 12: - | - | 1 11.10 | 9 9.69 | -\nRow 13: - | - | 7 08.41 | 6 19.14 | -\nRow 14: Total expenses (II) | - | 2 1,004.72 | 1 7,799.41 | 1 7,431.61\nRow 15: Restated profit before tax [III] (I-II) | - | 1 ,166.22 | 1 ,172.84 | 2 37.54\nRow 16: Tax expense: 12 | - | - | - | -\nRow 17: Current tax Adjustment of tax relating to earlier periods Deferred tax | - | 3 04.51 | 3 08.56 | 6 3.56 ( 0.06) 0 .52\nRow 18: - | - | 3 .62 | ( 2.02) | -\nRow 19: - | - | ( 4.13) | ( 4.51) | -\nRow 20: Total tax expense (IV) | - | 3 04.00 | 3 02.03 | 6 4.02\nRow 21: Restated profit for the year [V] (III-IV) | - | 8 62.22 | 8 70.81 | 1 73.52\nRow 22: RESTATED OTHER COMPREHENSIVE INCOME Items that will not to be reclassified to profit or loss: | - | - | - | -\nRow 23: Remeasurement of gains (losses) on defined benefit plans Income tax effect | - | 0 .91 | 5 .71 | 0 .55 ( 0.14)\nRow 24: - | - | ( 0.23) | ( 1.44) | -\nRow 25: Restated other comprehensive income for the year, net of tax [VI] | - | 0 .68 | 4 .27 | 0 .41\nRow 26: Restated total comprehensive income for the year (V+VI) | - | 8 62.90 | 8 75.08 | 1 73.93\nRow 27: Restated profit for the year attributable to : | - | - | - | -\nRow 28: Equity holder of parent Non-controlling interest Restated other comprehensive income for the year attributable to : | - | 8 63.84 ( 1.62) | 8 73.46 ( 2.65) | 1 73.52 -\nRow 29: Equity holder of parent Non-controlling interest Restated total comprehensive income for the year attributable to : | - | 0 .68 - | 4 .27 - | 0 .41 -\nRow 30: Equity holder of parent Non-controlling interest Earnings per equity share 29 | - | 8 64.52 ( 1.62) | 8 77.73 ( 2.65) | 1 73.93 -\nRow 31: Basic (face value of \u20b910 each) in \u20b9 3 .88 3 .92 0 .78 Diluted (face value of \u20b910 each) in \u20b9 3 .88 3 .92 0 .78 | - | 3 .88 3 .88 | 3 .92 3 .92 | -\nRow 32: Summary of Material Accounting Policies Annexure V For and on behalf of the board of directors of Maharashtra Oil Extractions Limited Notes forming part of the Restated Financial Information Annexure VI In terms of our report attached of even date For M B Agrawal & Co Chartered Accountants F.R.No. : 100137W CA Leena Harshal Agrawal Manoj Basantlal Agrawal Alkesh Basantlal Agrawal Partner Managing Director Whole Time Director Membership No. 061362 Din No. 00140749 Din No. 00147045 UDIN: 26061362CWRMDZ7651 Sanjay Bhagirath Agrawal Jyoti Shah Chief Financial Officer Company Secretary Membership No.: A64468 Place: Dhule Place: Dhule Date: September 07, 2026 Date: September 07, 2026 | - | - | - | -",
+        "rrf_score": 0.015151515151515152,
+        "rerank_score": 0.73514723777771
+      },
+      {
+        "source_id": "moe_p86_t1",
+        "page": 86,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > COMPREHENSIVE INCOME)",
+        "text": "Headers: Particulars | - | Fiscal 2026 | - | - | Fiscal 2025 | ) | - | Fiscal 2024 | -\nRow 1: - | - | (Consolidated) | - | - | (Consolidated | - | - | (Standalone) | -\nRow 2: REVENUE | - | - | - | - | - | - | - | - | -\nRow 3: Revenue from operations (net) | 22,115.37 | - | - | 18,832.99 | - | - | 17,449.01 | - | -\nRow 4: Other income | 55.57 | - | - | 139.26 | - | - | 220.14 | - | -\nRow 5: Total revenue (I) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 6: EXPENSES | - | - | - | - | - | - | - | - | -\nRow 7: Purchase of stock-in-trade | 3,733.80 | - | - | 2,339.46 | - | - | 2,178.29 | - | -\nRow 8: Cost of materials consumed | 16,197.23 | - | - | 14,453.88 | - | - | 14,097.04 | - | -\nRow 9: Changes in inventories of finished goods and stock in trade | (69.47) | - | - | (34.36) | - | - | (4.98) | - | -\nRow 10: Employee benefits expense | 224.05 | - | - | 198.14 | - | - | 193.02 | - | -\nRow 11: Finance costs | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -\nRow 12: Depreciation and amortisation expense | 111.10 | - | - | 99.69 | - | - | 50.87 | - | -\nRow 13: Other expenses | 708.41 | - | - | 619.14 | - | - | 526.96 | - | -\nRow 14: Total expenses (II) | 21,004.72 | - | - | 17,799.41 | - | - | 17,431.61 | - | -\nRow 15: Restated profit before tax (III) (I-II) | 1,166.22 | - | - | 1,172.84 | - | - | 237.54 | - | -\nRow 16: Tax expense | - | - | - | - | - | - | - | - | -\nRow 17: Current tax | 304.51 | - | - | 308.56 | - | - | 63.56 | - | -\nRow 18: Adjustment of tax relating to earlier periods | 3.62 | - | - | (2.02) | - | - | (0.06) | - | -\nRow 19: Deferred tax | (4.13) | - | - | (4.51) | - | - | 0.52 | - | -\nRow 20: Total tax expenses (IV) | 304.00 | - | - | 302.03 | - | - | 64.02 | - | -\nRow 21: Restated profit for the period/year (V) (III-IV) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 22: RESTATED OTHER COMPREHENSIVE INCOME | - | - | - | - | - | - | - | - | -\nRow 23: Items that will not be reclassified to profit or loss | - | - | - | - | - | - | - | - | -\nRow 24: Remeasurement of gains (losses) on defined benefit plans | 0.91 | - | - | 5.71 | - | - | 0.55 | - | -\nRow 25: Income tax effect | (0.23) | - | - | (1.44) | - | - | (0.14) | - | -\nRow 26: Restated other comprehensive income for the period/year, net of tax (VI) | 0.68 | - | - | 4.27 | - | - | 0.41 | - | -\nRow 27: Restated total comprehensive income for the period/year (V+VI) | 862.90 | - | - | 875.08 | - | - | 173.93 | - | -\nRow 28: Restated profit for the year attributable to: | - | - | - | - | - | - | - | - | -\nRow 29: Equity holder of parent | 863.84 | - | - | 873.46 | - | - | 173.52 | - | -\nRow 30: Non-controlling interest | (1.62) | - | - | (2.65) | - | - | - | - | -\nRow 31: Restated other comprehensive income for the period/year attributable to: | - | - | - | - | - | - | - | - | -\nRow 32: Equity holder of parent | 0.68 | - | - | 4.27 | - | - | 0.41 | - | -\nRow 33: Non-controlling interest | - | - | - | - | - | - | - | - | -\nRow 34: Restated total comprehensive income for the year attributable to: | - | - | - | - | - | - | - | - | -\nRow 35: Equity holder of parent | 864.52 | - | - | 877.73 | - | - | 173.93 | - | -\nRow 36: Non-controlling interest | (1.62) | - | - | (2.65) | - | - | - | - | -\nRow 37: Earning per equity share | - | - | - | - | - | - | - | - | -\nRow 38: Basic (\u20b9) | 3.88 | - | - | 3.92 | - | - | 0.78 | - | -\nRow 39: Diluted (\u20b9) | 3.88 | - | - | 3.92 | - | - | 0.78 | - | -",
+        "rrf_score": 0.014925373134328358,
+        "rerank_score": 0.72466641664505
+      },
+      {
+        "source_id": "drhp_p463_c1",
+        "page": 463,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS",
+        "text": "459 \nOUR RESULTS OF OPERATIONS \n \nThe following tables set forth our selected financial data from our restated statement of profit and loss for Fiscals 2026, 2025 and 2024, the components of which are also \nexpressed as a percentage of total revenue for such years: \n \nParticulars \nFiscal \n2026 \n2025 \n2024 \nAmount \n(in \u20b9 million) \nPercentage of \ntotal revenue \n(%) \nAmount \n(in \u20b9 \nmillion) \nPercentage of \ntotal revenue \n(%) \nAmount \n(in \u20b9 \nmillion) \nPercentage of \ntotal revenue \n(%) \nRevenue \n \nRevenue from operations (net) \n22,115.37 \n99.75 \n18,832.99 \n99.27 \n17,449.01 \n98.75 \nOther income \n55.57 \n0.25 \n139.26 \n0.73 \n220.14 \n1.25 \nTotal revenue (I) \n22,170.94 \n100.00 \n18,972.25 \n100.00 \n17,669.15 \n100.00 \n \nExpenses \n \nPurchase of stock-in-trade \n3,733.80 \n16.84 \n2,339.46 \n12.33 \n2,178.29 \n12.33 \nCost of materials consumed \n16,197.23 \n73.06 \n14,453.88 \n76.18 \n14,097.04 \n79.78 \nChanges in inventories of finished goods and stock in trade \n(69.47) \n(0.31) \n(34.36) \n(0.18) \n(4.98) \n(0.03)",
+        "rrf_score": 0.01639344262295082,
+        "rerank_score": 0.9854475855827332
+      },
+      {
+        "source_id": "drhp_p464_c1",
+        "page": 464,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS",
+        "text": "460 \nFiscal 2026 compared to Fiscal 2025 \n \nTotal revenue \n \nOur total revenue increased by \u20b9 3,198.69 million i.e. 16.86% to \u20b9 22,170.94 million in Fiscal 2026 from \u20b9 18,972.25 million \nin Fiscal 2025. This increase was primarily attributable to the following: \n \nRevenue from operations (net) \n \nOur revenue from operations (net) increased by \u20b9 3,282.38 million i.e. 17.43% to \u20b9 22,115.37 million in Fiscal 2026 from \u20b9 \n18,832.99 million in Fiscal 2025. This increase was attributable to the growth in sale of products to \u20b9 22,059.88 million in \nFiscal 2026 from \u20b9 18,815.62 million in Fiscal 2025, comprising an increase in domestic sales to \u20b9 19,497.68 million from \u20b9 \n16,463.79 million and in export sales to \u20b9 2,562.20 million from \u20b9 2,351.83 million, together with an increase in export \nbenefits and other government incentives to \u20b9 55.49 million from \u20b9 17.37 million.  \n \nOther income",
+        "rrf_score": 0.012987012987012988,
+        "rerank_score": 0.955189049243927
+      }
+    ],
+    "passed": true
+  },
+  {
+    "id": "TEST 2",
+    "query": "What was the revenue growth from FY2025 to FY2026?",
+    "route": "financial",
+    "answer": "**Growth / Change Query**\n\nReport:\n- **Underlying Values:**\n  - FY2025 Revenue from Operations: \u20b9\u202f18,832.99\u202fmillion\u202f[moe_p86_t1, Page\u202f86]\n  - FY2026 Revenue from Operations: \u20b9\u202f22,115.37\u202fmillion\u202f[moe_p444_t1, Page\u202f444]\n- **Calculated Change:**\n  - Absolute Change: \u20b9\u202f3,282.38\u202fmillion\n  - Percentage Growth: **+17.43\u202f%**\n  - Formula: \\(((22,115.37 - 18,832.99) / 18,832.99) \u00d7 100 = +17.43\u202f%\\)\n\n*The calculation is derived from the cited DRHP values.*\n\n### Sources Cited\n| Source ID | Page | Description |\n|-----------|------|-------------|\n| moe_p86_t1 | 86 | FY2025 Revenue from Operations |\n| moe_p444_t1 | 444 | FY2026 Revenue from Operations |",
+    "sources": [
+      {
+        "source_id": "moe_p56_t1",
+        "page": 56,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS",
+        "text": "Headers: Name of the | Fiscal 2026 | - | Fiscal 2025 | - | Fiscal 2024 | -\nRow 1: countries | Amount | Percentage | Amount | Percentage | Amount | Percentage\nRow 2: - | (in \u20b9 million) | of revenue | (in \u20b9 million) | of revenue | (in \u20b9 million) | of revenue\nRow 3: - | - | from exports | - | from exports | - | from exports\nRow 4: - | - | (%) | - | (%) | - | (%)\nRow 5: South Korea | 1,427.57 | 55.72 | 1,183.16 | 50.31 | 1,203.79 | 53.90\nRow 6: Japan | 309.55 | 12.08 | 385.25 | 16.38 | 341.08 | 15.27\nRow 7: Taiwan | 247.08 | 9.64 | 342.65 | 14.57 | 268.50 | 12.02\nRow 8: Malaysia | 193.63 | 7.56 | 134.00 | 5.70 | 69.43 | 3.11\nRow 9: Sri Lanka | 156.18 | 6.10 | 71.37 | 3.03 | 75.59 | 3.38\nRow 10: Vietnam | 94.46 | 3.69 | 83.06 | 3.53 | 91.33 | 4.09\nRow 11: Netherlands | 56.57 | 2.21 | 20.03 | 0.85 | 17.96 | 0.80\nRow 12: Indonesia | 26.39 | 1.03 | 26.23 | 1.12 | 2.29 | 0.10\nRow 13: Kenya | 21.85 | 0.85 | 28.20 | 1.20 | - | -\nRow 14: Other countries* | 28.92 | 1.12 | 77.88 | 3.31 | 163.45 | 7.33\nRow 15: Total exports revenue | 2,562.20 | 100.00 | 2,351.83 | 100.00 | 2,233.42 | 100.00",
+        "rrf_score": 0.013333333333333334,
+        "rerank_score": 0.9363657832145691
+      },
+      {
+        "source_id": "moe_p264_t2",
+        "page": 264,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION IV \u2013 ABOUT OUR COMPANY > OVERVIEW",
+        "text": "Headers: Business operations | - | Fiscal 2026 | - | - | - | - | - | Fiscal 2025 | - | - | Fiscal 2024 | - | - | - | -\nRow 1: - | - | Sale of | - | - | Percentage | - | - | Sale of Products (in \u20b9 million) | - | Percentage of Sale of Products (%) | Sale of Products (in \u20b9 million) | - | - | Percentage | -\nRow 2: - | - | Products (in | - | - | of Sale of | - | - | - | - | - | - | - | - | of Sale of | -\nRow 3: - | - | \u20b9 million) | - | - | Products (%) | - | - | - | - | - | - | - | - | Products (%) | -\nRow 4: Revenue from B2B2C operations | 16,141.27 | - | - | 73.17 | - | - | 14,166.65 | - | 75.29 | - | 13,470.00 | - | 77.27 | - | -\nRow 5: Revenue from B2B operations | 5,918.61 | - | - | 26.83 | - | - | 4,648.97 | - | 24.71 | - | 3,963.10 | - | 22.73 | - | -\nRow 6: Total | 22,059.88 | - | - | 100.00 | - | - | 18,815.62 | - | 100.00 | - | 17,433.10 | - | 100.00 | - | -",
+        "rrf_score": 0.012658227848101266,
+        "rerank_score": 0.9207519292831421
+      },
+      {
+        "source_id": "moe_p444_t1",
+        "page": 444,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | 2025 | - | - | 2024 | -\nRow 2: Revenue from Operations (A) | 22,115.37 | - | - | 18,832.99 | - | - | 17,449.01 | - | -\nRow 3: Other Income (B) | 55.57 | - | - | 139.26 | - | - | 220.14 | - | -\nRow 4: Total Income (C) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 5: Restated Profit / (Loss) for the period/ fiscal year (D) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 6: Finance costs (E) | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -\nRow 7: Total tax expense (F) | 304.00 | - | - | 302.03 | - | - | 64.02 | - | -\nRow 8: Depreciation/Amortization/ Impairment expense (G) | 111.10 | - | - | 99.69 | - | - | 50.87 | - | -\nRow 9: EBITDA [H= (D+E+F+G-B)] | 1,321.35 | - | - | 1,256.73 | - | - | 458.68 | - | -\nRow 10: EBITDA Margin (%) (I=H/A) | 5.97 | - | - | 6.67 | - | - | 2.63 | - | -",
+        "rrf_score": 0.014285714285714285,
+        "rerank_score": 0.9189777374267578
+      },
+      {
+        "source_id": "moe_p86_t1",
+        "page": 86,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > COMPREHENSIVE INCOME)",
+        "text": "Headers: Particulars | - | Fiscal 2026 | - | - | Fiscal 2025 | ) | - | Fiscal 2024 | -\nRow 1: - | - | (Consolidated) | - | - | (Consolidated | - | - | (Standalone) | -\nRow 2: REVENUE | - | - | - | - | - | - | - | - | -\nRow 3: Revenue from operations (net) | 22,115.37 | - | - | 18,832.99 | - | - | 17,449.01 | - | -\nRow 4: Other income | 55.57 | - | - | 139.26 | - | - | 220.14 | - | -\nRow 5: Total revenue (I) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 6: EXPENSES | - | - | - | - | - | - | - | - | -\nRow 7: Purchase of stock-in-trade | 3,733.80 | - | - | 2,339.46 | - | - | 2,178.29 | - | -\nRow 8: Cost of materials consumed | 16,197.23 | - | - | 14,453.88 | - | - | 14,097.04 | - | -\nRow 9: Changes in inventories of finished goods and stock in trade | (69.47) | - | - | (34.36) | - | - | (4.98) | - | -\nRow 10: Employee benefits expense | 224.05 | - | - | 198.14 | - | - | 193.02 | - | -\nRow 11: Finance costs | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -\nRow 12: Depreciation and amortisation expense | 111.10 | - | - | 99.69 | - | - | 50.87 | - | -\nRow 13: Other expenses | 708.41 | - | - | 619.14 | - | - | 526.96 | - | -\nRow 14: Total expenses (II) | 21,004.72 | - | - | 17,799.41 | - | - | 17,431.61 | - | -\nRow 15: Restated profit before tax (III) (I-II) | 1,166.22 | - | - | 1,172.84 | - | - | 237.54 | - | -\nRow 16: Tax expense | - | - | - | - | - | - | - | - | -\nRow 17: Current tax | 304.51 | - | - | 308.56 | - | - | 63.56 | - | -\nRow 18: Adjustment of tax relating to earlier periods | 3.62 | - | - | (2.02) | - | - | (0.06) | - | -\nRow 19: Deferred tax | (4.13) | - | - | (4.51) | - | - | 0.52 | - | -\nRow 20: Total tax expenses (IV) | 304.00 | - | - | 302.03 | - | - | 64.02 | - | -\nRow 21: Restated profit for the period/year (V) (III-IV) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 22: RESTATED OTHER COMPREHENSIVE INCOME | - | - | - | - | - | - | - | - | -\nRow 23: Items that will not be reclassified to profit or loss | - | - | - | - | - | - | - | - | -\nRow 24: Remeasurement of gains (losses) on defined benefit plans | 0.91 | - | - | 5.71 | - | - | 0.55 | - | -\nRow 25: Income tax effect | (0.23) | - | - | (1.44) | - | - | (0.14) | - | -\nRow 26: Restated other comprehensive income for the period/year, net of tax (VI) | 0.68 | - | - | 4.27 | - | - | 0.41 | - | -\nRow 27: Restated total comprehensive income for the period/year (V+VI) | 862.90 | - | - | 875.08 | - | - | 173.93 | - | -\nRow 28: Restated profit for the year attributable to: | - | - | - | - | - | - | - | - | -\nRow 29: Equity holder of parent | 863.84 | - | - | 873.46 | - | - | 173.52 | - | -\nRow 30: Non-controlling interest | (1.62) | - | - | (2.65) | - | - | - | - | -\nRow 31: Restated other comprehensive income for the period/year attributable to: | - | - | - | - | - | - | - | - | -\nRow 32: Equity holder of parent | 0.68 | - | - | 4.27 | - | - | 0.41 | - | -\nRow 33: Non-controlling interest | - | - | - | - | - | - | - | - | -\nRow 34: Restated total comprehensive income for the year attributable to: | - | - | - | - | - | - | - | - | -\nRow 35: Equity holder of parent | 864.52 | - | - | 877.73 | - | - | 173.93 | - | -\nRow 36: Non-controlling interest | (1.62) | - | - | (2.65) | - | - | - | - | -\nRow 37: Earning per equity share | - | - | - | - | - | - | - | - | -\nRow 38: Basic (\u20b9) | 3.88 | - | - | 3.92 | - | - | 0.78 | - | -\nRow 39: Diluted (\u20b9) | 3.88 | - | - | 3.92 | - | - | 0.78 | - | -",
+        "rrf_score": 0.014705882352941176,
+        "rerank_score": 0.900833249092102
+      },
+      {
+        "source_id": "drhp_p465_c3",
+        "page": 465,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS",
+        "text": "adjustment of tax relating to earlier periods increased to \u20b9 3.62 million in Fiscal 2026 compared to \u20b9 (2.02) million in Fiscal \n2025 on account of additional tax demands pertaining to earlier assessment years. Additionally, deferred tax increased to \u20b9 \n(4.13) million in Fiscal 2026 compared to \u20b9 (4.51) million in Fiscal 2025 due to the increase in deferred tax asset (net) to \u20b9 \n13.81 million as at March 31, 2026 from \u20b9 9.91 million as at March 31, 2025. \n \nProfit after tax \n \nFor the various reasons discussed above, we recorded a profit for the year of \u20b9 862.22 million in Fiscal 2026 compared to \nprofit for the year of \u20b9 870.81 million in Fiscal 2025. \n \nFiscal 2025 compared to Fiscal 2024 \n \nTotal revenue \n \nOur total revenue increased by \u20b9 1,303.10 million i.e. 7.38% to \u20b9 18,972.25 million in Fiscal 2025 from \u20b9 17,669.15 million \nin Fiscal 2024. This increase was primarily attributable to the following: \n \nRevenue from operations (net)",
+        "rrf_score": 0.01639344262295082,
+        "rerank_score": 0.9981022477149963
+      },
+      {
+        "source_id": "drhp_p464_c1",
+        "page": 464,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS",
+        "text": "460 \nFiscal 2026 compared to Fiscal 2025 \n \nTotal revenue \n \nOur total revenue increased by \u20b9 3,198.69 million i.e. 16.86% to \u20b9 22,170.94 million in Fiscal 2026 from \u20b9 18,972.25 million \nin Fiscal 2025. This increase was primarily attributable to the following: \n \nRevenue from operations (net) \n \nOur revenue from operations (net) increased by \u20b9 3,282.38 million i.e. 17.43% to \u20b9 22,115.37 million in Fiscal 2026 from \u20b9 \n18,832.99 million in Fiscal 2025. This increase was attributable to the growth in sale of products to \u20b9 22,059.88 million in \nFiscal 2026 from \u20b9 18,815.62 million in Fiscal 2025, comprising an increase in domestic sales to \u20b9 19,497.68 million from \u20b9 \n16,463.79 million and in export sales to \u20b9 2,562.20 million from \u20b9 2,351.83 million, together with an increase in export \nbenefits and other government incentives to \u20b9 55.49 million from \u20b9 17.37 million.  \n \nOther income",
+        "rrf_score": 0.015873015873015872,
+        "rerank_score": 0.9970740079879761
+      }
+    ],
+    "passed": true
+  },
+  {
+    "id": "TEST 3",
+    "query": "What was the EBITDA margin in FY2026?",
+    "route": "financial",
+    "answer": "**Report**\n\n- **Metric:** EBITDA Margin  \n- **Period:** FY2026  \n- **Value:** 5.97%  \n- **Source:** [moe_p444_t1, Page\u202f444]  \n\n**Note:**  \nThe calculation is derived from the cited DRHP values.  \n\n---\n\n### Sources Cited\n\n| Source ID | Page | Description |\n|-----------|------|-------------|\n| moe_p444_t1 | 444 | EBITDA margin table (EBITDA Margin (%) = 5.97) |\n| drhp_p444_c3 | 444 | Textual explanation of EBITDA margin calculation and value (5.97) |",
+    "sources": [
+      {
+        "source_id": "moe_p444_t1",
+        "page": 444,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | 2025 | - | - | 2024 | -\nRow 2: Revenue from Operations (A) | 22,115.37 | - | - | 18,832.99 | - | - | 17,449.01 | - | -\nRow 3: Other Income (B) | 55.57 | - | - | 139.26 | - | - | 220.14 | - | -\nRow 4: Total Income (C) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 5: Restated Profit / (Loss) for the period/ fiscal year (D) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 6: Finance costs (E) | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -\nRow 7: Total tax expense (F) | 304.00 | - | - | 302.03 | - | - | 64.02 | - | -\nRow 8: Depreciation/Amortization/ Impairment expense (G) | 111.10 | - | - | 99.69 | - | - | 50.87 | - | -\nRow 9: EBITDA [H= (D+E+F+G-B)] | 1,321.35 | - | - | 1,256.73 | - | - | 458.68 | - | -\nRow 10: EBITDA Margin (%) (I=H/A) | 5.97 | - | - | 6.67 | - | - | 2.63 | - | -",
+        "rrf_score": 0.015873015873015872,
+        "rerank_score": 0.993648111820221
+      },
+      {
+        "source_id": "moe_p444_t2",
+        "page": 444,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | 2025 | - | - | 2024 | -\nRow 2: Restated Profit for the period/ fiscal year (A) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 3: Total Income (B) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 4: PAT Margin (%) (C=A/B) | 3.89 | - | - | 4.59 | - | - | 0.98 | - | -",
+        "rrf_score": 0.015384615384615385,
+        "rerank_score": 0.9739096164703369
+      },
+      {
+        "source_id": "moe_p373_t1",
+        "page": 373,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > MAHARASHTRA OIL EXTRACTIONS LIMITED",
+        "text": "Headers: Particulars | Notes | For the year ended March 31, 2026 | For the year ended March 31, 2025 | For the year ended March 31, 2024\nRow 1: - | - | Consolidated | Consolidated | Standalone\nRow 2: REVENUE Revenue from operations (net) 21 Other income 22 | - | - | - | 1 7,449.01 2 20.14\nRow 3: - | - | 2 2,115.37 | 1 8,832.99 | -\nRow 4: - | - | 5 5.57 | 1 39.26 | -\nRow 5: Total revenue (I) | - | 2 2,170.94 | 1 8,972.25 | 1 7,669.15\nRow 6: EXPENSES Purchase of Stock-in-Trade Cost of materials consumed 23 Changes in inventories of finished goods and stock in trade 24 Employee benefits expense 25 Finance costs 26 Depreciation and amortisation expense 27 Other expenses 28 | - | - | - | 2 ,178.29 1 4,097.04 ( 4.98) 1 93.02 3 90.41 5 0.87 5 26.96\nRow 7: - | - | 3 ,733.80 | 2 ,339.46 | -\nRow 8: - | - | 1 6,197.23 | 1 4,453.88 | -\nRow 9: - | - | ( 69.47) | ( 34.36) | -\nRow 10: - | - | 2 24.05 | 1 98.14 | -\nRow 11: - | - | 9 9.60 | 1 23.46 | -\nRow 12: - | - | 1 11.10 | 9 9.69 | -\nRow 13: - | - | 7 08.41 | 6 19.14 | -\nRow 14: Total expenses (II) | - | 2 1,004.72 | 1 7,799.41 | 1 7,431.61\nRow 15: Restated profit before tax [III] (I-II) | - | 1 ,166.22 | 1 ,172.84 | 2 37.54\nRow 16: Tax expense: 12 | - | - | - | -\nRow 17: Current tax Adjustment of tax relating to earlier periods Deferred tax | - | 3 04.51 | 3 08.56 | 6 3.56 ( 0.06) 0 .52\nRow 18: - | - | 3 .62 | ( 2.02) | -\nRow 19: - | - | ( 4.13) | ( 4.51) | -\nRow 20: Total tax expense (IV) | - | 3 04.00 | 3 02.03 | 6 4.02\nRow 21: Restated profit for the year [V] (III-IV) | - | 8 62.22 | 8 70.81 | 1 73.52\nRow 22: RESTATED OTHER COMPREHENSIVE INCOME Items that will not to be reclassified to profit or loss: | - | - | - | -\nRow 23: Remeasurement of gains (losses) on defined benefit plans Income tax effect | - | 0 .91 | 5 .71 | 0 .55 ( 0.14)\nRow 24: - | - | ( 0.23) | ( 1.44) | -\nRow 25: Restated other comprehensive income for the year, net of tax [VI] | - | 0 .68 | 4 .27 | 0 .41\nRow 26: Restated total comprehensive income for the year (V+VI) | - | 8 62.90 | 8 75.08 | 1 73.93\nRow 27: Restated profit for the year attributable to : | - | - | - | -\nRow 28: Equity holder of parent Non-controlling interest Restated other comprehensive income for the year attributable to : | - | 8 63.84 ( 1.62) | 8 73.46 ( 2.65) | 1 73.52 -\nRow 29: Equity holder of parent Non-controlling interest Restated total comprehensive income for the year attributable to : | - | 0 .68 - | 4 .27 - | 0 .41 -\nRow 30: Equity holder of parent Non-controlling interest Earnings per equity share 29 | - | 8 64.52 ( 1.62) | 8 77.73 ( 2.65) | 1 73.93 -\nRow 31: Basic (face value of \u20b910 each) in \u20b9 3 .88 3 .92 0 .78 Diluted (face value of \u20b910 each) in \u20b9 3 .88 3 .92 0 .78 | - | 3 .88 3 .88 | 3 .92 3 .92 | -\nRow 32: Summary of Material Accounting Policies Annexure V For and on behalf of the board of directors of Maharashtra Oil Extractions Limited Notes forming part of the Restated Financial Information Annexure VI In terms of our report attached of even date For M B Agrawal & Co Chartered Accountants F.R.No. : 100137W CA Leena Harshal Agrawal Manoj Basantlal Agrawal Alkesh Basantlal Agrawal Partner Managing Director Whole Time Director Membership No. 061362 Din No. 00140749 Din No. 00147045 UDIN: 26061362CWRMDZ7651 Sanjay Bhagirath Agrawal Jyoti Shah Chief Financial Officer Company Secretary Membership No.: A64468 Place: Dhule Place: Dhule Date: September 07, 2026 Date: September 07, 2026 | - | - | - | -",
+        "rrf_score": 0.014925373134328358,
+        "rerank_score": 0.8818343281745911
+      },
+      {
+        "source_id": "moe_p463_t1",
+        "page": 463,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | - | - | 2025 | - | - | - | - | - | 2024 | - | - | - | -\nRow 2: - | Amount (in \u20b9 million) | Amount | - | Percentage of | - | - | Amount | - | - | Percentage of | - | - | Amount | - | - | Percentage of | -\nRow 3: - | - | (in \u20b9 million) | - | total revenue | - | - | (in \u20b9 | - | - | total revenue | - | - | (in \u20b9 | - | - | total revenue | -\nRow 4: - | - | - | - | (%) | - | - | million) | - | - | (%) | - | - | million) | - | - | (%) | -\nRow 5: Revenue | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -\nRow 6: Revenue from operations (net) | 22,115.37 | - | 99.75 | - | - | 18,832.99 | - | - | 99.27 | - | - | 17,449.01 | - | - | 98.75 | - | -\nRow 7: Other income | 55.57 | - | 0.25 | - | - | 139.26 | - | - | 0.73 | - | - | 220.14 | - | - | 1.25 | - | -\nRow 8: Total revenue (I) | 22,170.94 | - | 100.00 | - | - | 18,972.25 | - | - | 100.00 | - | - | 17,669.15 | - | - | 100.00 | - | -\nRow 9: Expenses | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -\nRow 10: Purchase of stock-in-trade | 3,733.80 | - | 16.84 | - | - | 2,339.46 | - | - | 12.33 | - | - | 2,178.29 | - | - | 12.33 | - | -\nRow 11: Cost of materials consumed | 16,197.23 | - | 73.06 | - | - | 14,453.88 | - | - | 76.18 | - | - | 14,097.04 | - | - | 79.78 | - | -\nRow 12: Changes in inventories of finished goods and stock in trade | (69.47) | - | (0.31) | - | - | (34.36) | - | - | (0.18) | - | - | (4.98) | - | - | (0.03) | - | -\nRow 13: Employee benefits expense | 224.05 | - | 1.01 | - | - | 198.14 | - | - | 1.04 | - | - | 193.02 | - | - | 1.09 | - | -\nRow 14: Finance costs | 99.60 | - | 0.45 | - | - | 123.46 | - | - | 0.65 | - | - | 390.41 | - | - | 2.21 | - | -\nRow 15: Depreciation and amortisation expense | 111.10 | - | 0.50 | - | - | 99.69 | - | - | 0.53 | - | - | 50.87 | - | - | 0.29 | - | -\nRow 16: Other expenses | 708.41 | - | 3.20 | - | - | 619.14 | - | - | 3.26 | - | - | 526.96 | - | - | 2.98 | - | -\nRow 17: Total expenses (II) | 21,004.72 | - | 94.74 | - | - | 17,799.41 | - | - | 93.82 | - | - | 17,431.61 | - | - | 98.66 | - | -\nRow 18: Restated profit before tax [III] (I \u2013 II) | 1,166.22 | - | 5.26 | - | - | 1,172.84 | - | - | 6.18 | - | - | 237.54 | - | - | 1.34 | - | -\nRow 19: Tax expense | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | -\nRow 20: Current tax | 304.51 | - | 1.37 | - | - | 308.56 | - | - | 1.63 | - | - | 63.56 | - | - | 0.36 | - | -\nRow 21: Adjustment of tax relating to earlier periods | 3.62 | - | 0.02 | - | - | (2.02) | - | - | (0.01) | - | - | (0.06) | - | - | Negligible | - | -\nRow 22: Deferred tax | (4.13) | - | (0.02) | - | - | (4.51) | - | - | (0.02) | - | - | 0.52 | - | - | Negligible | - | -\nRow 23: Total tax expense (IV) | 304.00 | - | 1.37 | - | - | 302.03 | - | - | 1.59 | - | - | 64.02 | - | - | 0.36 | - | -\nRow 24: Restated profit for the period/year [V] (III \u2013 IV) | 862.22 | - | 3.89 | - | - | 870.81 | - | - | 4.59 | - | - | 173.52 | - | - | 0.98 | - | -",
+        "rrf_score": 0.0125,
+        "rerank_score": 0.8350756764411926
+      },
+      {
+        "source_id": "drhp_p444_c3",
+        "page": 444,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "restated basis, including a reconciliation of each such financial measure to the Restated Financial Information. \nEBITDA is calculated as restated profit / (loss) for the period / fiscal year, plus finance costs, total taxes, and \ndepreciation and amortisation expense less other income. EBITDA margin is calculated as percentage derived \nby dividing EBITDA by Revenue from Operations: \n(in \u20b9 million, unless otherwise indicated) \nParticulars \nFiscal \n2026 \n2025 \n2024 \nRevenue from Operations (A) \n22,115.37 \n18,832.99 \n17,449.01 \nOther Income (B) \n55.57 \n139.26 \n220.14 \nTotal Income (C) \n22,170.94 \n18,972.25 \n17,669.15 \nRestated Profit / (Loss) for the period/ fiscal year (D) \n862.22 \n870.81 \n173.52 \nFinance costs (E) \n99.60 \n123.46 \n390.41 \nTotal tax expense (F) \n304.00 \n302.03 \n64.02 \nDepreciation/Amortization/ Impairment expense (G) \n111.10 \n99.69 \n50.87 \nEBITDA [H= (D+E+F+G-B)] \n1,321.35 \n1,256.73 \n458.68 \nEBITDA Margin (%) (I=H/A) \n5.97 \n6.67 \n2.63",
+        "rrf_score": 0.015625,
+        "rerank_score": 0.9988607168197632
+      },
+      {
+        "source_id": "drhp_p443_c2",
+        "page": 443,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "6 \nEPS (basic and diluted) (6) \n\u20b9 \n3.88 \n3.92 \n0.78 \n7 \nTotal borrowings(7) \nin \u20b9 \nmillion \n      2,853.88  \n        1,571.32  \n    4,781.59  \n8 \nAdjusted Net Debt to Adjusted \nEquity(8) \nTimes \n0.55 \n0.31 \n0.56 \n9 \nInterest coverage ratio(9) \nTimes \n12.71 \n10.50 \n1.61 \n10 \nReturn on Net Worth (RONW)(10) \n% \n20.63 \n25.98 \n5.95 \n11 \nReturn on Capital Employed \n(ROCE)(11) \n% \n16.88 \n24.20 \n8.07 \n12 \nTrade Receivable Days(12) \nDays \n              14  \n              13  \n             18  \n13 \nInventory Days(13) \nDays \n              66  \n             65  \n             69  \n14 \nWorking capital Days(14) \nDays \n              76 \n              73  \n             82  \n15 \nNet Asset Value per Equity Share (15) \nIn \u20b9 \n20.68 \n16.81 \n13.27 \nNotes:  \n1. \nRevenue from operations means the revenue from operations as appearing in the Restated Financial Information. \n2. \nEBITDA is calculated as restated profit / (loss) for the fiscal year, plus finance costs, total taxes, and depreciation and",
+        "rrf_score": 0.0125,
+        "rerank_score": 0.984093427658081
+      }
+    ],
+    "passed": true
+  },
+  {
+    "id": "TEST 4",
+    "query": "How did revenue change over FY2024, FY2025 and FY2026?",
+    "route": "financial",
+    "answer": "**Growth / Change Query**\n\nReport:  \n**Underlying Values**  \n- FY2024 Revenue from Operations: **\u20b9\u202f17,449.01\u202fmillion** [moe_p86_t1, Page\u202f86]  \n- FY2025 Revenue from Operations: **\u20b9\u202f18,832.99\u202fmillion** [moe_p86_t1, Page\u202f86]  \n- FY2026 Revenue from Operations: **\u20b9\u202f22,115.37\u202fmillion** [moe_p86_t1, Page\u202f86]  \n\n**Calculated Change**  \n- Absolute change FY2024\u202f\u2192\u202fFY2025: **+\u20b9\u202f1,383.98\u202fmillion**  \n- Percentage growth FY2024\u202f\u2192\u202fFY2025: **+7.93\u202f%**  \n- Absolute change FY2025\u202f\u2192\u202fFY2026: **+\u20b9\u202f3,282.38\u202fmillion**  \n- Percentage growth FY2025\u202f\u2192\u202fFY2026: **+17.43\u202f%**  \n- Overall change FY2024\u202f\u2192\u202fFY2026: **+\u20b9\u202f4,666.36\u202fmillion**  \n- Overall percentage growth FY2024\u202f\u2192\u202fFY2026: **+26.74\u202f%**  \n\n**Formula**  \n\\[\n\\text{Percentage Growth} = \\frac{\\text{Target} - \\text{Base}}{\\text{Base}} \\times 100\n\\]\n\n**Statement**  \nThe calculation is derived from the cited DRHP values.  \n\n---\n\n### Sources Cited\n\n| Source ID | Page | Description |\n|-----------|------|-------------|\n| moe_p86_t1 | 86 | Revenue from Operations figures for FY2024\u2011FY2026 |\n| moe_p86_t1 | 86 | Same table provides all three fiscal year values |\n| moe_p86_t1 | 86 | Source for absolute and percentage changes (derived)",
+    "sources": [
+      {
+        "source_id": "moe_p86_t1",
+        "page": 86,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > COMPREHENSIVE INCOME)",
+        "text": "Headers: Particulars | - | Fiscal 2026 | - | - | Fiscal 2025 | ) | - | Fiscal 2024 | -\nRow 1: - | - | (Consolidated) | - | - | (Consolidated | - | - | (Standalone) | -\nRow 2: REVENUE | - | - | - | - | - | - | - | - | -\nRow 3: Revenue from operations (net) | 22,115.37 | - | - | 18,832.99 | - | - | 17,449.01 | - | -\nRow 4: Other income | 55.57 | - | - | 139.26 | - | - | 220.14 | - | -\nRow 5: Total revenue (I) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 6: EXPENSES | - | - | - | - | - | - | - | - | -\nRow 7: Purchase of stock-in-trade | 3,733.80 | - | - | 2,339.46 | - | - | 2,178.29 | - | -\nRow 8: Cost of materials consumed | 16,197.23 | - | - | 14,453.88 | - | - | 14,097.04 | - | -\nRow 9: Changes in inventories of finished goods and stock in trade | (69.47) | - | - | (34.36) | - | - | (4.98) | - | -\nRow 10: Employee benefits expense | 224.05 | - | - | 198.14 | - | - | 193.02 | - | -\nRow 11: Finance costs | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -\nRow 12: Depreciation and amortisation expense | 111.10 | - | - | 99.69 | - | - | 50.87 | - | -\nRow 13: Other expenses | 708.41 | - | - | 619.14 | - | - | 526.96 | - | -\nRow 14: Total expenses (II) | 21,004.72 | - | - | 17,799.41 | - | - | 17,431.61 | - | -\nRow 15: Restated profit before tax (III) (I-II) | 1,166.22 | - | - | 1,172.84 | - | - | 237.54 | - | -\nRow 16: Tax expense | - | - | - | - | - | - | - | - | -\nRow 17: Current tax | 304.51 | - | - | 308.56 | - | - | 63.56 | - | -\nRow 18: Adjustment of tax relating to earlier periods | 3.62 | - | - | (2.02) | - | - | (0.06) | - | -\nRow 19: Deferred tax | (4.13) | - | - | (4.51) | - | - | 0.52 | - | -\nRow 20: Total tax expenses (IV) | 304.00 | - | - | 302.03 | - | - | 64.02 | - | -\nRow 21: Restated profit for the period/year (V) (III-IV) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 22: RESTATED OTHER COMPREHENSIVE INCOME | - | - | - | - | - | - | - | - | -\nRow 23: Items that will not be reclassified to profit or loss | - | - | - | - | - | - | - | - | -\nRow 24: Remeasurement of gains (losses) on defined benefit plans | 0.91 | - | - | 5.71 | - | - | 0.55 | - | -\nRow 25: Income tax effect | (0.23) | - | - | (1.44) | - | - | (0.14) | - | -\nRow 26: Restated other comprehensive income for the period/year, net of tax (VI) | 0.68 | - | - | 4.27 | - | - | 0.41 | - | -\nRow 27: Restated total comprehensive income for the period/year (V+VI) | 862.90 | - | - | 875.08 | - | - | 173.93 | - | -\nRow 28: Restated profit for the year attributable to: | - | - | - | - | - | - | - | - | -\nRow 29: Equity holder of parent | 863.84 | - | - | 873.46 | - | - | 173.52 | - | -\nRow 30: Non-controlling interest | (1.62) | - | - | (2.65) | - | - | - | - | -\nRow 31: Restated other comprehensive income for the period/year attributable to: | - | - | - | - | - | - | - | - | -\nRow 32: Equity holder of parent | 0.68 | - | - | 4.27 | - | - | 0.41 | - | -\nRow 33: Non-controlling interest | - | - | - | - | - | - | - | - | -\nRow 34: Restated total comprehensive income for the year attributable to: | - | - | - | - | - | - | - | - | -\nRow 35: Equity holder of parent | 864.52 | - | - | 877.73 | - | - | 173.93 | - | -\nRow 36: Non-controlling interest | (1.62) | - | - | (2.65) | - | - | - | - | -\nRow 37: Earning per equity share | - | - | - | - | - | - | - | - | -\nRow 38: Basic (\u20b9) | 3.88 | - | - | 3.92 | - | - | 0.78 | - | -\nRow 39: Diluted (\u20b9) | 3.88 | - | - | 3.92 | - | - | 0.78 | - | -",
+        "rrf_score": 0.014705882352941176,
+        "rerank_score": 0.9291839599609375
+      },
+      {
+        "source_id": "moe_p56_t1",
+        "page": 56,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS",
+        "text": "Headers: Name of the | Fiscal 2026 | - | Fiscal 2025 | - | Fiscal 2024 | -\nRow 1: countries | Amount | Percentage | Amount | Percentage | Amount | Percentage\nRow 2: - | (in \u20b9 million) | of revenue | (in \u20b9 million) | of revenue | (in \u20b9 million) | of revenue\nRow 3: - | - | from exports | - | from exports | - | from exports\nRow 4: - | - | (%) | - | (%) | - | (%)\nRow 5: South Korea | 1,427.57 | 55.72 | 1,183.16 | 50.31 | 1,203.79 | 53.90\nRow 6: Japan | 309.55 | 12.08 | 385.25 | 16.38 | 341.08 | 15.27\nRow 7: Taiwan | 247.08 | 9.64 | 342.65 | 14.57 | 268.50 | 12.02\nRow 8: Malaysia | 193.63 | 7.56 | 134.00 | 5.70 | 69.43 | 3.11\nRow 9: Sri Lanka | 156.18 | 6.10 | 71.37 | 3.03 | 75.59 | 3.38\nRow 10: Vietnam | 94.46 | 3.69 | 83.06 | 3.53 | 91.33 | 4.09\nRow 11: Netherlands | 56.57 | 2.21 | 20.03 | 0.85 | 17.96 | 0.80\nRow 12: Indonesia | 26.39 | 1.03 | 26.23 | 1.12 | 2.29 | 0.10\nRow 13: Kenya | 21.85 | 0.85 | 28.20 | 1.20 | - | -\nRow 14: Other countries* | 28.92 | 1.12 | 77.88 | 3.31 | 163.45 | 7.33\nRow 15: Total exports revenue | 2,562.20 | 100.00 | 2,351.83 | 100.00 | 2,233.42 | 100.00",
+        "rrf_score": 0.01282051282051282,
+        "rerank_score": 0.8992939591407776
+      },
+      {
+        "source_id": "moe_p444_t1",
+        "page": 444,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | 2025 | - | - | 2024 | -\nRow 2: Revenue from Operations (A) | 22,115.37 | - | - | 18,832.99 | - | - | 17,449.01 | - | -\nRow 3: Other Income (B) | 55.57 | - | - | 139.26 | - | - | 220.14 | - | -\nRow 4: Total Income (C) | 22,170.94 | - | - | 18,972.25 | - | - | 17,669.15 | - | -\nRow 5: Restated Profit / (Loss) for the period/ fiscal year (D) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 6: Finance costs (E) | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -\nRow 7: Total tax expense (F) | 304.00 | - | - | 302.03 | - | - | 64.02 | - | -\nRow 8: Depreciation/Amortization/ Impairment expense (G) | 111.10 | - | - | 99.69 | - | - | 50.87 | - | -\nRow 9: EBITDA [H= (D+E+F+G-B)] | 1,321.35 | - | - | 1,256.73 | - | - | 458.68 | - | -\nRow 10: EBITDA Margin (%) (I=H/A) | 5.97 | - | - | 6.67 | - | - | 2.63 | - | -",
+        "rrf_score": 0.014492753623188406,
+        "rerank_score": 0.8929330706596375
+      },
+      {
+        "source_id": "moe_p53_t2",
+        "page": 53,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS",
+        "text": "Headers: Particulars | Fiscal 2026 | - | Fiscal 2025 | - | Fiscal 2024 | -\nRow 1: - | Amount (in | % of | Amount | % of revenue | Amount (in | % of\nRow 2: - | \u20b9 million) | revenue | (in \u20b9 | from | \u20b9 million) | revenue\nRow 3: - | - | from | million) | operations | - | from\nRow 4: - | - | operations | - | - | - | operations\nRow 5: Revenue contributed by exports through Nisshin (flakes and grits) | 2,190.66 | 9.93 | 2,118.79 | 11.26 | 2,069.38 | 11.87\nRow 6: Revenue contributed by exports directly and other distributors (Lecithin, soya meal, untoasted grits through distributor) | 371.54 | 1.68 | 233.04 | 1.24 | 164.04 | 0.94\nRow 7: Total revenue contributed by exports | 2,562.20 | 11.61 | 2,351.83 | 12.50 | 2,233.42 | 12.81",
+        "rrf_score": 0.015151515151515152,
+        "rerank_score": 0.8885172009468079
+      },
+      {
+        "source_id": "drhp_p465_c3",
+        "page": 465,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS",
+        "text": "adjustment of tax relating to earlier periods increased to \u20b9 3.62 million in Fiscal 2026 compared to \u20b9 (2.02) million in Fiscal \n2025 on account of additional tax demands pertaining to earlier assessment years. Additionally, deferred tax increased to \u20b9 \n(4.13) million in Fiscal 2026 compared to \u20b9 (4.51) million in Fiscal 2025 due to the increase in deferred tax asset (net) to \u20b9 \n13.81 million as at March 31, 2026 from \u20b9 9.91 million as at March 31, 2025. \n \nProfit after tax \n \nFor the various reasons discussed above, we recorded a profit for the year of \u20b9 862.22 million in Fiscal 2026 compared to \nprofit for the year of \u20b9 870.81 million in Fiscal 2025. \n \nFiscal 2025 compared to Fiscal 2024 \n \nTotal revenue \n \nOur total revenue increased by \u20b9 1,303.10 million i.e. 7.38% to \u20b9 18,972.25 million in Fiscal 2025 from \u20b9 17,669.15 million \nin Fiscal 2024. This increase was primarily attributable to the following: \n \nRevenue from operations (net)",
+        "rrf_score": 0.014084507042253521,
+        "rerank_score": 0.9964492321014404
+      },
+      {
+        "source_id": "drhp_p463_c1",
+        "page": 463,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > OUR RESULTS OF OPERATIONS",
+        "text": "459 \nOUR RESULTS OF OPERATIONS \n \nThe following tables set forth our selected financial data from our restated statement of profit and loss for Fiscals 2026, 2025 and 2024, the components of which are also \nexpressed as a percentage of total revenue for such years: \n \nParticulars \nFiscal \n2026 \n2025 \n2024 \nAmount \n(in \u20b9 million) \nPercentage of \ntotal revenue \n(%) \nAmount \n(in \u20b9 \nmillion) \nPercentage of \ntotal revenue \n(%) \nAmount \n(in \u20b9 \nmillion) \nPercentage of \ntotal revenue \n(%) \nRevenue \n \nRevenue from operations (net) \n22,115.37 \n99.75 \n18,832.99 \n99.27 \n17,449.01 \n98.75 \nOther income \n55.57 \n0.25 \n139.26 \n0.73 \n220.14 \n1.25 \nTotal revenue (I) \n22,170.94 \n100.00 \n18,972.25 \n100.00 \n17,669.15 \n100.00 \n \nExpenses \n \nPurchase of stock-in-trade \n3,733.80 \n16.84 \n2,339.46 \n12.33 \n2,178.29 \n12.33 \nCost of materials consumed \n16,197.23 \n73.06 \n14,453.88 \n76.18 \n14,097.04 \n79.78 \nChanges in inventories of finished goods and stock in trade \n(69.47) \n(0.31) \n(34.36) \n(0.18) \n(4.98) \n(0.03)",
+        "rrf_score": 0.016129032258064516,
+        "rerank_score": 0.9919135570526123
+      }
+    ],
+    "passed": true
+  },
+  {
+    "id": "TEST 5",
+    "query": "What was the company's research and development expenditure for quantum computing in FY2026?",
+    "route": "financial",
+    "answer": "I could not calculate the company\u2019s research and development expenditure for quantum computing in FY\u202f2026 because the retrieved prospectus evidence does not contain any figure or reference to quantum\u2011computing R&D spending for that fiscal year. None of the provided sources (definitions, assumptions, EBITDA tables, legal disclosures, or financial statements) mention quantum\u2011computing R&D expenditure.\n\n---\n\n### Sources Cited\n| Source ID | Page |\n|-----------|------|\n| moe_p7_t1 | 7 |\n| moe_p173_t1 | 173 |\n| moe_p445_t3 | 445 |\n| moe_p445_t2 | 445 |\n| drhp_p487_c5 | 487 |\n| drhp_p366_c2 | 366 |",
+    "sources": [
+      {
+        "source_id": "moe_p7_t1",
+        "page": 7,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION I \u2013 GENERAL > DEFINITIONS AND ABBREVIATIONS",
+        "text": "Headers: Term(s) | Description\nRow 1: Promoter Group | The persons and entities constituting the promoter group of our Company in terms of Regulation 2(1)(pp) of the SEBI ICDR Regulations and as disclosed in section titled \u201cOur Promoters and Promoter Group\u201d on page 349\nRow 2: \u201cPromoter Group Selling Shareholder\u201d or \u201cSelling Shareholder\u201d | Agrawal Basantlal Shankarlal (HUF), Ashok Shankarlal Agrawal (HUF), Yusuf Ahmedbhai Dhumadia and Iliyas Ibrahim Balesaria\nRow 3: \u201cRegistered and Corporate Office\u201d | The registered and corporate office of our company situated at E-140* MIDC, Awdhan, Dhule, Maharashtra \u2013 424001, India *There were two properties bearing the addresses E-140, MIDC, Awdhan, Dhule \u2013 424001 and E-140/1, MIDC, Awdhan, Dhule \u2013 424311. Pursuant to the amalgamation of the said properties, the address of the Company is now reflected as E-140, MIDC, Awdhan, Dhule \u2013 424001, which is also reflected on the website of the Registrar of Companies. However, certain documents and records continue to reflect the earlier address as E-140, MIDC, Awdhan, Dhule \u2013 424311. The difference in the postal PIN code/address appearing in such documents is attributable to the aforesaid amalgamation and does not represent a difference in the underlying property.\nRow 4: \u201cRegistrar of Companies\u201d or \u201cRoC\u201d | The Registrar of Companies, Mumbai-II at Navi Mumbai\nRow 5: Restated Financial Information | Restated financial information of our Company comprises of: (i) the restated consolidated statement of assets and liabilities as at March 31, 2026 and March 31, 2025, the restated consolidated statement of profit and loss (including other comprehensive income), the restated consolidated statement of changes in equity, the restated consolidated statement of cash flow, for the year ended March 31, 2026 and March 31, 2025 (\u201cRestated Consolidated Financial Information\u201d); and (ii) the restated standalone statement of assets and liabilities as at March 31, 2024, the restated standalone statement of profit and loss (including other comprehensive income), the restated standalone statement of changes in equity, the restated standalone statement of cash flow, for the year ended March 31, 2024 (\u201cRestated Standalone Financial Information\u201d together with Restated Consolidated Financial Information collectively referred to as \u201cRestated Financial Information\u201d). The summary statement of material accounting policies and other explanatory notes, prepared in accordance with Ind AS and as per requirement of Section 26 of Part I of Chapter III of the Companies Act, 2013, SEBI ICDR Regulations, as amended and the Guidance Note on \u2018Reports in Company Prospectuses (Revised 2019)\u2019 issued by the Institute of Chartered Accountants of India, as amended from time to time.\nRow 6: Risk Management Committee | The risk management committee of our Board constituted in accordance with the Companies Act, 2013 and the SEBI Listing Regulations, and as described in \u201cOur Management \u2013 Committees of Our Board \u2013 Risk Management Committee\u201d on page 344\nRow 7: Shareholder(s) | The holders of the Equity Shares of our Company, from time to time\nRow 8: Senior Management Personnel | Senior management personnel of our Company in terms of Regulation 2(1)(bbbb) of the SEBI ICDR Regulations as described in \u201cOur Management \u2013 Key Managerial Personnel and Senior Management Personnel \u2013 Senior Management Personnel\u201d on page 346\nRow 9: Stakeholders\u2019 Relationship Committee | The stakeholders\u2019 relationship committee of our Board constituted in accordance with the Companies Act, 2013 and the SEBI Listing Regulations, as described in \u201cOur Management \u2013 Committees of Our Board \u2013 Stakeholders\u2019 Relationship Committee\u201d on page 343\nRow 10: Subsidiary | Subsidiary of our company as on date of this Draft Red Herring Prospectus which shall mean and include Basant Nutrifoods Private Limited. For further details see section titled \u201cOur Subsidiary\u201d on page 326\nRow 11: \u201cWhole-Time | The whole-time director(s) on the Board of Directors. For further details of the Whole",
+        "rrf_score": 0.016129032258064516,
+        "rerank_score": 0.5378531217575073
+      },
+      {
+        "source_id": "moe_p173_t1",
+        "page": 173,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > MSEDCL",
+        "text": "Headers: - | Particulars | - | - | Assumptions | -\nRow 1: - | - | - | Financial Information, which reflects the credit terms extended to our customers and the collection cycle. For Fiscal 2027, 2028, and 2029, our Company has assumed trade receivable holding levels of 22 days, 21 days, and 21 days, respectively. In Fiscal 2026, trade receivable days reached up to 19 days, with a mean of 16 days over the last three fiscals. This assumption is consistent with our experience in managing customer credit and collections. The projected levels of trade receivables for the forecast period have been prepared in line with historical trends, with no significant variation, thereby ensuring alignment with our working capital requirements and expected business operations. | - | -\nRow 2: Cash and Cash Equivalents | - | - | Cash and cash equivalents have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028, and 2029, our Company has assumed cash and cash equivalent holding levels of 3 days, 3 days, and 3 days of revenue from operations, respectively. In Fiscal 2024, cash and bank balances together increased up to 65 days due to fixed deposit overdraft (FD-OD) facilities. Cash and cash equivalents have been projected and maintained in line with expected sales for the respective fiscal years pursuant to proposed expansion, ensuring sufficient liquidity to support ongoing business operations. | - | -\nRow 3: Other Current Assets | - | - | Other current assets have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028 and 2029, our Company has assumed a holding level for other current assets equivalent to 13 days, 12 days and 12 days of revenue from operations. In Fiscal 2026, it reached up to 12 days, with a mean of 6 days over the last three fiscals. Other current assets have been projected and maintained in line with the proposed expansion plan and the expected business activity for Fiscal 2027, 2028, and 2029. | - | -\nRow 4: - | II) Current Liabilities | - | - | - | -\nRow 5: Trade Payables | - | - | Our trade payables are maintained at modest levels due to the nature of our business model. The holding levels for trade payable have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028, and 2029, our Company has assumed trade payable holding levels of 5 days, 5 days, and 5 days of cost of material consumed, respectively, with a mean of approximately 6 days over the three fiscals. Trade payable levels have been projected in line with the expected sales for the respective fiscal years, envisaging timely and prudent payments of liabilities with improved utilization of working capital balancing the need for uninterrupted raw material supply ensuring consistency with our working capital requirements and overall business operations. | - | -\nRow 6: Other Current Liabilities | - | - | Other current liabilities have been computed based on our historical Restated Standalone Financial Information. For Fiscal 2027, 2028, and 2029, our Company has assumed holding levels for other current liabilities of 1 day, 1 day, and 1 day of revenue from operations, respectively, with a mean of approximately 1 day over the three fiscals. Other current liabilities have been projected and maintained in line with the expected business activity for the respective fiscal years, ensuring consistency with our working capital requirements and operational needs. | - | -",
+        "rrf_score": 0.013333333333333334,
+        "rerank_score": 0.41352221369743347
+      },
+      {
+        "source_id": "moe_p445_t3",
+        "page": 445,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | 2025 | - | - | 2024 | -\nRow 2: Restated Profit / (loss) for the year (A) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 3: Finance costs (B) | 99.60 | - | - | 123.46 | - | - | 390.41 | - | -",
+        "rrf_score": 0.012987012987012988,
+        "rerank_score": 0.21217764914035797
+      },
+      {
+        "source_id": "moe_p445_t2",
+        "page": 445,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "Headers: Particulars | - | Fiscal | - | - | - | - | - | - | -\nRow 1: - | - | 2026 | - | - | 2025 | - | - | 2024 | -\nRow 2: Equity shares capital (A) | 2,229.03 | - | - | 2,229.03 | - | - | 2,229.03 | - | -\nRow 3: Other equity (B) | 2,430.02 | - | - | 1,565.50 | - | - | 779.88 | - | -\nRow 4: Non-controlling Interests (C) | 2.82 | - | - | 4.44 | - | - | - | - | -\nRow 5: Capital Reserve (D) | 51.60 | - | - | 51.60 | - | - | 51.60 | - | -\nRow 6: Net Worth (E=A+B+C-D) | 4,610.27 | - | - | 3,747.37 | - | - | 2,957.31 | - | -\nRow 7: Restated Profit / (loss) for the year (F) | 862.22 | - | - | 870.81 | - | - | 173.52 | - | -\nRow 8: Opening Balance of Net worth (G) | 3,747.37 | - | - | 2,957.31 | - | - | 2,875.48 | - | -\nRow 9: Closing Balance of Net Worth (H) | 4,610.27 | - | - | 3,747.37 | - | - | 2,957.31 | - | -\nRow 10: Average Net Worth [I=(G+H)/2] | 4,178.82 | - | - | 3,352.34 | - | - | 2,916.40 | - | -\nRow 11: RoNW (%) [J = F/I*100%] | 20.63 | - | - | 25.98 | - | - | 5.95 | - | -",
+        "rrf_score": 0.013888888888888888,
+        "rerank_score": 0.1669805496931076
+      },
+      {
+        "source_id": "drhp_p487_c5",
+        "page": 487,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION VI \u2013 LEGAL AND OTHER INFORMATION > OTHER REGULATORY AND STATUTORY DISCLOSURES",
+        "text": "account and debit or credit balance of profit and loss account, after deducting the aggregate value of the accumulated losses, deferred \nexpenditure and miscellaneous expenditure not written off, but does not include reserves created out of revaluation of assets, write-\nback of depreciation and amalgamation. Net worth, as stated above, comprises equity share capital and other equity, and includes \nnon-controlling interests, after excluding the capital reserve arising on amalgamation of \u20b9 51.60 million in each of the financial years \nended March 31, 2026, March 31, 2025 and March 31, 2024. \n(4) \n\u2018Operating Profit\u2019 has been calculated as profit before tax add finance cost and less other income. \n \nThe average of our restated operating profit for Fiscals 2026, 2025 and 2024 of our Company was \u20b9 925.03 million. For \nfurther details, see section titled \u201cOther Financial Information\u201d on page 431.",
+        "rrf_score": 0.014492753623188406,
+        "rerank_score": 0.5738653540611267
+      },
+      {
+        "source_id": "drhp_p366_c2",
+        "page": 366,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > INFORMATION IN CONNECTION WITH THE PROPOSED INITIAL PUBLIC",
+        "text": "Consolidated Statement of Assets and Liabilities as at March 31, 2026, March 31, 2025, the \nRestated Consolidated Statements of Profit and Loss (including other comprehensive income), \nthe Restated Consolidated Statement of Changes in Equity, the Restated Consolidated Cash \nFlows for the financial years ended March 31, 2026 and March 31, 2025 along with the statement \nof material accounting policies, and other explanatory information relating to such financial \nyears; and (ii) the Restated Standalone Balance Sheet as at March 31, 2024, the Restated \nStandalone Statement of Profit and Loss (including other comprehensive income), the Restated \nStandalone Statement of Changes in Equity and Restated Standalone Statement of Cash Flows \nfor the financial year ended March 31, 2024 along with the statement of material accounting \npolicies, and other explanatory information relating to such financial year ended March 31, 2024",
+        "rrf_score": 0.01639344262295082,
+        "rerank_score": 0.4137199819087982
+      }
+    ],
+    "passed": true
+  },
+  {
+    "id": "BONUS 6 (Debt-to-Equity)",
+    "query": "What is the company's debt-to-equity ratio?",
+    "route": "financial",
+    "answer": "**Report**\n\n- **Metric:** Debt\u2011to\u2011Equity Ratio  \n- **FY2026:** 0.61\u202fx  \n- **Source:** [moe_p473_t1, Page\u202f473]  \n\n*The calculation is derived from the cited DRHP values.*  \n\n---\n\n### Sources Cited\n\n| Source ID | Page | Description |\n|-----------|------|-------------|\n| moe_p473_t1 | 473 | Capitalisation Statement \u2013 Total borrowings (\u20b9\u202f2,853.88\u202fmillion) and Total equity (\u20b9\u202f4,659.05\u202fmillion) |\n| moe_p473_t1 | 473 | Capitalisation Statement \u2013 Debt/Equity Ratio (0.61\u00d7) |\n| moe_p256_t1 | 256 | Consolidated financial information \u2013 Debt/Equity Ratio (0.61\u00d7) |",
+    "sources": [
+      {
+        "source_id": "moe_p22_t2",
+        "page": 22,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION I \u2013 GENERAL > EBITDA",
+        "text": "Headers: - | Sr. | - | Key performance indicators | Definition\nRow 1: - | No. | - | - | -\nRow 2: 1. | - | - | Adjusted Net Debt to Adjusted Equity | Adjusted Net Debt to Adjusted Equity Ratio is calculated as total interest bearing loans and borrowings less cash and cash equivalents and bank balances other than cash and cash equivalents divided by total equity attributable to the owners of the Company, comprising equity share capital, convertible preference shares, if any and other equity, as reported in the Restated Statement of Assets and Liabilities, and excludes non-controlling interest.\nRow 3: 2. | - | - | Capacity Utilization | Capacity Utilization is derived as a percentage obtained by dividing Actual Capacity utilized during the relevant financial year divided by the Total Installed / Operating Capacity of the respective facility / plant, as applicable.\nRow 4: 3. | - | - | EBITDA | EBITDA is calculated as restated profit / (loss) for the period / fiscal year, plus finance costs, total taxes, and depreciation and amortisation expense less other income.\nRow 5: 4. | - | - | EBITDA margin | EBITDA margin refers to the percentage derived by dividing EBITDA by Revenue from Operations\nRow 6: 5. | - | - | EPS (basic and diluted) | Earnings per share (EPS) equals profit for the year attributable to the shareholders of the company divided by the Weighted average number of Equity Shares outstanding during the year and giving effect to Bonus Issuance. Since there is no dilutive capital, Basic and Diluted EPS would be same.\nRow 7: 6. | - | - | Installed Storage Capacity | Storage Capacity is the total installed capacity of a particular type of storage unit in metric tonnes\nRow 8: 7. | - | - | Interest coverage ratio | Interest coverage ratio is calculated by dividing EBIT by Finance Costs. EBIT, i.e, Earnings before Interest and Taxes, is calculated as restated profit / (loss) for the period / year, plus finance costs and total taxes\nRow 9: 8. | - | - | Inventory Days | Inventory days are calculated as Average Inventory divided by Revenue from operations and multiplied by number of days in the fiscal year. Average Inventory is the sum of opening and closing balance of Inventory for relevant fiscal divided by two.\nRow 10: 9. | - | - | Net Asset Value per Equity Share | Net Asset Value per Equity Share (NAV) is calculated as Net Worth divided by the number of equity shares outstanding as at the end of the year\nRow 11: 10. | - | - | No. of Employees | No. of Employees means the aggregate number of permanent employees employed by our Company during the respective financial years\nRow 12: 11. | - | - | PAT margin | PAT Margin is calculated as percentage derived by dividing profit for the period/ fiscal year by Total Income.\nRow 13: 12. | - | - | Profit after tax (PAT) | Profit after tax (PAT) means restated profit / (loss) for the period/financial year as appearing in the Restated consolidated financial Information.\nRow 14: 13. | - | - | Return on Capital Employed (ROCE) | Return on capital employed (ROCE) is calculated as EBIT divided by closing capital employed for the period / fiscal year. Earnings before Interest and Taxes (EBIT) is calculated as restated profit / (loss) for the period / fiscal year, plus finance costs and total taxes. Capital employed is the sum of total equity plus debt consisting of borrowings and lease liabilities plus deferred tax liabilities less deferred tax assets, as appearing in the Restated Financial Information.\nRow 15: 14. | - | - | Return on Net Worth (RONW) | Return on Net Worth is calculated as restated profit / (loss) for the period / year divided by average net worth. Net Worth is calculated",
+        "rrf_score": 0.016129032258064516,
+        "rerank_score": 0.562896728515625
+      },
+      {
+        "source_id": "moe_p473_t1",
+        "page": 473,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > CAPITALISATION STATEMENT",
+        "text": "Headers: Particulars | - | Pre-Offer as at | - | - | As adjusted for | -\nRow 1: - | - | March 31, 2026 | - | - | the Offer# | -\nRow 2: Total borrowings | - | - | - | - | - | -\nRow 3: Current borrowings*# | 2,744.36 | - | - | [\u25cf] | - | -\nRow 4: Non-current borrowings (including current maturity and interest accrued and due on borrowings)* | 109.52 | - | - | [\u25cf] | - | -\nRow 5: Total borrowings (A) | 2,853.88 | - | - | [\u25cf] | - | -\nRow 6: Total equity | - | - | - | - | - | -\nRow 7: Equity share capital* | 2,229.03 | - | - | [\u25cf] | - | -\nRow 8: Other equity* | 2,430.02 | - | - | [\u25cf] | - | -\nRow 9: Total Equity (B) | 4,659.05 | - | - | [\u25cf] | - | -\nRow 10: Total (A+B) | 7,512.93 | - | - | [\u25cf] | - | -\nRow 11: Non-current borrowings (including current maturity and interest accrued and due on borrowings)/Total Equity | 0.02 | - | - | [\u25cf] | - | -\nRow 12: Total borrowings/ Total equity (in times) | 0.61 | - | - | [\u25cf] | - | -",
+        "rrf_score": 0.015384615384615385,
+        "rerank_score": 0.26757898926734924
+      },
+      {
+        "source_id": "moe_p256_t1",
+        "page": 256,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION IV \u2013 ABOUT OUR COMPANY > EBIDTA",
+        "text": "Headers: Maharashtra Oil Extractions Limited | - | - | Unit | FY26 | FY25 | FY24\nRow 1: Revenue from Operations | - | - | Rs Million | 22,115.37 | 18,832.99 | 17,449.01\nRow 2: Revenue from Domestic Sales | - | - | Rs Million | 19,497.68 | 16,463.79 | 15,199.68\nRow 3: Revenue from Export Sales | - | - | Rs Million | 2,562.20 | 2,351.83 | 2,233.42\nRow 4: EBIDTA | - | - | Rs Million | 1,321.35 | 1,256.73 | 458.68\nRow 5: - | EBIDTA Margin | - | % | 5.97% | 6.67% | 2.63%\nRow 6: PAT | PAT | - | Rs Million | 862.22 | 870.81 | 173.52\nRow 7: - | PAT Margin | - | % | 3.89% | 4.59% | 0.98%\nRow 8: - | EPS (basic and diluted) | - | Times | 3.88 | 3.92 | 0.78\nRow 9: Total Borrowings | Total Borrowings | - | Rs Million | 2,853.88 | 1,571.32 | 4,781.59\nRow 10: - | Adjusted Net Debt to Adjusted Equity | - | Times | 0.55 | 0.31 | 0.56\nRow 11: - | Debt/Equity Ratio | - | Times | 0.61 | 0.41 | 1.59\nRow 12: - | Interest Coverage Ratio | - | Times | 12.71 | 10.50 | 1.61\nRow 13: - | RONW | - | % | 20.63% | 25.98% | 5.95%\nRow 14: - | ROCE | - | % | 16.88% | 24.20% | 8.07%\nRow 15: - | Trade Receivable Days | - | Days | 14 | 13 | 18\nRow 16: - | Inventory Days | - | Days | 66 | 65 | 69\nRow 17: - | Working capital cycle | - | Days | 75 | 73 | 83",
+        "rrf_score": 0.015151515151515152,
+        "rerank_score": 0.1591920703649521
+      },
+      {
+        "source_id": "moe_p184_t1",
+        "page": 184,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > EBITDA",
+        "text": "Headers: - | Sr. | - | Key performance indicators (1) | Description | -\nRow 1: - | No. | - | - | - | -\nRow 2: 12. | - | - | Adjusted Net Debt to Adjusted Equity | This ratio is used by our Company to compare shareholder\u2019s equity to company net debt to assess our company\u2019s amount of leverage and financial stability | -\nRow 3: 13. | - | - | Interest coverage ratio | It measures our Company's ability to pay the interest on its outstanding debt using its earnings before interest and taxes | -\nRow 4: 14. | - | - | Return on Net Worth (RONW) | Return on Net Worth provides how efficiently our Company generates earnings from the shareholders\u2019 funds | -\nRow 5: 15. | - | - | Return on Capital Employed (ROCE) | It provides how efficiently the Company generates earnings from the capital employed in the business. | -\nRow 6: 16. | - | - | Trade Receivable Days | It is a financial metric that measures the average number of days it takes for the company to collect payment from its customers after a sale is made. It reflects the efficiency of our company\u2019s accounts receivable process and its ability to manage customer credit. | -\nRow 7: 17. | - | - | Inventory Days | It is a financial metric that measures the average number of days it takes for the company to hold its inventory before sale is made. It reflects the efficiency of our company\u2019s Inventory management. | -\nRow 8: 18. | - | - | Working capital Days | It is a metric that measures how many days it takes our Company to transform its working capital into sales cash flows. | -\nRow 9: 19. | - | - | Net Asset Value per Equity Share | Net Asset Value per Equity Share reflects the intrinsic value of a company's equity, helping in assessing the company's financial health | -\nRow 10: - | Operational Metrics | - | - | - | -\nRow 11: 1. | - | - | No. of Employees | No. of Employees signifies the total permanent manpower of our Company during a fiscal as our operations are manpower extensive | -\nRow 12: 2. | - | - | Total Installed Capacity | - | -\nRow 13: a) | - | - | Solvent Extraction Plant | Total Installed capacity (total operating capacity in case of refining) is our annual capacity in metric tonnes for following facilities: a) Solvent Extraction Plant \u2013 Soybean Seed crushing b) Refining \u2013 Production of refined oil and certain by products such as Lecithin and Acid Oil c) Packing \u2013 Packing of our products under various formats d) Soy Flour \u2013 Production of Soy Flour of various grit sized e) Textured Soy Protein \u2013 Production of products like chunks, flakes and nuggets (extruded) | -\nRow 14: b) | - | - | Refining | - | -\nRow 15: c) | - | - | Packing | - | -\nRow 16: d) | - | - | Soy Flour | - | -\nRow 17: e) | - | - | Texturized Soy Protein | - | -\nRow 18: 3. | - | - | Capacity Utilization | - | -\nRow 19: a) | - | - | Solvent Extraction Plant | It indicates the total capacity utilized per annum as a percentage of Total Installed capacities (total operating capacity in case of refining) of various facilities / plants. It helps us to track how efficiently our facilities / plants are being utilized. | -\nRow 20: b) | - | - | Refining | - | -\nRow 21: c) | - | - | Packing | - | -\nRow 22: d) | - | - | Soy Flour | - | -\nRow 23: e) | - | - | Texturized Soy Protein | - | -\nRow 24: 4. | - | - | Storage Capacity | - | -\nRow 25: a) | - | - | Silos | It indicates our ability to store our raw material / finished goods for various kinds of products we procure / manufacture. It helps in our Inventory management | -\nRow 26: b) | - | - | Storage Bins | - | -\nRow 27: c) | - | - | Tanks | - | -",
+        "rrf_score": 0.01639344262295082,
+        "rerank_score": 0.13199245929718018
+      },
+      {
+        "source_id": "drhp_p427_c2",
+        "page": 427,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > MAHARASHTRA OIL EXTRACTIONS LIMITED",
+        "text": "2,229.03\n                         \n18.42\n                              \n18.42\n                              \nOther equity\n2,430.02\n                         \n3,776.11\n                         \n2,990.49\n                         \nTotal equity\n4,659.05\n                         \n3,794.53\n                         \n3,008.91\n                         \nAdjusted net debt to adjusted equity ratio\n0.55\n0.31\n0.56\nThe Group monitors capital using a ratio of \u2018adjusted net debt\u2019 to \u2018adjusted equity\u2019. For this purpose, adjusted net debt is defined as total interest-\nbearing loans and borrowings less cash and cash equivalents and bank balances other than cash and cash equivalents. Adjusted equity is defined as total\nequity attributable to the owners of the Company, comprising equity share capital, convertible preference shares and other equity, as reported in the\nRestated Statement of Assets and Liabilities, and excludes non-controlling interest.",
+        "rrf_score": 0.016129032258064516,
+        "rerank_score": 0.8913986086845398
+      },
+      {
+        "source_id": "drhp_p443_c4",
+        "page": 443,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2)",
+        "text": "7. \nTotal borrowings refer to the sum of Non-current borrowings and current borrowings as appearing in Restated \nFinancial Information. \n8. \nAdjusted Net Debt to Adjusted Equity Ratio is calculated as total interest bearing loans and borrowings less cash and \ncash equivalents and bank balances other than cash and cash equivalents divided by total equity attributable to the \nowners of the Company, comprising equity share capital, convertible preference shares, if any and other equity, as \nreported in the Restated Statement of Assets and Liabilities, and excludes non-controlling interest. \n9. \nInterest coverage ratio is calculated by dividing EBIT by Finance Costs. EBIT, i.e, Earnings before Interest and Taxes, \nis calculated as restated profit / (loss) for the period / year, plus finance costs and total taxes \n10. Return on Net Worth is calculated as restated profit / (loss) for the period / year divided by average net worth. Net",
+        "rrf_score": 0.015151515151515152,
+        "rerank_score": 0.8909826874732971
+      }
+    ],
+    "passed": true
+  },
+  {
+    "id": "BONUS 7 (Current Ratio)",
+    "query": "What is the current ratio?",
+    "route": "financial",
+    "answer": "**Report**\n\n- **Metric:** Current Ratio  \n- **FY2026:** 14.42x  \n- **Source:** [moe_p57_t1, Page\u202f57]  \n\n*The calculation is derived from the cited DRHP values.*  \n\n**Sources Cited**\n\n| Source ID | Page | Description |\n|-----------|------|-------------|\n| moe_p57_t1 | 57 | Total Current Assets and Total Current Liabilities for FY2026 |",
+    "sources": [
+      {
+        "source_id": "moe_p57_t1",
+        "page": 57,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS",
+        "text": "Headers: Particulars | Fiscal | - | -\nRow 1: - | 2026 | 2025 | 2024\nRow 2: I) Current assets | - | - | -\nRow 3: A) Inventories | 4,531.94 | 3,369.21 | 3,303.77\nRow 4: B) Financial assets | - | - | -\nRow 5: i) Trade receivables | 1,147.55 | 707.67 | 736.08\nRow 6: ii) Cash and cash equivalents | 276.80 | 402.21 | 9.02\nRow 7: iii) Bank balance other than (ii) above | 5.01 | 1.55 | 3,096.45\nRow 8: iv) Loans | 10.36 | 7.08 | 135.34\nRow 9: v) Other financial assets | 0.00 | 0.00 | 1.20\nRow 10: C) Other Current Assets | 716.56 | 162.48 | 189.63\nRow 11: Total Current Assets (A) | 6,688.22 | 4,650.20 | 7,471.49\nRow 12: II) Current liabilities | - | - | -\nRow 13: A) Financial liabilities | - | - | -\nRow 14: i) Trade payables | 290.02 | 215.11 | 293.33\nRow 15: ii) Other financial liabilities | 30.08 | 31.66 | 24.92\nRow 16: B) Provisions | 13.60 | 9.54 | 17.44\nRow 17: C) Other current liabilities | 22.78 | 21.37 | 148.02\nRow 18: Current tax liabilities (Net) | 107.36 | 57.45 | 18.60\nRow 19: Total current liabilities (B) | 463.84 | 335.13 | 502.31\nRow 20: Net working capital requirements (C=A-B)# | 6,224.38 | 4,315.07 | 6,969.18\nRow 21: Funding pattern | - | - | -\nRow 22: Internal accruals | 3,480.02 | 2,889.78 | 2,187.59\nRow 23: Bank borrowings | 2,744.36 | 1,425.29 | 4,781.59",
+        "rrf_score": 0.01639344262295082,
+        "rerank_score": 0.9401968121528625
+      },
+      {
+        "source_id": "moe_p171_t1",
+        "page": 171,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > MSEDCL",
+        "text": "Headers: Particulars | Fiscal | - | -\nRow 1: - | 2026 | 2025 | 2024\nRow 2: Total Current Assets (A) | 6,688.22 | 4,650.20 | 7,471.49\nRow 3: II) Current liabilities | - | - | -\nRow 4: A) Financial liabilities | - | - | -\nRow 5: i) Trade payables | 290.02 | 215.11 | 293.33\nRow 6: ii) Other financial liabilities | 30.08 | 31.66 | 24.92\nRow 7: B) Provisions | 13.60 | 9.54 | 17.44\nRow 8: C) Other current liabilities | 22.78 | 21.37 | 148.02\nRow 9: Current tax liabilities (Net) | 107.36 | 57.45 | 18.60\nRow 10: Total current liabilities (B) | 463.84 | 335.13 | 502.31\nRow 11: Net working capital requirements (C=A-B)# | 6,224.38 | 4,315.07 | 6,969.18\nRow 12: Funding pattern | - | - | -\nRow 13: Internal accruals | 3,480.02 | 2,889.78 | 2,187.59\nRow 14: Bank borrowings | 2,744.36 | 1,425.29 | 4,781.59",
+        "rrf_score": 0.015625,
+        "rerank_score": 0.9017701745033264
+      },
+      {
+        "source_id": "moe_p171_t2",
+        "page": 171,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > MSEDCL",
+        "text": "Headers: Sr. No. | Particulars | Fiscal | - | -\nRow 1: - | - | 2027 | 2028 | 2029\nRow 2: I. | Current assets | - | - | -\nRow 3: A. | Inventories | 6,458.94 | 7,192.84 | 8,600.48\nRow 4: B. | Financial assets | - | - | -\nRow 5: - | i)Trade receivables | 1,520.99 | 1,792.61 | 2,119.86\nRow 6: - | ii)Cash and Cash Equivalents | 229.15 | 273.08 | 326.19\nRow 7: - | iii)Bank Balance other than (ii) above | 35.29 | 41.99 | 50.14\nRow 8: - | iv)Loans | 10.74 | 11.28 | 11.84\nRow 9: - | v)Other financial assets | 0.00 | 0.00 | 0.00\nRow 10: C. | Other current assets | 916.73 | 1,041.55 | 1,244.81\nRow 11: - | Total current assets (A) | 9,171.84 | 10,353.35 | 12,353.32\nRow 12: II. | Current liabilities | - | - | -\nRow 13: A. | Financial liabilities | - | - | -\nRow 14: - | i)Trade payables | 312.12 | 350.14 | 420.42\nRow 15: - | ii)Other financial liabilities | 44.84 | 53.81 | 64.58\nRow 16: B. | Provisions | 14.99 | 17.68 | 20.87\nRow 17: C. | Other current liabilities | 35.29 | 41.99 | 50.14\nRow 18: - | Current Tax Liabilities (Net) | 20.00 | 15.00 | 30.00\nRow 19: - | Total current liabilities (B) | 427.24 | 478.62 | 586.01\nRow 20: - | Net current assets / Total working capital requirements (C = A - B) | 8,744.60 | 9,874.73 | 11,767.31\nRow 21: - | Funding pattern | - | - | -\nRow 22: - | Internal Accruals | 4,194.60 | 5,174.73 | 6,567.31\nRow 23: - | Bank borrowings | 3,950.00 | 3,950.00 | 3,950.00\nRow 24: - | Estimated cumulative deployment of Net Proceeds | 600.00 | 750.00 | 1,250.00\nRow 25: - | Estimated deployment of Net Proceeds | 600.00 | 150.00 | 500.00",
+        "rrf_score": 0.016129032258064516,
+        "rerank_score": 0.8913332223892212
+      },
+      {
+        "source_id": "moe_p170_t1",
+        "page": 170,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "table",
+        "section_path": "SECTION III \u2013 INTRODUCTION > MSEDCL",
+        "text": "Headers: Particulars | Fiscal | - | -\nRow 1: - | 2026 | 2025 | 2024\nRow 2: I) Current assets | - | - | -\nRow 3: A) Inventories | 4,531.94 | 3,369.21 | 3,303.77\nRow 4: B) Financial assets | - | - | -\nRow 5: i) Trade receivables | 1,147.55 | 707.67 | 736.08\nRow 6: ii) Cash and cash equivalents | 276.80 | 402.21 | 9.02\nRow 7: iii) Bank balance other than (ii) above | 5.01 | 1.55 | 3,096.45\nRow 8: iv) Loans | 10.36 | 7.08 | 135.34\nRow 9: v) Other financial assets | 0.00 | 0.00 | 1.20\nRow 10: C) Other Current Assets | 716.56 | 162.48 | 189.63",
+        "rrf_score": 0.014705882352941176,
+        "rerank_score": 0.36354419589042664
+      },
+      {
+        "source_id": "drhp_p171_c3",
+        "page": 171,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION III \u2013 INTRODUCTION > MSEDCL",
+        "text": "I. \nCurrent assets \nA. \nInventories \n6,458.94 \n7,192.84 \n8,600.48 \nB. \nFinancial assets \n \n \n \ni)Trade receivables \n1,520.99 \n1,792.61 \n2,119.86 \nii)Cash and Cash Equivalents  \n229.15 \n273.08 \n326.19 \niii)Bank Balance other than (ii) above \n35.29 \n41.99 \n50.14 \niv)Loans \n10.74 \n11.28 \n11.84 \nv)Other financial assets \n0.00 \n0.00 \n0.00 \nC. \nOther current assets \n916.73 \n1,041.55 \n1,244.81 \nTotal current assets (A) \n9,171.84 \n10,353.35 \n12,353.32 \nII. \nCurrent liabilities \n \nA. \nFinancial liabilities \n \n \ni)Trade payables \n312.12 \n350.14 \n420.42 \nii)Other financial liabilities \n44.84 \n53.81 \n64.58 \nB. \nProvisions \n14.99 \n17.68 \n20.87 \nC. \nOther current liabilities \n35.29 \n41.99 \n50.14 \n \nCurrent Tax Liabilities (Net) \n20.00 \n15.00 \n30.00 \n \nTotal current liabilities (B) \n427.24 \n478.62 \n586.01 \n \nNet current assets / Total working \ncapital requirements (C = A - B) \n8,744.60 \n9,874.73 \n11,767.31 \n \nFunding pattern \n \n \nInternal Accruals \n4,194.60 \n5,174.73 \n6,567.31 \n \nBank borrowings",
+        "rrf_score": 0.016129032258064516,
+        "rerank_score": 0.9758021235466003
+      },
+      {
+        "source_id": "drhp_p57_c2",
+        "page": 57,
+        "company": "Maharashtra Oil Extractions Limited",
+        "document_type": "DRHP",
+        "content_type": "text",
+        "section_path": "SECTION II \u2013 RISK FACTORS > FORWARD-LOOKING STATEMENTS",
+        "text": "707.67 \n736.08 \nii) Cash and cash equivalents \n276.80 \n402.21 \n9.02 \niii) Bank balance other than (ii) above \n5.01 \n1.55 \n3,096.45 \niv) Loans \n10.36 \n7.08 \n135.34 \nv) Other financial assets \n0.00 \n0.00 \n1.20 \nC) Other Current Assets \n716.56 \n162.48 \n189.63 \nTotal Current Assets (A) \n6,688.22 \n4,650.20 \n7,471.49 \nII) Current liabilities \n \nA) Financial liabilities \n \ni) Trade payables \n290.02 \n215.11 \n293.33 \nii) Other financial liabilities  \n30.08 \n31.66 \n24.92 \nB) Provisions  \n13.60 \n9.54 \n17.44 \nC) Other current liabilities \n22.78 \n21.37 \n148.02 \nCurrent tax liabilities (Net) \n107.36 \n57.45 \n18.60 \nTotal current liabilities (B) \n463.84 \n335.13 \n502.31 \nNet working capital requirements \n(C=A-B)# \n6,224.38 \n4,315.07 \n6,969.18 \nFunding pattern \n \nInternal accruals \n3,480.02 \n2,889.78 \n2,187.59 \nBank borrowings \n2,744.36 \n1,425.29 \n4,781.59 \n \nIn case of any shortage in the availability of working capital, we may be unable to purchase raw material and",
+        "rrf_score": 0.01639344262295082,
+        "rerank_score": 0.9009124040603638
+      }
+    ],
+    "passed": true
+  }
+]

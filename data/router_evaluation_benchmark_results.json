@@ -1,0 +1,170 @@
+{
+  "total_queries": 18,
+  "correct_classifications": 18,
+  "incorrect_classifications": 0,
+  "accuracy_percent": 100.0,
+  "records": [
+    {
+      "id": "F1",
+      "query": "What was the company's revenue from operations and restated profit after tax in Fiscal 2026?",
+      "expected": "financial",
+      "predicted": "financial",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query explicitly asks for the company's revenue from operations and restated profit after tax for a specific fiscal year, which are financial performance metrics."
+    },
+    {
+      "id": "F2",
+      "query": "How much total debt and financial borrowing is currently on the company's balance sheet?",
+      "expected": "financial",
+      "predicted": "financial",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query explicitly asks for the amount of total debt and financial borrowing on the company's balance sheet, which is a request for financial information about the company's liabilities."
+    },
+    {
+      "id": "F3",
+      "query": "What is the breakdown between the Fresh Issue size and the Offer for Sale component in the IPO?",
+      "expected": "financial",
+      "predicted": "financial",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query asks for the quantitative breakdown of the IPO's Fresh Issue size versus the Offer for Sale component, which pertains to the financial structure of the offering."
+    },
+    {
+      "id": "R1",
+      "query": "How vulnerable is the company to fluctuations in raw material prices and supply disruptions?",
+      "expected": "risk",
+      "predicted": "risk",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query asks about the company's vulnerability to raw material price fluctuations and supply disruptions, which are classic business risk factors addressed in the Risk Factors section of the prospectus."
+    },
+    {
+      "id": "R2",
+      "query": "What operational hazards and business disruptions arise from concentrating facilities in Maharashtra?",
+      "expected": "risk",
+      "predicted": "risk",
+      "correct": true,
+      "confidence": 0.99,
+      "reasoning": "The query asks about operational hazards and business disruptions due to geographic concentration of facilities, which pertains to business risk factors disclosed in the prospectus."
+    },
+    {
+      "id": "R3",
+      "query": "How could rising raw-material prices affect the company's profit margins?",
+      "expected": "risk",
+      "predicted": "risk",
+      "correct": true,
+      "confidence": 0.99,
+      "reasoning": "The query asks about the impact of rising raw-material prices on profit margins, which pertains to business risk and operational vulnerability related to commodity price fluctuations, fitting the 'risk' category."
+    },
+    {
+      "id": "L1",
+      "query": "What outstanding legal proceedings and material lawsuits are pending against the company?",
+      "expected": "litigation",
+      "predicted": "litigation",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query explicitly asks for information on outstanding legal proceedings and material lawsuits pending against the company, which falls under the litigation category."
+    },
+    {
+      "id": "L2",
+      "query": "Are there any pending direct or indirect tax demands disputed by the company or promoters?",
+      "expected": "litigation",
+      "predicted": "litigation",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query asks specifically about pending direct or indirect tax demands disputed by the company or promoters, which pertains to legal proceedings and tax disputes, fitting the 'litigation' category."
+    },
+    {
+      "id": "L3",
+      "query": "Has SEBI or any other regulatory body initiated actions or issued show-cause notices to the promoters?",
+      "expected": "litigation",
+      "predicted": "litigation",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query asks whether SEBI or any regulatory body has initiated actions or issued show-cause notices to the promoters, which pertains to regulatory enforcement actions against promoters, fitting the definition of the 'litigation' category."
+    },
+    {
+      "id": "RP1",
+      "query": "What related-party transactions has the company entered into with promoter group entities?",
+      "expected": "related_party",
+      "predicted": "related_party",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The user explicitly asks for details on related\u2011party transactions between the company and promoter group entities, which directly maps to the 'related_party' category."
+    },
+    {
+      "id": "RP2",
+      "query": "Who are the promoters and promoter group entities of the company?",
+      "expected": "related_party",
+      "predicted": "related_party",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The user explicitly asks for identification of the promoters and promoter group entities, which aligns with the 'related_party' category that covers queries about promoters and promoter group entities."
+    },
+    {
+      "id": "RP3",
+      "query": "Were any loans, advances, or corporate guarantees extended to entities associated with directors?",
+      "expected": "related_party",
+      "predicted": "related_party",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query asks specifically about loans, advances, or corporate guarantees extended to entities associated with directors, which pertains to related\u2011party transactions and promoter/director affiliations. This aligns with the 'related_party' category."
+    },
+    {
+      "id": "G1",
+      "query": "Where is the registered and corporate office of the company located?",
+      "expected": "general",
+      "predicted": "general",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The user asks for the location of the registered and corporate office, which is a corporate background detail. This fits the 'general' category covering corporate office address and basic company information."
+    },
+    {
+      "id": "G2",
+      "query": "What is the history of the company's incorporation and changes to its corporate name?",
+      "expected": "general",
+      "predicted": "general",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The user asks specifically about the company's incorporation history and name changes, which are details about corporate background and identity, fitting the 'general' category."
+    },
+    {
+      "id": "G3",
+      "query": "Who are the members of the Board of Directors and the Key Managerial Personnel (KMP)?",
+      "expected": "general",
+      "predicted": "general",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The user asks specifically for the names of the Board of Directors and Key Managerial Personnel, which falls under corporate background and governance details defined in the 'general' category."
+    },
+    {
+      "id": "M1",
+      "query": "What are the pending litigation cases against the promoters and what related-party transactions did they execute?",
+      "expected": "multi_intent",
+      "predicted": "multi_intent",
+      "correct": true,
+      "confidence": 1.0,
+      "reasoning": "The query requests information on two distinct topics: pending litigation cases against promoters (litigation) and related-party transactions executed by them (related_party). Since both intents are explicitly and equally present, it qualifies as a multi_intent query."
+    },
+    {
+      "id": "A1",
+      "query": "Tell me about the general numbers and miscellaneous things in the prospectus.",
+      "expected": "ambiguous",
+      "predicted": "ambiguous",
+      "correct": true,
+      "confidence": 0.93,
+      "reasoning": "The request is vague, asking for 'general numbers and miscellaneous things' without specifying whether the interest is financial data, risk, litigation, related parties, or general corporate background. This lack of clear intent makes the query ambiguous per the guidelines."
+    },
+    {
+      "id": "A2",
+      "query": "Is this company good?",
+      "expected": "ambiguous",
+      "predicted": "ambiguous",
+      "correct": true,
+      "confidence": 0.99,
+      "reasoning": "The query 'Is this company good?' is vague and lacks specific intent such as financial performance, risk, litigation, related-party details, or general corporate facts. It does not request concrete information, making it excessively vague and thus falls under the 'ambiguous' category."
+    }
+  ]
+}

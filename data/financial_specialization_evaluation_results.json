@@ -1,0 +1,137 @@
+[
+  {
+    "id": "FQ1",
+    "type": "Single Metric",
+    "query": "What was the company's revenue from operations in FY2026?",
+    "target": "\u20b9 22,115.37 million",
+    "generic_answer": "Based on the provided DRHP context, the company's revenue from operations (net) in Fiscal 2026 was **\u20b9 22,115.37 million** [drhp_p464_c1, Page 464].\n\nThis figure represents an increase of \u20b9 3,282.38 million, or 17.43%, compared to the revenue from operations (net) of \u20b9 18,832.99 million in Fiscal 2025 [drhp_p464_c1, Page 464]. This data point is corroborated by the financial summary table which lists \"Revenue from Operations\" for FY26 as \u20b9 22,115.37 million [drhp_p256_c2, Page 256].\n\n### Sources Cited\n\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| drhp_p464_c1 | 464 | Text |\n| drhp_p256_c2 | 256 | Text |",
+    "generic_sources": [
+      "drhp_p464_c1",
+      "drhp_p466_c1",
+      "drhp_p55_c4",
+      "drhp_p465_c3",
+      "drhp_p256_c2"
+    ],
+    "financial_agent_answer": "Metric: Revenue from Operations (Net)\nFY2026: \u20b9 22,115.37 Million\nSource: [moe_p256_t1, Page 256]\n\n### Sources Cited\n| Source ID | Page | Description |\n| :--- | :--- | :--- |\n| moe_p256_t1 | 256 | EBITDA Table showing Revenue from Operations for FY26, FY25, and FY24 |\n| drhp_p464_c1 | 464 | Narrative discussion on Results of Operations confirming FY26 revenue figures |\n| moe_p373_t1 | 373 | Restated Profit and Loss Account showing Revenue from operations (net) for the year ended March 31, 2026 |",
+    "financial_agent_sources": [
+      "moe_p256_t1",
+      "moe_p44_t1",
+      "moe_p53_t2",
+      "moe_p373_t1",
+      "drhp_p464_c1",
+      "drhp_p466_c1"
+    ],
+    "calculation_performed": false,
+    "calculation_details": null
+  },
+  {
+    "id": "FQ2",
+    "type": "Multiple Metrics",
+    "query": "What were revenue from operations and restated profit after tax in FY2026?",
+    "target": "Revenue: \u20b9 22,115.37 million, Restated PAT: \u20b9 862.22 million",
+    "generic_answer": "Based on the retrieved DRHP context for Maharashtra Oil Extractions Limited, here are the financial figures for Fiscal 2026:\n\n**Revenue from Operations**\nThe revenue from operations (net) for Fiscal 2026 was **\u20b9 22,115.37 million** [drhp_p86_c1, Page 86]. This figure is consistent across the summary of the restated statement of profit and loss and the results of operations section [drhp_p463_c1, Page 463]. The DRHP notes that this represents an increase of \u20b9 3,282.38 million (17.43%) compared to Fiscal 2025 [drhp_p464_c1, Page 464].\n\n**Restated Profit After Tax**\nThe restated profit after tax (referred to as \"profit for the year\") for Fiscal 2026 was **\u20b9 862.22 million** [drhp_p465_c3, Page 465].\n\n*Note: While the summary table on Page 86 lists \"Restated profit before tax\" as \u20b9 1,166.22 million and \"Current tax\" as \u20b9 304.51 million, the specific line item for total profit after tax is explicitly stated in the narrative discussion of results on Page 465 [drhp_p86_c1, Page 86; drhp_p465_c3, Page 465].*\n\n### Sources Cited\n\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| drhp_p86_c1 | 86 | Text |\n| drhp_p463_c1 | 463 | Text |\n| drhp_p464_c1 | 464 | Text |\n| drhp_p465_c3 | 465 | Text |",
+    "generic_sources": [
+      "drhp_p86_c1",
+      "drhp_p464_c1",
+      "drhp_p463_c1",
+      "drhp_p465_c3",
+      "drhp_p182_c1"
+    ],
+    "financial_agent_answer": "Based on the retrieved DRHP context for Maharashtra Oil Extractions Limited, here are the financial figures for Fiscal Year 2026 (FY2026):\n\n**1. Revenue from Operations (Net)**\n*   **Metric:** Revenue from operations (net)\n*   **Period:** Fiscal 2026 (Consolidated)\n*   **Value:** \u20b9 22,115.37 million\n*   **Source:** [moe_p373_t1, Page 373], [moe_p444_t1, Page 444], [moe_p435_t1, Page 435], [moe_p86_t1, Page 86], [drhp_p86_c1, Page 86]\n\n**2. Restated Profit After Tax**\n*   **Metric:** Restated profit for the year (Profit After Tax)\n*   **Period:** Fiscal 2026 (Consolidated)\n*   **Value:** \u20b9 862.22 million\n*   **Source:** [moe_p373_t1, Page 373], [moe_p444_t1, Page 444], [moe_p435_t1, Page 435], [moe_p86_t1, Page 86]\n\n### Sources Cited\n\n| Source ID | Page | Content Type | Section |\n| :--- | :--- | :--- | :--- |\n| moe_p373_t1 | 373 | Table | SECTION V \u2013 FINANCIAL INFORMATION > MAHARASHTRA OIL EXTRACTIONS LIMITED |\n| moe_p444_t1 | 444 | Table | SECTION V \u2013 FINANCIAL INFORMATION > EBITDA(2) |\n| moe_p435_t1 | 435 | Table | SECTION V \u2013 FINANCIAL INFORMATION > OTHER FINANCIAL INFORMATION |\n| moe_p86_t1 | 86 | Table | SECTION III \u2013 INTRODUCTION > COMPREHENSIVE INCOME) |\n| drhp_p86_c1 | 86 | Text | SECTION III \u2013 INTRODUCTION > COMPREHENSIVE INCOME) |",
+    "financial_agent_sources": [
+      "moe_p373_t1",
+      "moe_p444_t1",
+      "moe_p435_t1",
+      "moe_p86_t1",
+      "drhp_p86_c1",
+      "drhp_p464_c1"
+    ],
+    "calculation_performed": false,
+    "calculation_details": null
+  },
+  {
+    "id": "FQ3",
+    "type": "Period Comparison",
+    "query": "How did revenue change from FY2024 to FY2026?",
+    "target": "FY24: \u20b9 17,449.01 million, FY26: \u20b9 22,115.37 million, Change: +\u20b9 4,666.36 million (+26.74%)",
+    "generic_answer": "Based on the provided DRHP context, the total revenue for Maharashtra Oil Extractions Limited increased from **\u20b9 17,669.15 million** in Fiscal 2024 to **\u20b9 22,170.94 million** in Fiscal 2026 [moe_p86_t1, Page 86]. This represents an absolute increase of **\u20b9 4,501.79 million** over the two-year period.\n\nThe year-over-year changes are detailed as follows:\n\n1.  **Fiscal 2024 to Fiscal 2025:**\n    *   Total revenue increased by **\u20b9 1,303.10 million** (7.38%) from \u20b9 17,669.15 million in Fiscal 2024 to \u20b9 18,972.25 million in Fiscal 2025 [drhp_p465_c3, Page 465].\n    *   This increase was primarily attributable to growth in revenue from operations (net), which rose by 7.93% to \u20b9 18,832.99 million in Fiscal 2025 from \u20b9 17,449.01 million in Fiscal 2024 [drhp_p466_c1, Page 466].\n    *   The growth in revenue from operations was driven by higher production volumes in response to increased demand, reflected in the growth of sale of products to \u20b9 18,815.62 million in Fiscal 2025 from \u20b9 17,433.10 million in Fiscal 2024 [drhp_p466_c1, Page 466].\n\n2.  **Fiscal 2025 to Fiscal 2026:**\n    *   Total revenue increased by **\u20b9 3,198.69 million** (16.86%) from \u20b9 18,972.25 million in Fiscal 2025 to \u20b9 22,170.94 million in Fiscal 2026 [drhp_p464_c1, Page 464].\n    *   Revenue from operations (net) increased by **\u20b9 3,282.38 million** (17.43%) to \u20b9 22,115.37 million in Fiscal 2026 from \u20b9 18,832.99 million in Fiscal 2025 [drhp_p464_c1, Page 464].\n    *   This increase was attributable to the growth in sale of products to \u20b9 22,059.88 million in Fiscal 2026 from \u20b9 18,815.62 million in Fiscal 2025 [drhp_p464_c1, Page 464].\n    *   Specifically, domestic sales increased to \u20b9 19,497.68 million from \u20b9 16,463.79 million, and export sales increased to \u20b9 2,562.20 million from \u20b9 2,351.83 million [drhp_p464_c1, Page 464].\n    *   Additionally, export benefits and other government incentives increased to \u20b9 55.49 million in Fiscal 2026 from \u20b9 17.37 million in Fiscal 2025 [drhp_p464_c1, Page 464].\n\n**Summary of Total Revenue",
+    "generic_sources": [
+      "drhp_p465_c3",
+      "drhp_p466_c1",
+      "drhp_p464_c1",
+      "moe_p86_t1",
+      "moe_p375_t1"
+    ],
+    "financial_agent_answer": "Based on the retrieved DRHP context for Maharashtra Oil Extractions Limited, here is the analysis of the revenue change from FY2024 to FY2026.\n\n### Revenue Analysis: FY2024 to FY2026\n\n**Metric:** Revenue from Operations (Net)\n**Source Data:**\n*   **FY2024:** \u20b917,449.01 million `[moe_p86_t1, Page 86]`\n*   **FY2026:** \u20b922,115.37 million `[moe_p86_t1, Page 86]`\n\n**Calculation of Change:**\nThe change in revenue from operations is calculated as follows:\n\n1.  **Absolute Change:**\n    \u20b922,115.37 million (FY2026) - \u20b917,449.01 million (FY2024) = **\u20b94,666.36 million**\n\n2.  **Percentage Change:**\n    ((\u20b922,115.37 million - \u20b917,449.01 million) / \u20b917,449.01 million) \u00d7 100 = **+26.74%**\n\n*Note: The calculation is derived from the cited DRHP values.*\n\n***\n\n**Alternative Metric: Total Revenue**\nIf \"revenue\" is interpreted as Total Revenue (including Other Income):\n\n**Metric:** Total Revenue\n**Source Data:**\n*   **FY2024:** \u20b917,669.15 million `[moe_p86_t1, Page 86]`\n*   **FY2026:** \u20b922,170.94 million `[moe_p86_t1, Page 86]`\n\n**Calculation of Change:**\n1.  **Absolute Change:**\n    \u20b922,170.94 million (FY2026) - \u20b917,669.15 million (FY2024) = **\u20b94,501.79 million**\n\n2.  **Percentage Change:**\n    ((\u20b922,170.94 million - \u20b917,669.15 million) / \u20b917,669.15 million) \u00d7 100 = **+25.48%**\n\n*Note: The calculation is derived from the cited DRHP values.*\n\n### Sources Cited\n\n| Source ID | Page | Description |\n| :--- | :--- | :--- |\n| moe_p86_t1 | 86 | Restated Statement of Comprehensive Income (Consolidated/Standalone) |\n| drhp_p463_c1 | 463 | Results of Operations Table (Selected Financial Data) |\n| moe_p444_t1 | 444 | EBITDA Reconciliation Table |",
+    "financial_agent_sources": [
+      "moe_p86_t1",
+      "moe_p435_t1",
+      "moe_p173_t1",
+      "moe_p444_t1",
+      "drhp_p463_c1",
+      "drhp_p378_c5"
+    ],
+    "calculation_performed": true,
+    "calculation_details": {
+      "metric": "Revenue from Operations",
+      "base_period": "FY2024",
+      "base_value": 17449.01,
+      "target_period": "FY2026",
+      "target_value": 22115.37,
+      "absolute_change": 4666.36,
+      "percentage_change": 26.7428,
+      "unit": "\u20b9 million",
+      "explanation": "Revenue from Operations increased by 4,666.36 \u20b9 million (+26.74%) from 17,449.01 \u20b9 million in FY2024 to 22,115.37 \u20b9 million in FY2026.\n\nCalculation Details:\n  Absolute Change  : 22,115.37 - 17,449.01 = 4,666.36 \u20b9 million\n  Percentage Change: ((22,115.37 - 17,449.01) / 17,449.01) \u00d7 100 = +26.74%"
+    }
+  },
+  {
+    "id": "FQ4",
+    "type": "Financial Table (Borrowings)",
+    "query": "What are the details of the company's total borrowings across Fiscal 2024, 2025, and 2026?",
+    "target": "Total Borrowings: FY24: \u20b9 4,781.59 M, FY25: \u20b9 1,571.32 M, FY26: \u20b9 2,853.88 M",
+    "generic_answer": "Based on the provided DRHP context, the details of Maharashtra Oil Extractions Limited's total borrowings for Fiscal 2024, 2025, and 2026 are as follows:\n\n**Total Borrowings**\nThe company\u2019s total borrowings were \u20b9 4,781.59 million in Fiscal 2024, \u20b9 1,571.32 million in Fiscal 2025, and \u20b9 2,853.88 million in Fiscal 2026 [drhp_p468_c3, Page 468]. This data is consistent across multiple sections of the document, including the Financial Indebtedness section and the Capital Expenditure section [drhp_p468_c4, Page 468].\n\n**Breakdown of Borrowings (Current vs. Non-Current)**\nThe total borrowings are further categorized into current and non-current portions as follows:\n*   **Fiscal 2026:**\n    *   Borrowings \u2013 current: \u20b9 2,780.87 million [drhp_p446_c1, Page 446]\n    *   Borrowings \u2013 non-current: \u20b9 73.01 million [drhp_p446_c1, Page 446]\n    *   *Note: The sum of current and non-current borrowings (\u20b9 2,853.88 million) matches the total borrowings reported for Fiscal 2026.*\n*   **Fiscal 2025:**\n    *   Borrowings \u2013 current: \u20b9 1,461.80 million [drhp_p446_c1, Page 446]\n    *   Borrowings \u2013 non-current: \u20b9 109.52 million [drhp_p446_c1, Page 446]\n    *   *Note: The sum of current and non-current borrowings (\u20b9 1,571.32 million) matches the total borrowings reported for Fiscal 2025.*\n*   **Fiscal 2024:**\n    *   Borrowings \u2013 current: \u20b9 4,781.59 million [drhp_p446_c1, Page 446]\n    *   Borrowings \u2013 non-current: \u20b9 0 (represented as \"-\") [drhp_p446_c1, Page 446]\n    *   *Note: The current borrowings match the total borrowings reported for Fiscal 2024.*\n\n**Related Financial Metrics**\n*   **Debt to Equity Ratio:** As of March 31, 2026, the company\u2019s total debt to equity ratio was 0.61 [drhp_p468_c3, Page 468].\n*   **Financing Activities:**\n    *   In Fiscal 2026, net cash inflow from financing activities was \u20b9 1,182.96 million, driven primarily by net proceeds of borrowing of \u20b9 1,282.56 million [drhp_p468_c2, Page 468].\n    *   In Fiscal 2025, net cash outflow from financing activities was \u20b9 (3,563.65) million, primarily due to net repayment of borrowings of \u20b9 (3,351.33) million [drhp_p468_c2, Page 468].\n    *   In Fiscal 2024, net cash outflow from financing activities was \u20b9 (119.69) million,",
+    "generic_sources": [
+      "drhp_p468_c4",
+      "drhp_p468_c2",
+      "drhp_p468_c3",
+      "drhp_p446_c1",
+      "drhp_p55_c3"
+    ],
+    "financial_agent_answer": "Based on the retrieved DRHP context, here are the details regarding the company's total borrowings for Fiscal 2024, 2025, and 2026.\n\n### Total Borrowings Analysis\n\nThe total borrowings are explicitly reported in the Capital Expenditure section of the DRHP. The values represent the aggregate of non-current and current financial liabilities classified as borrowings.\n\n**Metric:** Total Borrowings\n**Unit:** \u20b9 million\n\n| Fiscal Year | Total Borrowings (\u20b9 million) | Source |\n| :--- | :--- | :--- |\n| **Fiscal 2026** | 2,853.88 | [moe_p468_t2, Page 468] |\n| **Fiscal 2025** | 1,571.32 | [moe_p468_t2, Page 468] |\n| **Fiscal 2024** | 4,781.59 | [moe_p468_t2, Page 468] |\n\n**Verification via Balance Sheet (Summary of Restated Statement of Assets and Liabilities):**\nThe total borrowings can be cross-verified by summing the non-current and current borrowings from the Balance Sheet summary:\n\n*   **Fiscal 2026:**\n    *   Non-current Borrowings: 73.01 [moe_p85_t1, Page 85]\n    *   Current Borrowings: 2,780.87 [moe_p85_t1, Page 85]\n    *   *Calculated Total:* 73.01 + 2,780.87 = **2,853.88** [moe_p85_t1, Page 85]\n\n*   **Fiscal 2025:**\n    *   Non-current Borrowings: 109.52 [moe_p85_t1, Page 85]\n    *   Current Borrowings: 1,461.80 [moe_p85_t1, Page 85]\n    *   *Calculated Total:* 109.52 + 1,461.80 = **1,571.32** [moe_p85_t1, Page 85]\n\n*   **Fiscal 2024:**\n    *   Non-current Borrowings: - (Nil) [moe_p85_t1, Page 85]\n    *   Current Borrowings: 4,781.59 [moe_p85_t1, Page 85]\n    *   *Calculated Total:* 0 + 4,781.59 = **4,781.59** [moe_p85_t1, Page 85]\n\nThe calculated totals from the Balance Sheet components match the explicitly stated \"Total borrowings\" figures in the Capital Expenditure section exactly.\n\n### Sources Cited\n\n| Source ID | Page | Section | Content Type |\n| :--- | :--- | :--- | :--- |\n| moe_p468_t2 | 468 | SECTION V \u2013 FINANCIAL INFORMATION > CAPITAL EXPENDITURE | Table |\n| drhp_p468_c4 | 468 | SECTION V \u2013 FINANCIAL INFORMATION > CAPITAL EXPENDITURE | Text |\n| moe_p85_t1 | 85 | SECTION III \u2013 INTRODUCTION > SUMMARY OF RESTATED STATEMENT OF ASSETS AND LI",
+    "financial_agent_sources": [
+      "moe_p468_t2",
+      "moe_p38_t1",
+      "moe_p85_t1",
+      "moe_p308_t1",
+      "drhp_p468_c4",
+      "drhp_p468_c2"
+    ],
+    "calculation_performed": false,
+    "calculation_details": null
+  },
+  {
+    "id": "FQ5",
+    "type": "Missing Information Refusal",
+    "query": "What was the company's capital expenditure for quantum computing research in Fiscal 2026?",
+    "target": "Refusal: Insufficient evidence in the provided DRHP context",
+    "generic_answer": "Insufficient evidence in the provided DRHP context to answer this question.\n\nThe provided context contains no mention of \"quantum computing research\" or any capital expenditure allocated specifically to such activities. The retrieved excerpts discuss general capital expenditure for the acquisition of property, plant, and equipment, and intangible assets, but do not break down these expenditures by specific research domains or technologies like quantum computing.\n\nSpecifically, the context states that the company's total capital expenditure for Fiscal 2026 was \u20b9 325.74 million `[drhp_p267_c1, Page 267]` and `[drhp_p63_c2, Page 63]`, and that net cash outflow from investing activities was \u20b9 (420.56) million primarily for payments for property, plant and equipment & intangible assets `[drhp_p467_c5, Page 467]`. However, there is no data linking any portion of this expenditure to quantum computing research.\n\n### Sources Cited\n| Source ID | Page Number | Content Type |\n| :--- | :--- | :--- |\n| drhp_p267_c1 | 267 | Text |\n| drhp_p63_c2 | 63 | Text |\n| drhp_p467_c5 | 467 | Text |",
+    "generic_sources": [
+      "drhp_p468_c2",
+      "drhp_p267_c1",
+      "drhp_p63_c2",
+      "drhp_p466_c3",
+      "drhp_p467_c5"
+    ],
+    "financial_agent_answer": "Insufficient evidence in the provided DRHP context to answer this question.\n\nThe provided context contains financial data regarding **Maharashtra Oil Extractions Limited**, an oil extraction and manufacturing company. The documents detail capital expenditures related to:\n1.  **Manufacturing Facilities:** Specifically, capacity enhancement at the Dhule Manufacturing Facility and modernization of the Gangakhed Manufacturing Facility [moe_p144_t1, Page 144].\n2.  **General Capital Expenditure:** Total capital expenditure for Fiscal 2026 is reported as \u20b9 325.74 million, attributed to the acquisition of property, plant, and equipment [drhp_p267_c1, Page 267].\n\nThere is **no mention** of \"quantum computing research\" anywhere in the provided text. The company's business profile, as indicated by the section headers (e.g., \"MSEDCL,\" \"Oil Extractions,\" \"Refinery,\" \"Packaging Unit\"), does not align with quantum computing activities. Therefore, no financial figures for quantum computing research can be extracted or calculated from the source material.\n\n### Sources Cited\n\n| Source ID | Page | Content Summary |\n| :--- | :--- | :--- |\n| moe_p144_t1 | 144 | Table detailing objects of the offer, including capital expenditure for Dhule and Gangakhed manufacturing facilities. |\n| drhp_p267_c1 | 267 | Text detailing total capital expenditure for Fiscals 2024-2026, specifically citing \u20b9 325.74 million for Fiscal 2026 for PP&E acquisition. |\n| drhp_p468_c2 | 468 | Text detailing cash flows from financing activities and a header for Capital Expenditure details. |",
+    "financial_agent_sources": [
+      "moe_p173_t1",
+      "moe_p144_t1",
+      "moe_p471_t1",
+      "moe_p86_t1",
+      "drhp_p468_c2",
+      "drhp_p267_c1"
+    ],
+    "calculation_performed": false,
+    "calculation_details": null
+  }
+]

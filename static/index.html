@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPO Research Agent — Page-Cited Prospectus Analysis</title>
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --sidebar-bg: #FFFFFF;
+      --card-bg: #FFFFFF;
+      --text-main: #1A1A1A;
+      --text-muted: #666666;
+      --text-light: #999999;
+      --border: #E8E8E5;
+      --border-subtle: #F0F0EE;
+      --accent: #2563EB;
+      --accent-hover: #1D4ED8;
+      --active-bg: #F5F5F3;
+      --citation-bg: #F2F2EF;
+      --tag-bg: #F4F4F2;
+      --sidebar-width: 250px;
+      --radius: 8px;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --code-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    /* --------------------------------------------------
+       Layout & Sidebar
+    -------------------------------------------------- */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .brand {
+      padding: 20px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 26px;
+      height: 26px;
+      background: #1A1A1A;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      color: var(--text-main);
+    }
+
+    .company-selector-wrap {
+      padding: 0 16px 16px;
+    }
+
+    .company-pill {
+      width: 100%;
+      background: var(--active-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .company-select-native {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .nav-group {
+      padding: 10px 16px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+      padding-left: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover {
+      background: var(--active-bg);
+      color: var(--text-main);
+    }
+
+    .nav-item.active {
+      background: var(--active-bg);
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .nav-item svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .sidebar-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* --------------------------------------------------
+       Main Workspace
+    -------------------------------------------------- */
+    .main-content {
+      flex: 1;
+      padding: 36px 48px 64px;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .view-container {
+      display: none;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    .view-header {
+      margin-bottom: 28px;
+    }
+
+    .view-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+
+    .view-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* --------------------------------------------------
+       Cards & Form Elements
+    -------------------------------------------------- */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .selector-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.15s ease;
+    }
+
+    .selector-card:hover {
+      border-color: #CBD5E1;
+    }
+
+    .selector-card-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .selector-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: var(--active-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .selector-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .selector-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .selector-select-native {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* --------------------------------------------------
+       Research Query Input Area
+    -------------------------------------------------- */
+    .query-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .query-box:focus-within {
+      border-color: #B0B0AA;
+      box-shadow: 0 0 0 1px #B0B0AA;
+    }
+
+    .query-box-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-light);
+      font-size: 12px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .query-textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-main);
+      background: transparent;
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    .query-textarea::placeholder {
+      color: #AAAAAA;
+    }
+
+    .query-box-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .shortcut-hint {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .btn-primary {
+      background: #1A1A1A;
+      color: #FFFFFF;
+      border: 1px solid #1A1A1A;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      background: #333333;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--active-bg);
+    }
+
+    /* --------------------------------------------------
+       Example Questions Section
+    -------------------------------------------------- */
+    .examples-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 32px 0 14px;
+    }
+
+    .examples-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .examples-subtitle {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .example-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .example-card:hover {
+      border-color: #B5B5AF;
+      transform: translateY(-1px);
+    }
+
+    .example-tag {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .example-text {
+      font-size: 13.5px;
+      color: var(--text-main);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    /* --------------------------------------------------
+       Loading State
+    -------------------------------------------------- */
+    .loading-container {
+      display: none;
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .loading-container.active {
+      display: block;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: #1A1A1A;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 14px;
+      color: var(--text-main);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .loading-subtext {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* --------------------------------------------------
+       Results View
+    -------------------------------------------------- */
+    .results-context-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .context-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .route-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--tag-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .answer-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 32px;
+    }
+
+    .answer-content {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #222222;
+    }
+
+    .answer-content h1, .answer-content h2, .answer-content h3 {
+      color: var(--text-main);
+      margin: 24px 0 12px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .answer-content h1 { font-size: 20px; }
+    .answer-content h2 { font-size: 17px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px; }
+    .answer-content h3 { font-size: 15px; }
+
+    .answer-content p {
+      margin-bottom: 14px;
+    }
+
+    .answer-content ul, .answer-content ol {
+      margin: 12px 0 16px 20px;
+    }
+
+    .answer-content li {
+      margin-bottom: 6px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin: 18px 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #FFFFFF;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    .data-table th {
+      background: #F7F7F5;
+      font-weight: 600;
+      color: #2D3748;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: #333333;
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .answer-h1 { font-size: 19px; font-weight: 600; color: var(--text-main); margin: 24px 0 12px; }
+    .answer-h2 { font-size: 16.5px; font-weight: 600; color: var(--text-main); margin: 22px 0 10px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px; }
+    .answer-h3 { font-size: 15px; font-weight: 600; color: var(--text-main); margin: 18px 0 8px; }
+    .answer-h4 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 14px 0 6px; }
+    .answer-divider { border: none; border-top: 1px solid var(--border-subtle); margin: 22px 0; }
+
+    /* Grounded Citation Badges */
+    .citation {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-family: var(--font-stack);
+      font-size: 11.5px;
+      padding: 1.5px 7px;
+      border-radius: 4px;
+      background: #F4F4F0;
+      color: #2D3748;
+      border: 1px solid #E2E2DC;
+      margin: 0 3px;
+      font-weight: 500;
+      vertical-align: baseline;
+    }
+
+    .citation-prefix {
+      font-weight: 600;
+      color: #4A5568;
+      text-transform: uppercase;
+      font-size: 9.5px;
+      letter-spacing: 0.3px;
+    }
+
+    .citation-id {
+      font-family: var(--code-font);
+      font-size: 10.5px;
+      color: #718096;
+    }
+
+    /* Sources List Section */
+    .sources-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .sources-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .source-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .source-card:hover {
+      border-color: #B5B5AF;
+    }
+
+    .source-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .source-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .source-type-pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--active-bg);
+      color: var(--text-muted);
+    }
+
+    .source-section {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .source-id-label {
+      font-family: var(--code-font);
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .source-excerpt {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-height: 120px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .source-card.expanded .source-excerpt {
+      display: block;
+    }
+
+    /* --------------------------------------------------
+       Upload View
+    -------------------------------------------------- */
+    .dropzone {
+      border: 2px dashed #CBD5E1;
+      border-radius: var(--radius);
+      padding: 40px 20px;
+      text-align: center;
+      background: #FFFFFF;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 24px;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--accent);
+      background: #F8FAFC;
+    }
+
+    .dropzone-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 12px;
+      color: var(--text-muted);
+    }
+
+    .dropzone-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .dropzone-sub {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-input:focus {
+      border-color: #999999;
+    }
+
+    .form-hint {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 16px 0 24px;
+      font-size: 13.5px;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .upload-status {
+      display: none;
+      padding: 14px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-top: 20px;
+    }
+
+    .upload-status.success {
+      display: block;
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      color: #166534;
+    }
+
+    .upload-status.error {
+      display: block;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #991B1B;
+    }
+
+    /* Modal / Draft Legal view */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: 8px;
+      max-width: 560px;
+      width: 90%;
+      padding: 28px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .modal-body {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .main-content {
+        padding: 24px 20px;
+      }
+      .cards-row, .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================================
+       SIDEBAR
+  ============================================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">◆</div>
+      <div class="brand-title">IPO Research Agent</div>
+    </div>
+
+    <!-- Company Selector Pill -->
+    <div class="company-selector-wrap">
+      <div class="company-pill" id="sidebar-company-pill">
+        <span id="sidebar-company-text">HDB Financial Services</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 15l5 5 5-5M7 9l5-5 5 5"/>
+        </svg>
+        <select class="company-select-native" id="sidebar-company-select" aria-label="Select IPO Offering">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-group">
+      <div class="nav-label">Research</div>
+      <a class="nav-item active" id="nav-new-research" onclick="switchView('research')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        New Research
+      </a>
+      <a class="nav-item" id="nav-history" onclick="switchView('history')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Research History
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Documents</div>
+      <a class="nav-item" id="nav-drhp" onclick="selectDocumentDirect('drhp')">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        DRHP Scope
+      </a>
+      <a class="nav-item" id="nav-rhp" onclick="selectDocumentDirect('rhp')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        RHP Scope
+      </a>
+      <a class="nav-item" id="nav-upload" onclick="switchView('upload')">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload New
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Settings</div>
+      <a class="nav-item" onclick="focusScopeSelector()">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        Document Scope
+      </a>
+    </div>
+
+    <!-- Sidebar footer -->
+    <div class="sidebar-footer">
+      <div>IPO Prospectus Intelligence</div>
+      <div><a href="#" onclick="openModal('terms'); return false;">Terms of Service (Draft)</a> · <a href="#" onclick="openModal('privacy'); return false;">Privacy (Draft)</a></div>
+    </div>
+  </aside>
+
+  <!-- ==============================================
+       MAIN WORKSPACE
+  ============================================== -->
+  <main class="main-content">
+
+    <!-- 1. RESEARCH VIEW -->
+    <div class="view-container active" id="view-research">
+      <div class="view-header">
+        <h1 class="view-title">New Research</h1>
+        <p class="view-subtitle">Research Indian IPO prospectuses with page-cited answers.</p>
+      </div>
+
+      <!-- Quick Selectors Row -->
+      <div class="cards-row">
+        <!-- Document Scope Card -->
+        <div class="selector-card" id="scope-card">
+          <div class="selector-card-content">
+            <div class="selector-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+            <div>
+              <div class="selector-label">Document Scope</div>
+              <div class="selector-value" id="card-scope-text">Latest (RHP)</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <select class="selector-select-native" id="native-scope-select" aria-label="Select Document Scope">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Company Card -->
+        <div class="selector-card" id="company-card">
+          <div class="selector-card-content">
+            <div class="selector-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            </div>
+            <div>
+              <div class="selector-label">Company</div>
+              <div class="selector-value" id="card-company-text">HDB Financial Services</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <select class="selector-select-native" id="native-company-select" aria-label="Select Company">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Question Input Area -->
+      <div class="query-box">
+        <div class="query-box-top">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Ask about revenue, risks, litigation, related parties, or DRHP vs RHP changes...</span>
+        </div>
+        <textarea
+          class="query-textarea"
+          id="research-query-input"
+          placeholder="Ask a question about the prospectus..."
+          rows="3"
+        ></textarea>
+        <div class="query-box-bottom">
+          <span class="shortcut-hint">Press <strong>Ctrl + Enter</strong> to submit</span>
+          <button class="btn-primary" id="btn-submit-research" onclick="executeResearch()">
+            <span>Research</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-container" id="research-loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Researching IPO prospectuses...</div>
+        <div class="loading-subtext">Retrieving grounded text and table evidence with cross-encoder reranking</div>
+      </div>
+
+      <!-- Example Questions Section -->
+      <div id="examples-section">
+        <div class="examples-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span class="examples-title">Example Questions</span>
+          <span class="examples-subtitle">— click to test capabilities</span>
+        </div>
+        <div class="examples-grid" id="examples-grid">
+          <!-- Populated dynamically based on selected company -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. RESULTS VIEW -->
+    <div class="view-container" id="view-results">
+      <div class="results-context-bar">
+        <div class="context-breadcrumb">
+          <strong id="result-company-name">HDB Financial Services Limited</strong>
+          <span>·</span>
+          <span id="result-scope-label">Latest (RHP)</span>
+          <span>·</span>
+          <span class="route-badge" id="result-route-badge">financial</span>
+        </div>
+        <button class="btn-secondary" onclick="switchView('research')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          New Query
+        </button>
+      </div>
+
+      <div class="answer-card">
+        <div class="answer-content" id="answer-content">
+          <!-- Markdown answer parsed here -->
+        </div>
+      </div>
+
+      <!-- Sources Section -->
+      <div class="sources-header">
+        <div class="sources-title">Supporting Sources & Evidence (<span id="sources-count">0</span>)</div>
+        <div style="font-size: 12px; color: var(--text-light);">Click card to toggle raw excerpt</div>
+      </div>
+      <div class="sources-grid" id="sources-grid">
+        <!-- Source cards populated dynamically -->
+      </div>
+    </div>
+
+    <!-- 3. UPLOAD VIEW -->
+    <div class="view-container" id="view-upload">
+      <div class="view-header">
+        <h1 class="view-title">Upload New Document</h1>
+        <p class="view-subtitle">Add a new IPO prospectus to the vector knowledge base and sparse BM25 index.</p>
+      </div>
+
+      <div class="card">
+        <!-- PDF Dropzone -->
+        <div class="dropzone" id="pdf-dropzone" onclick="document.getElementById('pdf-file-input').click()">
+          <input type="file" id="pdf-file-input" accept=".pdf" style="display: none;" onchange="handleFileSelected(event)">
+          <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          <div class="dropzone-title" id="dropzone-filename">Drop PDF file here, or click to browse</div>
+          <div class="dropzone-sub">Supports DRHP and RHP prospectus filings (.pdf format)</div>
+        </div>
+
+        <form id="upload-form" onsubmit="handleUploadSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="upload-company">Company Legal Name</label>
+              <input type="text" class="form-input" id="upload-company" placeholder="e.g. Tata Technologies Limited" required oninput="autoSuggestIpoId(this.value)">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="upload-ipoid">IPO Identifier</label>
+              <input type="text" class="form-input" id="upload-ipoid" placeholder="e.g. tata_tech_ipo" required>
+              <div class="form-hint">Canonical key used for strict cross-IPO isolation</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="upload-doctype">Document Type</label>
+              <select class="form-input" id="upload-doctype">
+                <option value="DRHP">DRHP (Draft Red Herring Prospectus)</option>
+                <option value="RHP">RHP (Red Herring Prospectus)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="upload-date">Filing Date</label>
+              <input type="date" class="form-input" id="upload-date" value="2024-06-15" required>
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="upload-is-latest" checked>
+            <span>Mark this filing as the latest authoritative version for this company</span>
+          </label>
+
+          <button type="submit" class="btn-primary" id="btn-upload-submit">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Upload & Index Prospectus</span>
+          </button>
+        </form>
+
+        <div class="upload-status" id="upload-status"></div>
+      </div>
+    </div>
+
+    <!-- 4. RESEARCH HISTORY VIEW -->
+    <div class="view-container" id="view-history">
+      <div class="view-header">
+        <h1 class="view-title">Research History</h1>
+        <p class="view-subtitle">Recent research queries evaluated during this session.</p>
+      </div>
+      <div id="history-list">
+        <!-- Rendered from in-memory session history -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==============================================
+       LEGAL DRAFT MODAL
+  ============================================== -->
+  <div class="modal-overlay" id="legal-modal" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-title" id="modal-title">Terms of Service</div>
+      <div class="modal-subtitle">Draft for Review · Prototype Application</div>
+      <div class="modal-body" id="modal-body">
+        This research tool is provided strictly for academic and informational demonstration purposes. It analyzes public Indian IPO prospectuses using grounded retrieval-augmented generation. It does not constitute investment, financial, legal, or tax advice. Always consult certified financial advisors and refer to the complete official filings registered with SEBI and the Registrar of Companies (RoC).
+      </div>
+      <button class="btn-secondary" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- ==============================================
+       APPLICATION CONTROLLER JAVASCRIPT
+  ============================================== -->
+  <script>
+    // State
+    const state = {
+      companies: [],
+      currentCompanyId: "hdbfs_ipo",
+      currentScope: "latest",
+      history: [],
+      selectedFile: null
+    };
+
+    // --------------------------------------------------
+    // Initialization & Data Loading
+    // --------------------------------------------------
+    async function init() {
+      try {
+        const res = await fetch("/api/companies");
+        const data = await res.json();
+        state.companies = data.companies || [];
+
+        // Check if currentCompanyId exists
+        if (!state.companies.some(c => c.ipo_id === state.currentCompanyId)) {
+          if (state.companies.length > 0) {
+            state.currentCompanyId = state.companies[0].ipo_id;
+          }
+        }
+
+        renderCompanyOptions();
+        updateCompanySelection(state.currentCompanyId);
+      } catch (err) {
+        console.error("Failed to load companies:", err);
+      }
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        // Ctrl+K to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+          e.preventDefault();
+          switchView("research");
+          document.getElementById("research-query-input").focus();
+        }
+        // Ctrl+Enter or Cmd+Enter to submit
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+          const textarea = document.getElementById("research-query-input");
+          if (document.activeElement === textarea) {
+            e.preventDefault();
+            executeResearch();
+          }
+        }
+      });
+    }
+
+    // --------------------------------------------------
+    // View Management
+    // --------------------------------------------------
+    function switchView(viewName) {
+      document.querySelectorAll(".view-container").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+
+      const target = document.getElementById("view-" + viewName);
+      if (target) target.classList.add("active");
+
+      if (viewName === "research") {
+        document.getElementById("nav-new-research").classList.add("active");
+      } else if (viewName === "upload") {
+        document.getElementById("nav-upload").classList.add("active");
+      } else if (viewName === "history") {
+        document.getElementById("nav-history").classList.add("active");
+        renderHistory();
+      }
+    }
+
+    // --------------------------------------------------
+    // Company & Scope Management
+    // --------------------------------------------------
+    function renderCompanyOptions() {
+      const sidebarSelect = document.getElementById("sidebar-company-select");
+      const nativeSelect = document.getElementById("native-company-select");
+
+      const optionsHtml = state.companies.map(c => `
+        <option value="${c.ipo_id}" ${c.ipo_id === state.currentCompanyId ? 'selected' : ''}>
+          ${c.short_name || c.name}
+        </option>
+      `).join("");
+
+      sidebarSelect.innerHTML = optionsHtml;
+      nativeSelect.innerHTML = optionsHtml;
+
+      sidebarSelect.onchange = (e) => updateCompanySelection(e.target.value);
+      nativeSelect.onchange = (e) => updateCompanySelection(e.target.value);
+    }
+
+    function updateCompanySelection(ipoId) {
+      state.currentCompanyId = ipoId;
+      const comp = state.companies.find(c => c.ipo_id === ipoId);
+      if (!comp) return;
+
+      // Update UI labels
+      const dispName = comp.short_name || comp.name;
+      document.getElementById("sidebar-company-text").textContent = dispName;
+      document.getElementById("card-company-text").textContent = dispName;
+
+      // Update sync on native dropdowns
+      document.getElementById("sidebar-company-select").value = ipoId;
+      document.getElementById("native-company-select").value = ipoId;
+
+      // Update scope options
+      renderScopeOptions(comp);
+
+      // Render example questions
+      renderExamples(comp);
+    }
+
+    function renderScopeOptions(company) {
+      const scopeSelect = document.getElementById("native-scope-select");
+      const scopes = company.scopes || [
+        { id: "latest", label: "Latest", hint: "", available: true },
+        { id: "drhp", label: "DRHP", hint: "", available: true }
+      ];
+
+      // Auto fallback if current scope unavailable for new company
+      const currentScopeObj = scopes.find(s => s.id === state.currentScope);
+      if (!currentScopeObj || !currentScopeObj.available) {
+        state.currentScope = "latest";
+      }
+
+      scopeSelect.innerHTML = scopes.map(s => `
+        <option value="${s.id}" ${s.id === state.currentScope ? 'selected' : ''} ${!s.available ? 'disabled' : ''}>
+          ${s.label} ${s.hint ? '(' + s.hint + ')' : ''} ${!s.available ? '[Unavailable]' : ''}
+        </option>
+      `).join("");
+
+      updateScopeDisplay();
+
+      scopeSelect.onchange = (e) => {
+        state.currentScope = e.target.value;
+        updateScopeDisplay();
+      };
+    }
+
+    function updateScopeDisplay() {
+      const company = state.companies.find(c => c.ipo_id === state.currentCompanyId);
+      const scopes = company ? company.scopes : [];
+      const current = scopes.find(s => s.id === state.currentScope);
+      const label = current ? `${current.label} ${current.hint ? '(' + current.hint + ')' : ''}` : state.currentScope;
+      document.getElementById("card-scope-text").textContent = label;
+      document.getElementById("native-scope-select").value = state.currentScope;
+    }
+
+    function selectDocumentDirect(scopeId) {
+      switchView("research");
+      const company = state.companies.find(c => c.ipo_id === state.currentCompanyId);
+      const targetScope = (company.scopes || []).find(s => s.id === scopeId);
+      if (targetScope && targetScope.available) {
+        state.currentScope = scopeId;
+        updateScopeDisplay();
+      } else {
+        alert(`Document scope '${scopeId.toUpperCase()}' is not available for ${company.name}.`);
+      }
+    }
+
+    function focusScopeSelector() {
+      switchView("research");
+      document.getElementById("native-scope-select").focus();
+    }
+
+    // --------------------------------------------------
+    // Examples Rendering
+    // --------------------------------------------------
+    function renderExamples(company) {
+      const container = document.getElementById("examples-grid");
+      const examples = company.examples || [];
+
+      container.innerHTML = examples.map(ex => `
+        <div class="example-card" onclick="populateAndResearch('${escapeQuotes(ex.text)}')">
+          <div class="example-tag">${ex.category}</div>
+          <div class="example-text">${ex.text}</div>
+        </div>
+      `).join("");
+    }
+
+    function escapeQuotes(str) {
+      return str.replace(/'/g, "\\'");
+    }
+
+    function populateAndResearch(text) {
+      const textarea = document.getElementById("research-query-input");
+      textarea.value = text;
+      textarea.focus();
+    }
+
+    // --------------------------------------------------
+    // Research Execution
+    // --------------------------------------------------
+    async function executeResearch() {
+      const textarea = document.getElementById("research-query-input");
+      const query = textarea.value.trim();
+      if (!query) {
+        textarea.focus();
+        return;
+      }
+
+      const btn = document.getElementById("btn-submit-research");
+      const loading = document.getElementById("research-loading");
+      const examples = document.getElementById("examples-section");
+
+      btn.disabled = true;
+      loading.classList.add("active");
+      examples.style.display = "none";
+
+      try {
+        const response = await fetch("/api/research", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: query,
+            ipo_id: state.currentCompanyId,
+            document_target: state.currentScope
+          })
+        });
+
+        const data = await response.json();
+        btn.disabled = false;
+        loading.classList.remove("active");
+        examples.style.display = "block";
+
+        if (data) {
+          // Record history
+          state.history.unshift({
+            timestamp: new Date().toLocaleTimeString(),
+            query: query,
+            company: state.currentCompanyId,
+            route: data.route,
+            answerPreview: data.answer.slice(0, 120) + "..."
+          });
+
+          displayResults(data);
+        }
+      } catch (err) {
+        btn.disabled = false;
+        loading.classList.remove("active");
+        examples.style.display = "block";
+        alert("Error executing research: " + err.message);
+      }
+    }
+
+    // --------------------------------------------------
+    // Results Display & Formatting
+    // --------------------------------------------------
+    function displayResults(data) {
+      const comp = state.companies.find(c => c.ipo_id === (data.ipo_id || state.currentCompanyId));
+      document.getElementById("result-company-name").textContent = comp ? comp.name : "IPO Research";
+      document.getElementById("result-scope-label").textContent = (data.document_target || state.currentScope).toUpperCase();
+      document.getElementById("result-route-badge").textContent = data.route || "general";
+
+      // Render answer with markdown & inline citations
+      const answerContainer = document.getElementById("answer-content");
+      answerContainer.innerHTML = formatMarkdown(data.answer || "No response generated.");
+
+      // Render sources
+      const sourcesGrid = document.getElementById("sources-grid");
+      const sources = data.sources || [];
+      document.getElementById("sources-count").textContent = sources.length;
+
+      if (sources.length === 0) {
+        sourcesGrid.innerHTML = `<div style="grid-column: 1/-1; color: var(--text-light); font-size: 13px;">No direct source excerpts returned for this scope.</div>`;
+      } else {
+        sourcesGrid.innerHTML = sources.map((s, idx) => `
+          <div class="source-card" onclick="this.classList.toggle('expanded')">
+            <div class="source-card-top">
+              <span class="source-title">${s.document_type || 'Filing'} · Page ${s.page || 'N/A'}</span>
+              <span class="source-type-pill">${s.content_type || 'text'}</span>
+            </div>
+            <div class="source-section" title="${escapeQuotes(s.section_path || '')}">${s.section_path || 'General Section'}</div>
+            <div class="source-id-label">${s.source_id || 'ID'}</div>
+            <div class="source-excerpt">${escapeHtml(s.text || '')}</div>
+          </div>
+        `).join("");
+      }
+
+      switchView("results");
+    }
+
+    // Markdown Formatter (Headers, Lists, Citations, Clean Tables)
+    function formatMarkdown(text) {
+      if (!text) return "";
+      let html = escapeHtml(text);
+
+      // Clean unicode brackets if LLM emitted them
+      html = html.replace(/【/g, '[').replace(/】/g, ']');
+
+      // Enhanced Source Citations: [source_id, Page N] or [Source: Page N, source_id]
+      html = html.replace(/\[(?:Source:\s*)?([a-zA-Z0-9_\-]+),\s*(?:Page\s*)?(\d+)\]/gi, (match, id, page) => {
+        return `<span class="citation"><span class="citation-prefix">Source:</span> Page ${page} <span class="citation-id">(${id})</span></span>`;
+      });
+      html = html.replace(/\[(?:Source:\s*)?Page\s*(\d+)[,\s]+([a-zA-Z0-9_\-]+)\]/gi, (match, page, id) => {
+        return `<span class="citation"><span class="citation-prefix">Source:</span> Page ${page} <span class="citation-id">(${id})</span></span>`;
+      });
+
+      // Headers (convert ### to clean, subtle styled headers)
+      html = html.replace(/^#### (.*$)/gim, '<h4 class="answer-h4">$1</h4>');
+      html = html.replace(/^### (.*$)/gim, '<h3 class="answer-h3">$1</h3>');
+      html = html.replace(/^## (.*$)/gim, '<h2 class="answer-h2">$1</h2>');
+      html = html.replace(/^# (.*$)/gim, '<h1 class="answer-h1">$1</h1>');
+
+      // Bold & Italic
+      html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+
+      // Parse Markdown Tables (turns | Col1 | Col2 | and |---|---| into <table>)
+      const tableRegex = /((?:^|\n)\|[^\n]+\|\r?\n\|[-:\s|]+\|\r?\n(?:\|[^\n]+\|\r?\n?)+)/g;
+      html = html.replace(tableRegex, (match) => {
+        const lines = match.trim().split(/\r?\n/).filter(l => l.trim().startsWith('|'));
+        if (lines.length < 2) return match;
+        
+        const headerCols = lines[0].split('|').slice(1, -1).map(c => c.trim());
+        const rows = lines.slice(2); // skip separator line (|---|---|)
+        
+        let tableHtml = '<div class="table-container"><table class="data-table"><thead><tr>';
+        headerCols.forEach(col => {
+          tableHtml += `<th>${col}</th>`;
+        });
+        tableHtml += '</tr></thead><tbody>';
+        
+        rows.forEach(r => {
+          const cols = r.split('|').slice(1, -1).map(c => c.trim());
+          tableHtml += '<tr>';
+          cols.forEach(c => {
+            tableHtml += `<td>${c}</td>`;
+          });
+          tableHtml += '</tr>';
+        });
+        tableHtml += '</tbody></table></div>';
+        return tableHtml;
+      });
+
+      // Bullet points
+      html = html.replace(/^\* (.*$)/gim, '<li>$1</li>');
+      html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
+      html = html.replace(/• (.*$)/gim, '<li>$1</li>');
+
+      // Wrap lists
+      html = html.replace(/(<li>.*<\/li>)/gms, '<ul>$1</ul>');
+      html = html.replace(/<\/ul>\s*<ul>/g, '');
+
+      // Horizontal dividers
+      html = html.replace(/^---$/gim, '<hr class="answer-divider">');
+
+      // Paragraphs
+      html = html.split('\n\n').map(p => {
+        p = p.trim();
+        if (p.startsWith('<h') || p.startsWith('<ul') || p.startsWith('<div') || p.startsWith('<hr')) {
+          return p;
+        }
+        return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+      }).join('');
+
+      return html;
+    }
+
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // --------------------------------------------------
+    // Upload Handling
+    // --------------------------------------------------
+    function handleFileSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      state.selectedFile = file;
+      document.getElementById("dropzone-filename").textContent = file.name + ` (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+    }
+
+    function autoSuggestIpoId(companyName) {
+      if (!companyName) return;
+      const clean = companyName.toLowerCase()
+        .replace(/limited|ltd|pvt|private/g, '')
+        .trim()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+      const ipoId = clean ? clean + "_ipo" : "";
+      document.getElementById("upload-ipoid").value = ipoId;
+    }
+
+    async function handleUploadSubmit(e) {
+      e.preventDefault();
+      if (!state.selectedFile) {
+        alert("Please select a PDF file first.");
+        return;
+      }
+
+      const company = document.getElementById("upload-company").value.trim();
+      const ipoId = document.getElementById("upload-ipoid").value.trim();
+      const docType = document.getElementById("upload-doctype").value;
+      const filingDate = document.getElementById("upload-date").value;
+      const isLatest = document.getElementById("upload-is-latest").checked;
+
+      const btn = document.getElementById("btn-upload-submit");
+      const statusBox = document.getElementById("upload-status");
+
+      btn.disabled = true;
+      btn.innerHTML = `<div class="spinner" style="width:14px;height:14px;margin:0;display:inline-block;"></div> Ingesting & Indexing...`;
+      statusBox.className = "upload-status";
+      statusBox.style.display = "none";
+
+      const formData = new FormData();
+      formData.append("file", state.selectedFile);
+      formData.append("company", company);
+      formData.append("ipo_id", ipoId);
+      formData.append("doc_type", docType);
+      formData.append("filing_date", filingDate);
+      formData.append("is_latest", isLatest ? "true" : "false");
+
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await res.json();
+        btn.disabled = false;
+        btn.innerHTML = `<span>Upload & Index Prospectus</span>`;
+
+        if (res.ok) {
+          statusBox.className = "upload-status success";
+          statusBox.innerHTML = `
+            <strong>Success!</strong> ${result.message}<br>
+            <span style="font-size:12px;">Total searchable chunks in knowledge base: ${result.total_indexed_documents}</span><br>
+            <a href="#" onclick="selectUploadedCompany('${result.ipo_id}'); return false;" style="color:#166534; font-weight:600; text-decoration:underline; margin-top:6px; display:inline-block;">
+              Start researching ${result.company} →
+            </a>
+          `;
+          // Refresh company dropdown
+          await init();
+        } else {
+          statusBox.className = "upload-status error";
+          statusBox.textContent = "Upload failed: " + (result.detail || "Server error");
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Upload & Index Prospectus</span>`;
+        statusBox.className = "upload-status error";
+        statusBox.textContent = "Network error: " + err.message;
+      }
+    }
+
+    function selectUploadedCompany(ipoId) {
+      updateCompanySelection(ipoId);
+      switchView("research");
+    }
+
+    // --------------------------------------------------
+    // History & Modals
+    // --------------------------------------------------
+    function renderHistory() {
+      const container = document.getElementById("history-list");
+      if (state.history.length === 0) {
+        container.innerHTML = `<div class="card" style="color:var(--text-light); font-size:13.5px;">No research queries executed in this session yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = state.history.map(item => `
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="populateAndResearch('${escapeQuotes(item.query)}')">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <strong style="font-size:14px;">${escapeHtml(item.query)}</strong>
+            <span class="route-badge">${item.route}</span>
+          </div>
+          <div style="font-size:12px; color:var(--text-light);">${item.timestamp} · Target: ${item.company}</div>
+          <div style="font-size:13px; color:var(--text-muted); margin-top:8px;">${escapeHtml(item.answerPreview)}</div>
+        </div>
+      `).join("");
+    }
+
+    function openModal(type) {
+      const modal = document.getElementById("legal-modal");
+      const title = document.getElementById("modal-title");
+      const body = document.getElementById("modal-body");
+
+      if (type === "terms") {
+        title.textContent = "Terms of Service (Draft for review)";
+        body.innerHTML = "This platform is an AI Research Prototype designed to parse Indian IPO prospectuses. All outputs are derived strictly from public DRHP and RHP filings and are for technical evaluation and research demonstration only. No representations or warranties of investment suitability are made.";
+      } else {
+        title.textContent = "Privacy Policy (Draft for review)";
+        body.innerHTML = "Uploaded prospectuses and user queries are processed locally and securely within the local system runtime. No personal identification data is stored or commercialized.";
+      }
+      modal.classList.add("active");
+    }
+
+    function closeModal() {
+      document.getElementById("legal-modal").classList.remove("active");
+    }
+
+    // Run on startup
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>

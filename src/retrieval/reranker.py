@@ -1,20 +1,19 @@
+from functools import lru_cache
 from sentence_transformers import CrossEncoder
 
 
 MODEL_NAME = "BAAI/bge-reranker-base"
 
 
-def get_reranker():
+@lru_cache(maxsize=1)
+def get_reranker() -> CrossEncoder:
     """
-    Load the local reranking model.
+    Load and cache the local cross-encoder reranking model.
     """
-
-    model = CrossEncoder(
+    return CrossEncoder(
         MODEL_NAME,
         device="cpu"
     )
-
-    return model
 
 
 def _extract_text(document):

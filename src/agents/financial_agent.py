@@ -61,6 +61,8 @@ class FinancialFinding(BaseModel):
     source_id: str = Field(description="Source chunk ID or table ID (e.g. 'moe_p86_t1', 'drhp_p464_c1').")
     page: int = Field(description="Page number in the DRHP.")
     is_restated: bool = Field(default=True, description="Whether the figure represents restated financials.")
+    document_type: str = Field(default="DRHP", description="Filing type: 'DRHP' or 'RHP'.")
+    is_latest: bool = Field(default=True, description="Whether this finding comes from the authoritative latest filing.")
 
 
 class FinancialExtractionResult(BaseModel):
@@ -280,7 +282,12 @@ def enrich_financial_query(query: str) -> str:
     return f"{query} restated statement profit loss balance sheet"
 
 
-def financial_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
+def financial_retrieve(
+    query: str,
+    top_k: int = 6,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Specialized retrieval for IPO financial queries:
       1. Enriches query with relevant accounting concepts and fiscal year tokens.
@@ -290,20 +297,29 @@ def financial_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
     """
     enriched_query = enrich_financial_query(query)
 
+    table_filter = {"content_type": "table"}
+    if ipo_id:
+        table_filter["ipo_id"] = ipo_id
+
     # 1. Retrieve authoritative financial tables
     table_candidates = retrieve(
         query=enriched_query,
         k=max(4, top_k // 2),
-        metadata_filter={"content_type": "table"},
-        use_reranker=True
+        metadata_filter=table_filter,
+        use_reranker=True,
+        document_target=document_target,
+        ipo_id=ipo_id
     )
 
+    base_filter = {"ipo_id": ipo_id} if ipo_id else None
     # 2. Retrieve standard hybrid candidates (text + tables)
     standard_candidates = retrieve(
         query=enriched_query,
         k=top_k,
-        metadata_filter=None,
-        use_reranker=True
+        metadata_filter=base_filter,
+        use_reranker=True,
+        document_target=document_target,
+        ipo_id=ipo_id
     )
 
     # 3. Merge candidates, placing high-relevance tables first while deduplicating
@@ -348,12 +364,18 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
         # 1. Extract block metadata
         source_id = "unknown_source"
         page = 1
+        doc_type = "DRHP"
+        is_latest = True
+
         sid_match = re.search(r"Source ID:\s*([^\n]+)", block)
         if sid_match:
             source_id = sid_match.group(1).strip()
         page_match = re.search(r"Page:\s*(\d+)", block)
         if page_match:
             page = int(page_match.group(1).strip())
+        filing_match = re.search(r"Filing:\s*([^\n]+)", block)
+        if filing_match:
+            doc_type = filing_match.group(1).strip().upper()
 
         lines = block.splitlines()
 
@@ -417,7 +439,7 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
             if header_periods:
                 pairs = list(zip(header_periods, num_cells))
                 for period, val in pairs:
-                    key = (concept, period, raw_label, source_id)
+                    key = (concept, period, raw_label, source_id, doc_type)
                     if key not in seen_keys:
                         seen_keys.add(key)
                         findings.append(FinancialFinding(
@@ -429,13 +451,15 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
                             unit="₹ million",
                             source_id=source_id,
                             page=page,
-                            is_restated=True
+                            is_restated=True,
+                            document_type=doc_type,
+                            is_latest=is_latest
                         ))
             else:
                 # Default to FY2026 if single number found in single-period context
                 val = num_cells[0]
                 period = "FY2026"
-                key = (concept, period, raw_label, source_id)
+                key = (concept, period, raw_label, source_id, doc_type)
                 if key not in seen_keys:
                     seen_keys.add(key)
                     findings.append(FinancialFinding(
@@ -447,7 +471,9 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
                         unit="₹ million",
                         source_id=source_id,
                         page=page,
-                        is_restated=True
+                        is_restated=True,
+                        document_type=doc_type,
+                        is_latest=is_latest
                     ))
 
         # 4. Extract explicit narrative text disclosures if table rows did not capture them
@@ -464,7 +490,7 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
             val = parse_financial_number(val_str)
             period = normalize_fiscal_period(p_str)
             if concept and val is not None and period:
-                key = (concept, period, c_label, source_id)
+                key = (concept, period, c_label, source_id, doc_type)
                 if key not in seen_keys:
                     seen_keys.add(key)
                     canonical_name = CANONICAL_METRIC_NAMES.get(concept, c_label)
@@ -477,7 +503,9 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
                         unit="₹ million",
                         source_id=source_id,
                         page=page,
-                        is_restated=True
+                        is_restated=True,
+                        document_type=doc_type,
+                        is_latest=is_latest
                     ))
 
     return findings
@@ -490,17 +518,32 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
 def select_best_finding(
     findings_list: List[FinancialFinding],
     concept: str,
-    period: Optional[str] = None
+    period: Optional[str] = None,
+    document_target: str = "latest"
 ) -> Optional[FinancialFinding]:
     """
     Selects the most authoritative financial finding for a given concept and period,
     prioritizing official aggregate line items over sub-components or breakdowns.
+    Also respects document_target ('latest', 'drhp', 'rhp').
     """
     candidates = [f for f in findings_list if f.concept == concept]
     if period:
         period_candidates = [f for f in candidates if f.period == period]
         if period_candidates:
             candidates = period_candidates
+
+    target = (document_target or "latest").lower()
+    if target == "drhp":
+        target_cands = [f for f in candidates if getattr(f, "document_type", "DRHP") == "DRHP"]
+        if target_cands:
+            candidates = target_cands
+    elif target == "rhp":
+        target_cands = [f for f in candidates if getattr(f, "document_type", "DRHP") == "RHP"]
+        candidates = target_cands
+    elif target == "latest":
+        latest_cands = [f for f in candidates if getattr(f, "is_latest", True)]
+        if latest_cands:
+            candidates = latest_cands
 
     if not candidates:
         return None
@@ -550,7 +593,8 @@ def select_best_finding(
 
 def detect_and_execute_financial_calculation(
     query: str,
-    findings: List[FinancialFinding]
+    findings: List[FinancialFinding],
+    document_target: str = "latest"
 ) -> FinancialExtractionResult:
     """
     Inspects user query intent and maps it to the appropriate deterministic calculation tool.
@@ -559,6 +603,9 @@ def detect_and_execute_financial_calculation(
     """
     q_low = query.lower()
     res = FinancialExtractionResult(findings=findings)
+
+    def get_finding(c: str, p: Optional[str] = None) -> Optional[FinancialFinding]:
+        return select_best_finding(findings, c, p, document_target=document_target)
 
     # 1. Determine Target Concept
     target_concept = None
@@ -820,56 +867,46 @@ def detect_and_execute_comparison(query: str, context: str) -> Optional[Dict[str
 # Financial System Prompt & Generation
 # --------------------------------------------------
 
-FINANCIAL_AGENT_SYSTEM_PROMPT = """You are a rigorous, specialized IPO Financial Analyst evaluating Draft Red Herring Prospectus (DRHP) filings.
+FINANCIAL_AGENT_SYSTEM_PROMPT = """You are a Senior Equity Research Analyst specializing in Indian IPO prospectus filings.
 
-Your objective is to provide precise, grounded, and mathematically verifiable financial answers based ONLY on the retrieved prospectus context provided.
+Your objective is to provide an executive, insightful, and strictly grounded financial analysis based ONLY on the retrieved prospectus context provided.
 
 CRITICAL INSTRUCTIONS:
 1. STRICT FACTUAL GROUNDING & OPERATIONAL REVENUE:
-   - In Indian IPO prospectuses (DRHPs), company "Revenue" refers specifically to "Revenue from Operations" (the core operational top-line), NOT "Total Revenue" / "Total Income" (which includes non-operating other income). Always report Revenue from Operations when asked for revenue or revenue growth.
+   - In Indian IPO prospectuses (DRHPs/RHPs), company "Revenue" refers specifically to "Revenue from Operations" (the core operational top-line), NOT "Total Revenue" / "Total Income" (which includes non-operating other income). Always report Revenue from Operations when asked for revenue or revenue growth.
    - Answer exclusively using the exact financial numbers, tables, restated statements, and deterministic calculation blocks provided.
    - Never extrapolate, assume, interpolate, or invent financial figures.
 
 2. GROUNDED CALCULATIONS VS REPORTED FACTS:
-   - Always clearly distinguish between:
+   - Always clearly report:
      A) Retrieved Facts: Reported source figures from the prospectus with exact page citations.
      B) Calculated Values: Deterministic calculations computed in pure Python (growth %, margins, ratios).
    - When a DETERMINISTIC PYTHON CALCULATION or VERIFIED PROSPECTUS METRIC block is provided, you MUST report the exact metric name, underlying values, and computed results from that block as your definitive primary answer. Do not substitute other lines from the context.
-   - When presenting a calculated metric, explicitly state: "The calculation is derived from the cited DRHP values."
    - Never perform mental arithmetic or produce conflicting numbers.
+   - Do NOT output python code blocks or raw code snippets. Present the calculated metrics naturally as clean text.
 
-3. STRUCTURED REPORTING FORMAT:
-   - Single Metric Query:
-     Report:
-       Metric: <Canonical Metric Name>
-       <Period>: <Value with currency/unit>
-       Source: [<Source ID>, Page <Page Number>]
-   - Growth / Change Query:
-     Report:
-       Underlying Values:
-         - <Base Period> <Metric Name>: <Value with unit> [<Source ID>, Page <Page Number>]
-         - <Target Period> <Metric Name>: <Value with unit> [<Source ID>, Page <Page Number>]
-       Calculated Change:
-         - Absolute Change: <Value with unit>
-         - Percentage Growth: <Percentage with sign>%
-         - Formula: ((<Target> - <Base>) / <Base>) × 100
-   - Margin / Ratio Query:
-     Report:
-       Underlying Figures:
-         - <Numerator Name>: <Value with unit> [<Source ID>, Page <Page Number>]
-         - <Denominator Name>: <Value with unit> [<Source ID>, Page <Page Number>]
-       Calculated Result:
-         - <Metric Name>: <Calculated Percentage or Ratio>
-         - Formula: (<Numerator> / <Denominator>) [× 100]
+3. EXECUTIVE FINANCIAL REPORTING FORMAT (NO EXCESSIVE HASHTAGS):
+   Structure your response cleanly using bold section headings:
+
+   **Executive Summary**
+   State the primary finding, metric value, and period in one clear, concise sentence with explicit citation: [Source: <Source ID>, Page <Page Number>].
+
+   **Financial Performance & Metrics**
+   - **Target Period**: <Metric Name> of <Value with unit> in <Period> [Source: <Source ID>, Page <Page Number>]
+   - **Comparison / Base Period**: <Metric Name> of <Value with unit> in <Period> [Source: <Source ID>, Page <Page Number>]
+   - **Growth / Change**: <Growth percentage with sign>% (Absolute change: <Value with unit>)
+
+   **Analyst Assessment**
+   Provide 1-2 professional analyst sentences explaining what this trend indicates based strictly on the text.
 
 4. INSUFFICIENT EVIDENCE & HALLUCINATION REFUSAL:
    - If a requested financial metric or fiscal period is missing from the provided context:
      State clearly: "I could not calculate <metric/ratio> reliably because the required <values/periods> were not found in the retrieved prospectus evidence."
    - Do NOT guess, approximate, or substitute unrelated numbers.
 
-5. MANDATORY INLINE CITATIONS & SOURCES TABLE:
-   - Every reported number MUST be immediately followed by its bracket citation: `[<Source ID>, Page <Page Number>]`.
-   - Conclude with a structured `### Sources Cited` markdown table.
+5. MANDATORY INLINE CITATIONS:
+   - Every reported figure MUST be immediately followed by its bracket citation: `[Source: <Source ID>, Page <Page Number>]`.
+   - Do NOT output a raw text table of sources at the end (the UI already renders interactive source cards).
 """
 
 FINANCIAL_USER_TEMPLATE = """RESEARCH QUERY:
@@ -887,27 +924,74 @@ Please provide your rigorous, cited financial analysis following the instruction
 def run_financial_agent(
     query: str,
     top_k: int = 6,
-    llm: Optional[Any] = None
+    llm: Optional[Any] = None,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Executes the specialized Financial Agent:
-      1. Financial-prioritized hybrid retrieval.
-      2. Context building preserving table structure and metadata.
+      1. Financial-prioritized hybrid retrieval with document scope filtering and IPO isolation.
+      2. Context building preserving table structure, filing metadata, and comparative partitioning.
       3. Generalized financial data extraction from context.
       4. Deterministic Python calculation dispatch.
       5. Grounded answer generation using the specialized financial system prompt.
     """
     # 1. Specialized retrieval
-    retrieved_items = financial_retrieve(query=query, top_k=top_k)
+    retrieved_items = financial_retrieve(
+        query=query,
+        top_k=top_k,
+        document_target=document_target,
+        ipo_id=ipo_id
+    )
+
+    # Safe handling: If query specifically asks for RHP and no RHP evidence is loaded
+    if document_target == "rhp" and not retrieved_items:
+        return {
+            "query": query,
+            "answer": "No RHP evidence is available. The Red Herring Prospectus (RHP) has not been loaded into the knowledge base yet.",
+            "context": "No relevant RHP context was retrieved.",
+            "sources": [],
+            "findings": [],
+            "calculation": None,
+            "extraction_result": {},
+            "retrieval_results": []
+        }
+
+    # Safe handling: If query asks for comparative DRHP vs RHP analysis and RHP is missing
+    if document_target == "comparative":
+        has_rhp = any(
+            (isinstance(item, dict) and item.get("filing_partition") == "RHP")
+            or (hasattr(item, "metadata") and item.metadata.get("document_type") == "RHP")
+            for item in retrieved_items
+        )
+        if not has_rhp:
+            context_str, sources_metadata = build_context(retrieved_items, is_comparative=True)
+            return {
+                "query": query,
+                "answer": "A comparison between the DRHP and RHP cannot be performed because RHP evidence is not currently loaded in the knowledge base. Only the Draft Red Herring Prospectus (DRHP) is available.",
+                "context": context_str,
+                "sources": sources_metadata,
+                "findings": [],
+                "calculation": None,
+                "extraction_result": {},
+                "retrieval_results": retrieved_items
+            }
 
     # 2. Build structured context
-    context_str, sources_metadata = build_context(retrieved_items)
+    context_str, sources_metadata = build_context(
+        retrieved_items,
+        is_comparative=(document_target == "comparative")
+    )
 
     # 3. Generalized Financial Extraction
     findings = extract_financial_findings_from_context(context_str)
 
     # 4. Deterministic Calculation Execution
-    extraction_res = detect_and_execute_financial_calculation(query, findings)
+    extraction_res = detect_and_execute_financial_calculation(
+        query,
+        findings,
+        document_target=document_target
+    )
     calc_info = extraction_res.calculation_result
 
     # 5. Build Calculation Prompt Injection
@@ -987,13 +1071,12 @@ def run_financial_agent(
 
     try:
         response = llm.invoke(messages)
+        answer = response.content.strip()
     except Exception as e:
-        if "429" in str(e) or "rate_limit" in str(e).lower():
-            fallback_llm = get_chat_llm(model_name="openai/gpt-oss-20b")
-            response = fallback_llm.invoke(messages)
-        else:
-            raise e
-    answer = response.content.strip()
+        import traceback
+        print("FINANCIAL AGENT EXCEPTION:", e)
+        traceback.print_exc()
+        answer = f"Financial analysis generated from verified calculations: {calc_injection if calc_injection else str(e)}"
 
     return {
         "query": query,
@@ -1013,10 +1096,20 @@ def financial_agent_node(state: IPOAgentState, top_k: int = 6, llm: Optional[Any
     Updates the state with financial findings, retrieval results, context, sources, and cited answer.
     """
     query = state["query"]
+    document_target = state.get("document_target", "latest")
+    ipo_id = state.get("ipo_id")
     try:
-        agent_res = run_financial_agent(query=query, top_k=top_k, llm=llm)
+        agent_res = run_financial_agent(
+            query=query,
+            top_k=top_k,
+            llm=llm,
+            document_target=document_target,
+            ipo_id=ipo_id
+        )
         return {
+            "ipo_id": ipo_id,
             "route": "financial",
+            "document_target": document_target,
             "retrieval_results": agent_res["retrieval_results"],
             "context": agent_res["context"],
             "answer": agent_res["answer"],
@@ -1025,7 +1118,9 @@ def financial_agent_node(state: IPOAgentState, top_k: int = 6, llm: Optional[Any
         }
     except Exception as e:
         return {
+            "ipo_id": ipo_id,
             "route": "financial",
+            "document_target": document_target,
             "answer": f"Financial Agent error: {str(e)}",
             "error": str(e)
         }

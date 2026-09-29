@@ -1,0 +1,157 @@
+[
+  {
+    "id": "Q1",
+    "category": "Risk Factors",
+    "query": "What are the key internal risk factors regarding raw material supply and price volatility?",
+    "expected_ids": [
+      "drhp_p30_c1",
+      "drhp_p32_c1"
+    ]
+  },
+  {
+    "id": "Q2",
+    "category": "Risk Factors",
+    "query": "What are the risks related to the geographic concentration of the company's business operations in Maharashtra?",
+    "expected_ids": [
+      "drhp_p32_c2",
+      "drhp_p32_c3"
+    ]
+  },
+  {
+    "id": "Q3",
+    "category": "Litigation",
+    "query": "What outstanding litigation cases and material legal proceedings are pending against the company?",
+    "expected_ids": [
+      "drhp_p44_c3",
+      "drhp_p45_c2",
+      "drhp_p476_c3",
+      "drhp_p477_c3"
+    ]
+  },
+  {
+    "id": "Q4",
+    "category": "Litigation",
+    "query": "What are the pending direct tax and indirect tax litigation matters involving the company?",
+    "expected_ids": [
+      "drhp_p477_c3",
+      "drhp_p478_c1"
+    ]
+  },
+  {
+    "id": "Q5",
+    "category": "Financial Information",
+    "query": "What was the company's revenue from operations and restated profit after tax for the latest fiscal years?",
+    "expected_ids": [
+      "drhp_p404_c4",
+      "drhp_p464_c1",
+      "moe_p444_t1",
+      "moe_p86_t1"
+    ]
+  },
+  {
+    "id": "Q6",
+    "category": "Financial Information",
+    "query": "What are the details of the company's total borrowings and financial indebtedness?",
+    "expected_ids": [
+      "drhp_p474_c1",
+      "moe_p474_t1"
+    ]
+  },
+  {
+    "id": "Q7",
+    "category": "Related-Party Transactions",
+    "query": "What related-party transactions has the company entered into with promoters and group entities?",
+    "expected_ids": [
+      "drhp_p71_c3",
+      "drhp_p474_c1",
+      "moe_p474_t1"
+    ]
+  },
+  {
+    "id": "Q8",
+    "category": "Related-Party Transactions",
+    "query": "Who are the promoters and promoter group entities of the company?",
+    "expected_ids": [
+      "drhp_p349_c1",
+      "drhp_p349_c2",
+      "moe_p7_t1"
+    ]
+  },
+  {
+    "id": "Q9",
+    "category": "Management",
+    "query": "Who are the members of the Board of Directors of the company and their designations?",
+    "expected_ids": [
+      "drhp_p334_c1",
+      "drhp_p334_c2",
+      "moe_p334_t1"
+    ]
+  },
+  {
+    "id": "Q10",
+    "category": "Management",
+    "query": "Who are the Key Managerial Personnel (KMP) including the CFO and Company Secretary?",
+    "expected_ids": [
+      "drhp_p6_c1",
+      "drhp_p350_c1",
+      "drhp_p350_c2"
+    ]
+  },
+  {
+    "id": "Q11",
+    "category": "IPO / Issue Information",
+    "query": "What are the main objects of the offer and how will the net proceeds be utilized?",
+    "expected_ids": [
+      "drhp_p142_c1",
+      "drhp_p142_c4",
+      "moe_p142_t1"
+    ]
+  },
+  {
+    "id": "Q12",
+    "category": "IPO / Issue Information",
+    "query": "What is the breakdown of the Fresh Issue and Offer for Sale in the IPO?",
+    "expected_ids": [
+      "drhp_p1_c2",
+      "drhp_p3_c4",
+      "drhp_p111_c1"
+    ]
+  },
+  {
+    "id": "Q13",
+    "category": "Business",
+    "query": "What are the primary business activities, products, and solvent extraction operations of the company?",
+    "expected_ids": [
+      "drhp_p279_c1",
+      "drhp_p280_c2"
+    ]
+  },
+  {
+    "id": "Q14",
+    "category": "Business",
+    "query": "Where are the company's manufacturing facilities located and what are their operational details?",
+    "expected_ids": [
+      "drhp_p289_c1",
+      "drhp_p289_c2",
+      "drhp_p153_c3"
+    ]
+  },
+  {
+    "id": "Q15",
+    "category": "General Company Information",
+    "query": "Where is the registered and corporate office of the company located?",
+    "expected_ids": [
+      "drhp_p101_c1",
+      "moe_p5_t1"
+    ]
+  },
+  {
+    "id": "Q16",
+    "category": "General Company Information",
+    "query": "What is the history of the company's incorporation and name changes?",
+    "expected_ids": [
+      "drhp_p3_c2",
+      "drhp_p101_c1"
+    ]
+  }
+]

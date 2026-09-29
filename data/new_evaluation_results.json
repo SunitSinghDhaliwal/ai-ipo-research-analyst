@@ -1,0 +1,78 @@
+{
+  "summary": {
+    "CHROMA": {
+      "hit_at_5": 8,
+      "hit_at_5_pct": 50.0,
+      "hit_at_10": 9,
+      "hit_at_10_pct": 56.2
+    },
+    "BM25": {
+      "hit_at_5": 5,
+      "hit_at_5_pct": 31.2,
+      "hit_at_10": 9,
+      "hit_at_10_pct": 56.2
+    },
+    "HYBRID_RRF": {
+      "hit_at_5": 8,
+      "hit_at_5_pct": 50.0,
+      "hit_at_10": 11,
+      "hit_at_10_pct": 68.8
+    },
+    "HYBRID_RERANK": {
+      "hit_at_5": 9,
+      "hit_at_5_pct": 56.2,
+      "hit_at_10": 11,
+      "hit_at_10_pct": 68.8
+    }
+  },
+  "category_summary_hit10": {
+    "Risk Factors": {
+      "CHROMA": "2/2",
+      "BM25": "1/2",
+      "HYBRID_RRF": "2/2",
+      "HYBRID_RERANK": "2/2"
+    },
+    "Litigation": {
+      "CHROMA": "2/2",
+      "BM25": "2/2",
+      "HYBRID_RRF": "2/2",
+      "HYBRID_RERANK": "2/2"
+    },
+    "Financial Information": {
+      "CHROMA": "0/2",
+      "BM25": "0/2",
+      "HYBRID_RRF": "0/2",
+      "HYBRID_RERANK": "0/2"
+    },
+    "Related-Party Transactions": {
+      "CHROMA": "1/2",
+      "BM25": "1/2",
+      "HYBRID_RRF": "2/2",
+      "HYBRID_RERANK": "2/2"
+    },
+    "Management": {
+      "CHROMA": "1/2",
+      "BM25": "1/2",
+      "HYBRID_RRF": "1/2",
+      "HYBRID_RERANK": "1/2"
+    },
+    "IPO / Issue Information": {
+      "CHROMA": "0/2",
+      "BM25": "1/2",
+      "HYBRID_RRF": "1/2",
+      "HYBRID_RERANK": "1/2"
+    },
+    "Business": {
+      "CHROMA": "1/2",
+      "BM25": "1/2",
+      "HYBRID_RRF": "1/2",
+      "HYBRID_RERANK": "1/2"
+    },
+    "General Company Information": {
+      "CHROMA": "2/2",
+      "BM25": "2/2",
+      "HYBRID_RRF": "2/2",
+      "HYBRID_RERANK": "2/2"
+    }
+  }
+}

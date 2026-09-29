@@ -59,6 +59,7 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent / "utils"))
 from section_detector import build_document_section_hierarchy
 
+PROCESSED_DIR = Path("data/processed")
 PAGES_PATH = Path(
     "data/processed/maharashtra_oil_extractions/pages.json"
 )
@@ -68,61 +69,72 @@ PAGES_PATH = Path(
 # Load tables
 # --------------------------------------------------
 
-def load_table_documents():
+def load_table_documents(tables_path=None, pages_path=None):
 
-    with open(TABLES_PATH, "r", encoding="utf-8") as file:
-        tables = json.load(file)
-
-    section_hierarchy = {}
-    if PAGES_PATH.exists():
-        with open(PAGES_PATH, "r", encoding="utf-8") as file:
-            pages = json.load(file)
-            section_hierarchy = build_document_section_hierarchy(pages)
+    if tables_path is not None:
+        table_files = [Path(tables_path)]
+    else:
+        table_files = sorted(PROCESSED_DIR.glob("*/tables.json"))
+        if not table_files and TABLES_PATH.exists():
+            table_files = [TABLES_PATH]
 
     documents = []
     ids = []
 
-    for table in tables:
+    for t_file in table_files:
+        p_file = t_file.parent / "pages.json" if pages_path is None else Path(pages_path)
+        with open(t_file, "r", encoding="utf-8") as file:
+            tables = json.load(file)
 
-        table_text = table_to_text(table["rows"])
+        section_hierarchy = {}
+        if p_file.exists():
+            with open(p_file, "r", encoding="utf-8") as file:
+                pages = json.load(file)
+                section_hierarchy = build_document_section_hierarchy(pages)
 
-        if not table_text.strip():
-            continue
+        for table in tables:
+            table_text = table_to_text(table["rows"])
+            if not table_text.strip():
+                continue
 
-        meaningful_cells = [
-            cell.strip()
-            for row in table["rows"]
-            for cell in row
-            if cell and cell.strip()
-        ]
+            meaningful_cells = [
+                cell.strip()
+                for row in table["rows"]
+                for cell in row
+                if cell and cell.strip()
+            ]
 
-        if len(meaningful_cells) < 5:
-            continue
+            if len(meaningful_cells) < 5:
+                continue
 
-        page_num = table["page"]
-        page_info = section_hierarchy.get(page_num, {
-            "section": "GENERAL",
-            "chapter": "GENERAL",
-            "section_path": "GENERAL"
-        })
-        sec_path = page_info["section_path"]
+            page_num = table["page"]
+            page_info = section_hierarchy.get(page_num, {
+                "section": "GENERAL",
+                "chapter": "GENERAL",
+                "section_path": "GENERAL"
+            })
+            sec_path = page_info["section_path"]
 
-        document = Document(
-            page_content=table_text,
-            metadata={
-                "table_id": table["table_id"],
-                "company": table["company"],
-                "document_type": table["document_type"],
-                "page": page_num,
-                "content_type": "table",
-                "section": page_info["section"],
-                "chapter": page_info["chapter"],
-                "section_path": sec_path
-            }
-        )
+            document = Document(
+                page_content=table_text,
+                metadata={
+                    "table_id": table["table_id"],
+                    "company": table["company"],
+                    "ipo_id": table.get("ipo_id", "moel_ipo"),
+                    "document_type": table.get("document_type", "DRHP"),
+                    "document_version": table.get("document_version", "drhp_v1"),
+                    "filing_date": table.get("filing_date", "2024-03-20"),
+                    "is_latest": table.get("is_latest", True),
+                    "page": page_num,
+                    "content_type": "table",
+                    "section": page_info["section"],
+                    "chapter": page_info["chapter"],
+                    "section_path": sec_path
+                }
+            )
 
-        documents.append(document)
-        ids.append(table["table_id"])
+            documents.append(document)
+            ids.append(table["table_id"])
 
     return documents, ids
 

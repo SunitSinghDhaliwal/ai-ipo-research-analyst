@@ -52,16 +52,26 @@ def extract_source_metadata(item: Union[Dict[str, Any], Document]) -> Dict[str, 
     page = meta.get("page", "N/A")
     company = meta.get("company", "Maharashtra Oil Extractions Limited")
     doc_type = meta.get("document_type", "DRHP")
+    ipo_id = meta.get("ipo_id", "moel_ipo")
+    document_version = meta.get("document_version", "drhp_v1")
+    filing_date = meta.get("filing_date", "2024-03-20")
+    is_latest = meta.get("is_latest", True)
     content_type = meta.get("content_type", "text")
     section_path = meta.get("section_path") or meta.get("section") or "GENERAL"
+    filing_partition = item.get("filing_partition") if isinstance(item, dict) else doc_type
 
     return {
         "source_id": str(source_id),
         "page": page,
         "company": company,
+        "ipo_id": ipo_id,
         "document_type": doc_type,
+        "document_version": document_version,
+        "filing_date": filing_date,
+        "is_latest": is_latest,
         "content_type": content_type,
         "section_path": section_path,
+        "filing_partition": filing_partition,
         "text": text.strip(),
         "rrf_score": rrf_score,
         "rerank_score": rerank_score,
@@ -74,8 +84,9 @@ def format_single_source(source_meta: Dict[str, Any], index: int) -> str:
     """
     header = (
         f"--- [SOURCE {index}] ---\n"
-        f"Source ID: {source_meta['source_id']}\n"
+        f"Filing: {source_meta['document_type']}\n"
         f"Document: {source_meta['document_type']} ({source_meta['company']})\n"
+        f"Source ID: {source_meta['source_id']}\n"
         f"Page: {source_meta['page']}\n"
         f"Content Type: {source_meta['content_type']}\n"
         f"Section: {source_meta['section_path']}\n"
@@ -91,24 +102,46 @@ def format_single_source(source_meta: Dict[str, Any], index: int) -> str:
 
 def build_context(
     retrieved_items: List[Union[Dict[str, Any], Document]],
-    max_tokens: int = None
+    max_tokens: int = None,
+    is_comparative: bool = False
 ) -> Tuple[str, List[Dict[str, Any]]]:
     """
     Builds a unified, structured prompt context string from retrieved chunks,
-    preserving chunk_id, page number, document/company, content_type, and source text.
+    preserving chunk_id, page number, filing type, content_type, and source text.
+    For comparative queries, organizes evidence into distinct DRHP and RHP sections.
 
     Returns:
       (context_string, list_of_source_metadata_dicts)
     """
     if not retrieved_items:
-        return "No relevant DRHP context was retrieved.", []
+        return "No relevant prospectus context was retrieved.", []
+
+    sources_metadata = [extract_source_metadata(item) for item in retrieved_items]
+
+    if is_comparative:
+        drhp_sources = [s for s in sources_metadata if s.get("document_type") == "DRHP" or s.get("filing_partition") == "DRHP"]
+        rhp_sources = [s for s in sources_metadata if s.get("document_type") == "RHP" or s.get("filing_partition") == "RHP"]
+
+        blocks = []
+        blocks.append("=== DRHP EVIDENCE ===")
+        if drhp_sources:
+            for idx, s in enumerate(drhp_sources, start=1):
+                blocks.append(format_single_source(s, index=idx))
+        else:
+            blocks.append("[No DRHP evidence available.]")
+
+        blocks.append("\n=== RHP EVIDENCE ===")
+        if rhp_sources:
+            for idx, s in enumerate(rhp_sources, start=1):
+                blocks.append(format_single_source(s, index=idx))
+        else:
+            blocks.append("[No RHP evidence available. The Red Herring Prospectus (RHP) has not been loaded into the knowledge base.]")
+
+        full_context = "\n".join(blocks)
+        return full_context, sources_metadata
 
     formatted_blocks = []
-    sources_metadata = []
-
-    for idx, item in enumerate(retrieved_items, start=1):
-        source_meta = extract_source_metadata(item)
-        sources_metadata.append(source_meta)
+    for idx, source_meta in enumerate(sources_metadata, start=1):
         block = format_single_source(source_meta, index=idx)
         formatted_blocks.append(block)
 

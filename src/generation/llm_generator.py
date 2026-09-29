@@ -7,28 +7,26 @@ from dotenv import load_dotenv
 env_path = Path(__file__).resolve().parent.parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
-SYSTEM_PROMPT = """You are a rigorous, highly disciplined IPO Research Analyst evaluating the Draft Red Herring Prospectus (DRHP) for Maharashtra Oil Extractions Limited.
+SYSTEM_PROMPT = """You are a Senior Equity Research & IPO Analyst writing for institutional investors.
 
-Your objective is to provide precise, factual, and strictly grounded answers to research questions based ONLY on the retrieved DRHP context provided.
+Your objective is to provide a clean, insightful, professional research answer based STRICTLY on the retrieved prospectus context provided.
 
-CRITICAL INSTRUCTIONS:
-1. STRICT FACTUAL GROUNDING:
-   - Answer the question solely and exclusively using the facts, numbers, names, and statements contained in the provided context.
-   - Do NOT extrapolate, speculate, interpolate, or introduce outside knowledge not present in the context.
+CRITICAL PRESENTATION & TONE RULES (MINIMAL CLUTTER):
+1. WRITE FOR HUMAN EXECUTIVES:
+   - Provide direct, readable, well-structured answers.
+   - DO NOT use excessive markdown hashtags (avoid ###, ####) and avoid horizontal lines (---).
+   - Use clean, natural text with bold headers (e.g. **Executive Summary**, **Key Findings**, **Analyst Commentary**).
+   - If presenting comparisons, use clean markdown tables or clean bullet comparisons.
 
-2. INSUFFICIENT EVIDENCE & HALLUCINATION PREVENTION:
-   - If the provided context does not contain sufficient direct evidence or answers only a portion of the question, clearly state:
-     "Insufficient evidence in the provided DRHP context to answer this question."
-   - Specifically state what required information is absent from the retrieved excerpts.
-   - Never guess or manufacture financial numbers, dates, legal case outcomes, or management details.
+2. STRICT FACTUAL GROUNDING:
+   - Use ONLY facts, metrics, and statements from the provided context. Never extrapolate or introduce outside information.
+   - If evidence is partial or unavailable, clearly state:
+     "Insufficient evidence in the provided prospectus context to answer this question."
 
-3. MANDATORY INLINE CITATIONS:
-   - Every factual statement, metric, table reference, or claim MUST be immediately followed by an inline citation specifying the Source ID and Page Number in brackets.
-   - Format: `[<Source ID>, Page <Page Number>]`
-   - Examples: `[drhp_p30_c1, Page 30]`, `[moe_p444_t1, Page 444]`.
-
-4. SOURCES SUMMARY TABLE:
-   - Conclude your response with a structured markdown section titled `### Sources Cited` listing every source ID cited in your response, its page number, and its content type (Text/Table).
+3. EXPLICIT INLINE CITATIONS:
+   - Every factual figure, disclosure, or claim must cite its source in brackets: `[Source: <Source ID>, Page <Page Number>]`.
+   - Examples: `[Source: hdbfs_rhp_p56_t2, Page 56]`, `[Source: moe_p86_t1, Page 86]`.
+   - Do NOT output a raw text table of sources at the end (the user interface already presents interactive source cards).
 """
 
 USER_PROMPT_TEMPLATE = """RESEARCH QUERY:
@@ -39,6 +37,49 @@ RETRIEVED DRHP CONTEXT:
 
 Please provide your rigorous, cited analysis following the instructions above.
 """
+
+
+class ResilientChatGroq:
+    """
+    Transparent wrapper around ChatGroq that automatically switches to
+    GROQ_API_KEY_BACKUP if a 429 rate limit error is encountered.
+    """
+    def __init__(self, primary_llm: Any, backup_llm: Optional[Any] = None):
+        self.primary_llm = primary_llm
+        self.backup_llm = backup_llm
+
+    def invoke(self, *args: Any, **kwargs: Any) -> Any:
+        try:
+            return self.primary_llm.invoke(*args, **kwargs)
+        except Exception as e:
+            if "429" in str(e) or "rate_limit" in str(e).lower():
+                # 1. Try backup key if available
+                if self.backup_llm is not None:
+                    try:
+                        return self.backup_llm.invoke(*args, **kwargs)
+                    except Exception:
+                        pass
+                # 2. Try fast secondary model (gpt-oss-20b) with separate token allocation
+                try:
+                    from langchain_groq import ChatGroq
+                    key = os.getenv("GROQ_API_KEY")
+                    fallback_llm = ChatGroq(
+                        model_name="openai/gpt-oss-20b",
+                        api_key=key,
+                        temperature=0.0
+                    )
+                    return fallback_llm.invoke(*args, **kwargs)
+                except Exception as fb_err:
+                    print("FALLBACK_LLM ERROR:", fb_err)
+            raise e
+
+    def with_structured_output(self, schema: Any, **kwargs: Any) -> Any:
+        primary_so = self.primary_llm.with_structured_output(schema, **kwargs)
+        backup_so = self.backup_llm.with_structured_output(schema, **kwargs) if self.backup_llm is not None else None
+        return ResilientChatGroq(primary_so, backup_so)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.primary_llm, name)
 
 
 def get_chat_llm(
@@ -55,19 +96,31 @@ def get_chat_llm(
 
     if provider == "groq":
         from langchain_groq import ChatGroq
-        api_key = os.getenv("GROQ_API_KEY")
+        api_key = kwargs.pop("api_key", None) or os.getenv("GROQ_API_KEY")
         if not api_key:
             raise ValueError("GROQ_API_KEY is missing from environment or .env file.")
         # Default to openai/gpt-oss-120b or GROQ_MODEL
         model = model_name or os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
-        max_tokens_val = kwargs.pop("max_tokens", int(os.getenv("GROQ_MAX_TOKENS", "800")))
-        return ChatGroq(
+        max_tokens_val = kwargs.pop("max_tokens", int(os.getenv("GROQ_MAX_TOKENS", "2048")))
+        primary = ChatGroq(
             model_name=model,
             api_key=api_key,
             temperature=temperature,
             max_tokens=max_tokens_val,
             **kwargs
         )
+        backup_key = os.getenv("GROQ_API_KEY_BACKUP")
+        backup = None
+        if backup_key and backup_key != api_key:
+            backup = ChatGroq(
+                model_name=model,
+                api_key=backup_key,
+                temperature=temperature,
+                max_tokens=max_tokens_val,
+                **kwargs
+            )
+        return ResilientChatGroq(primary, backup)
+
 
     elif provider == "openai":
         from langchain_openai import ChatOpenAI
@@ -125,8 +178,12 @@ def generate_answer(
         response = llm.invoke(messages)
     except Exception as e:
         if "429" in str(e) or "rate_limit" in str(e).lower():
-            fallback_llm = get_chat_llm(model_name="openai/gpt-oss-20b")
-            response = fallback_llm.invoke(messages)
+            backup_key = os.getenv("GROQ_API_KEY_BACKUP")
+            if backup_key:
+                fallback_llm = get_chat_llm(api_key=backup_key)
+                response = fallback_llm.invoke(messages)
+            else:
+                raise e
         else:
             raise e
     return response.content.strip()

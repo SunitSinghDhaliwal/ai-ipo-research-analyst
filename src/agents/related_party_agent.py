@@ -53,35 +53,44 @@ class RelatedPartySummary(BaseModel):
 # Specialized Related-Party Retrieval
 # --------------------------------------------------
 
-def related_party_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
+def related_party_retrieve(
+    query: str,
+    top_k: int = 6,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Specialized retrieval for IPO Related-Party queries:
-      1. Prioritizes the inter-facility sharing agreement (drhp_p331_c2).
-      2. Prioritizes Note 33 (Related Party Disclosures, pages 409-414).
-      3. Surfaces Promoter Group entity ties (pages 357-358) and Loans/Advances disclosures (page 392).
-      4. Merges hybrid retrieval candidates and deduplicates preserving high priority.
+      1. Prioritizes known facility sharing agreements and Note on Related Party Disclosures.
+      2. Surfaces Promoter Group entity ties and Loans/Advances disclosures.
+      3. Merges hybrid retrieval candidates and deduplicates preserving high priority.
     """
     q_lower = query.lower()
 
     # 1. Enriched query ensuring representation across agreements, notes, and entities
-    enriched_query = f"{query} related party transactions Note 33 promoter group entities subsidiary BNPL facility sharing agreement loans advances"
+    enriched_query = f"{query} related party transactions Note promoter group entities subsidiary facility sharing agreement loans advances"
 
     # 2. Targeted search for facility sharing and Note 33 if relevant
     facility_candidates = []
+    base_filter = {"ipo_id": ipo_id} if ipo_id else None
     if any(k in q_lower for k in ["facility", "sharing", "service", "agreement", "bnpl", "75,000", "month"]):
         facility_candidates = retrieve(
             query="inter-facility sharing understanding dated April 01 2025 BNPL 75,000 steam weighbridge laboratory ERP",
             k=3,
-            metadata_filter=None,
-            use_reranker=True
+            metadata_filter=base_filter,
+            use_reranker=True,
+            document_target=document_target,
+            ipo_id=ipo_id
         )
 
     # 3. Hybrid search
     hybrid_candidates = retrieve(
         query=enriched_query,
         k=top_k + 4,
-        metadata_filter=None,
-        use_reranker=True
+        metadata_filter=base_filter,
+        use_reranker=True,
+        document_target=document_target,
+        ipo_id=ipo_id
     )
 
     # 4. Priority scoring
@@ -127,9 +136,9 @@ def related_party_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
 # Related-Party System Prompt & Templates
 # --------------------------------------------------
 
-RELATED_PARTY_AGENT_SYSTEM_PROMPT = """You are a specialized IPO Governance & Related-Party Analyst evaluating the Draft Red Herring Prospectus (DRHP) for Maharashtra Oil Extractions Limited.
+RELATED_PARTY_AGENT_SYSTEM_PROMPT = """You are a specialized IPO Governance & Related-Party Analyst evaluating IPO prospectus filings (DRHP / RHP) for the subject company.
 
-Your objective is to provide precise, structured, and strictly grounded assessments of related-party transactions (RPT), agreements, promoter-group entity dealings, and loans/advances based ONLY on the retrieved DRHP context provided.
+Your objective is to provide precise, structured, and strictly grounded assessments of related-party transactions (RPT), agreements, promoter-group entity dealings, and loans/advances based ONLY on the retrieved prospectus context provided.
 
 CRITICAL INSTRUCTIONS:
 1. STRICT FACTUAL GROUNDING:
@@ -138,19 +147,17 @@ CRITICAL INSTRUCTIONS:
 
 2. CLASSIFICATION & ENTITY DISTINCTION (MANDATORY):
    Clearly distinguish the nature of each related party:
-   - **Subsidiary**: e.g., Basant Nutrifoods Private Limited (BNPL).
-   - **Promoters**: Individual promoters (e.g., Manoj Basantlal Agrawal, Alkesh Basantlal Agrawal).
-   - **Promoter Group Entities / Firms with Significant Influence**: e.g., AB Agribiz and Organics LLP, Samruddhi Proteins Private Limited, HUFs (Agrawal Alkesh Basantlal HUF, Ashok Shankarlal Agrawal HUF).
+   - **Subsidiary**: e.g., Basant Nutrifoods Private Limited (BNPL) or applicable subsidiaries.
+   - **Promoters**: Individual promoters.
+   - **Promoter Group Entities / Firms with Significant Influence**: Associated enterprises, LLPs, HUFs.
    - **Directors & Key Management Personnel (KMPs)**: Non-promoter directors, CFO, Company Secretary.
-   - **Relatives of Directors/KMPs**: As listed under Ind-AS 24 in Note 33.
+   - **Relatives of Directors/KMPs**: As listed under Ind-AS 24 / relevant accounting standard.
 
 3. SPECIFIC AGREEMENTS & TERMS:
    - When asked about facility-sharing or service agreements, report the exact details:
-     - Agreement Name: "inter-facility sharing understanding" dated April 01, 2025 with BNPL.
-     - Permitted Facilities: (i) steam generation and supply; (ii) weighbridge facilities; (iii) quality control and testing laboratory; (iv) accounting ERP; (v) utility infrastructure (water etc.); (vi) common amenities.
-     - Consideration: BNPL pays ₹ 75,000 per month (excluding applicable GST) for 3 years.
+     - Agreement Name, Permitted Facilities, and Consideration.
    - When asked about loans and advances:
-     - Disclose whether any loans are outstanding or given to related parties (e.g. Note on loans shows Nil / dash for related parties as at March 31, 2026/2025; no loans or advances taken by Promoters).
+     - Disclose whether any loans are outstanding or given to related parties.
 
 4. STRUCTURED REPORTING FORMAT:
    For each disclosed transaction or agreement, present:
@@ -162,9 +169,9 @@ CRITICAL INSTRUCTIONS:
    - **Source Citation**: `[<Source ID>, Page <Page Number>]`
 
 5. INSUFFICIENT EVIDENCE & HALLUCINATION REFUSAL:
-   - If the user asks about a related-party entity, loan, or agreement not disclosed in the provided DRHP context (e.g., fictitious offshore entities, undisclosed director loans, or companies not mentioned in the text), state clearly:
-     "Insufficient evidence in the provided DRHP context to answer this question."
-   - Explain clearly that no such transaction or entity is disclosed in the provided DRHP excerpts.
+   - If the user asks about a related-party entity, loan, or agreement not disclosed in the provided prospectus context (e.g., fictitious offshore entities, undisclosed director loans, or companies not mentioned in the text), state clearly:
+     "Insufficient evidence in the provided prospectus context to answer this question."
+   - Explain clearly that no such transaction or entity is disclosed in the provided prospectus excerpts.
 
 6. MANDATORY CITATIONS & SOURCES TABLE:
    - Every transaction detail and figure must be cited immediately: `[<Source ID>, Page <Page Number>]`.
@@ -176,7 +183,7 @@ CRITICAL INSTRUCTIONS:
 RELATED_PARTY_USER_TEMPLATE = """RESEARCH QUERY:
 {query}
 
-RETRIEVED DRHP RELATED-PARTY CONTEXT:
+RETRIEVED PROSPECTUS RELATED-PARTY CONTEXT:
 {context}
 
 Please provide your rigorous, cited related-party analysis following the instructions above.
@@ -190,16 +197,54 @@ Please provide your rigorous, cited related-party analysis following the instruc
 def run_related_party_agent(
     query: str,
     top_k: int = 6,
-    llm: Optional[Any] = None
+    llm: Optional[Any] = None,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Executes the specialized Related-Party Agent:
-      1. RPT-prioritized hybrid retrieval (facility agreement + Note 33 + promoter disclosures).
+      1. RPT-prioritized hybrid retrieval (facility agreement + Note 33 + promoter disclosures) with IPO isolation.
       2. Structured context generation preserving entity and contract details.
       3. Grounded governance analysis with mandatory entity classification.
     """
-    retrieved_items = related_party_retrieve(query=query, top_k=top_k)
-    context_str, sources_metadata = build_context(retrieved_items)
+    retrieved_items = related_party_retrieve(
+        query=query,
+        top_k=top_k,
+        document_target=document_target,
+        ipo_id=ipo_id
+    )
+
+    # Safe handling: If query specifically asks for RHP and no RHP evidence is loaded
+    if document_target == "rhp" and not retrieved_items:
+        return {
+            "query": query,
+            "answer": "No RHP evidence is available. The Red Herring Prospectus (RHP) has not been loaded into the knowledge base yet.",
+            "context": "No relevant RHP context was retrieved.",
+            "sources": [],
+            "retrieval_results": []
+        }
+
+    # Safe handling: If query asks for comparative DRHP vs RHP analysis and RHP is missing
+    if document_target == "comparative":
+        has_rhp = any(
+            (isinstance(item, dict) and item.get("filing_partition") == "RHP")
+            or (hasattr(item, "metadata") and item.metadata.get("document_type") == "RHP")
+            for item in retrieved_items
+        )
+        if not has_rhp:
+            context_str, sources_metadata = build_context(retrieved_items, is_comparative=True)
+            return {
+                "query": query,
+                "answer": "A comparison between DRHP and RHP related party disclosures cannot be performed because RHP evidence is not currently loaded in the knowledge base. Only the Draft Red Herring Prospectus (DRHP) is available.",
+                "context": context_str,
+                "sources": sources_metadata,
+                "retrieval_results": retrieved_items
+            }
+
+    context_str, sources_metadata = build_context(
+        retrieved_items,
+        is_comparative=(document_target == "comparative")
+    )
 
     if llm is None:
         llm = get_chat_llm(temperature=0.0)
@@ -214,8 +259,11 @@ def run_related_party_agent(
         ("user", user_prompt)
     ]
 
-    response = llm.invoke(messages)
-    answer = response.content.strip()
+    try:
+        response = llm.invoke(messages)
+        answer = response.content.strip()
+    except Exception as e:
+        answer = f"Related party analysis based on retrieved evidence:\n\n{context_str[:600]}...\n\n(Note: LLM generation encountered {e})"
 
     return {
         "query": query,
@@ -236,10 +284,20 @@ def related_party_agent_node(
     Updates the state with related-party findings, context, sources, and cited answer.
     """
     query = state["query"]
+    document_target = state.get("document_target", "latest")
+    ipo_id = state.get("ipo_id")
     try:
-        agent_res = run_related_party_agent(query=query, top_k=top_k, llm=llm)
+        agent_res = run_related_party_agent(
+            query=query,
+            top_k=top_k,
+            llm=llm,
+            document_target=document_target,
+            ipo_id=ipo_id
+        )
         return {
+            "ipo_id": ipo_id,
             "route": "related_party",
+            "document_target": document_target,
             "retrieval_results": agent_res["retrieval_results"],
             "context": agent_res["context"],
             "answer": agent_res["answer"],
@@ -248,7 +306,9 @@ def related_party_agent_node(
         }
     except Exception as e:
         return {
+            "ipo_id": ipo_id,
             "route": "related_party",
+            "document_target": document_target,
             "answer": f"Related-Party Agent error: {str(e)}",
             "error": str(e)
         }

@@ -19,7 +19,17 @@ def clean_cell(cell):
     return cell
 
 
-def normalize_table(raw_table, page_number, table_id, company, document_type="DRHP"):
+def normalize_table(
+    raw_table,
+    page_number,
+    table_id,
+    company,
+    document_type="DRHP",
+    ipo_id="moel_ipo",
+    document_version="drhp_v1",
+    filing_date="2024-03-20",
+    is_latest=True
+):
     """
     Normalize a raw pdfplumber table while preserving its structure.
     """
@@ -35,13 +45,16 @@ def normalize_table(raw_table, page_number, table_id, company, document_type="DR
             continue
 
         rows.append(cleaned_row)
-        
-        
+
     return {
-    "table_id": table_id,
-    "company": company,
-    "document_type": document_type,
-    "page": page_number,
-    "content_type": "table",
-    "rows": rows
-}
+        "table_id": table_id,
+        "company": company,
+        "ipo_id": ipo_id,
+        "document_type": document_type,
+        "document_version": document_version,
+        "filing_date": filing_date,
+        "is_latest": is_latest,
+        "page": page_number,
+        "content_type": "table",
+        "rows": rows
+    }

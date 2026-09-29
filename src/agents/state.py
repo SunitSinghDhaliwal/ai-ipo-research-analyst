@@ -18,7 +18,10 @@ class IPOAgentState(TypedDict):
       error: Error message if any step in the pipeline fails.
     """
     query: str
+    ipo_id: Optional[str]
     route: str
+    document_target: Optional[str]
+    filing_comparison: Optional[bool]
     route_confidence: Optional[float]
     route_reasoning: Optional[str]
     retrieval_results: List[Dict[str, Any]]

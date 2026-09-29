@@ -15,38 +15,52 @@ TEXT_CHUNKS_PATH = Path(
 )
 
 
+PROCESSED_DIR = Path("data/processed")
+
+
 # --------------------------------------------------
 # Load text chunks
 # --------------------------------------------------
 
-def load_text_documents():
+def load_text_documents(chunks_path=None):
 
-    with open(TEXT_CHUNKS_PATH, "r", encoding="utf-8") as file:
-        chunks = json.load(file)
+    if chunks_path is not None:
+        chunk_files = [Path(chunks_path)]
+    else:
+        chunk_files = sorted(PROCESSED_DIR.glob("*/text_chunks.json"))
+        if not chunk_files and TEXT_CHUNKS_PATH.exists():
+            chunk_files = [TEXT_CHUNKS_PATH]
 
     documents = []
 
-    for chunk in chunks:
+    for c_file in chunk_files:
+        with open(c_file, "r", encoding="utf-8") as file:
+            chunks = json.load(file)
 
-        meta = {
-            "chunk_id": chunk["chunk_id"],
-            "company": chunk["company"],
-            "document_type": chunk["document_type"],
-            "page": chunk["page"],
-            "content_type": chunk["content_type"]
-        }
-        if "section" in chunk:
-            meta["section"] = chunk["section"]
-        if "chapter" in chunk:
-            meta["chapter"] = chunk["chapter"]
-        if "section_path" in chunk:
-            meta["section_path"] = chunk["section_path"]
+        for chunk in chunks:
+            meta = {
+                "chunk_id": chunk["chunk_id"],
+                "company": chunk["company"],
+                "ipo_id": chunk.get("ipo_id", "moel_ipo"),
+                "document_type": chunk.get("document_type", "DRHP"),
+                "document_version": chunk.get("document_version", "drhp_v1"),
+                "filing_date": chunk.get("filing_date", "2024-03-20"),
+                "is_latest": chunk.get("is_latest", True),
+                "page": chunk["page"],
+                "content_type": chunk["content_type"]
+            }
+            if "section" in chunk:
+                meta["section"] = chunk["section"]
+            if "chapter" in chunk:
+                meta["chapter"] = chunk["chapter"]
+            if "section_path" in chunk:
+                meta["section_path"] = chunk["section_path"]
 
-        documents.append({
-            "id": chunk["chunk_id"],
-            "text": chunk["text"],
-            "metadata": meta
-        })
+            documents.append({
+                "id": chunk["chunk_id"],
+                "text": chunk["text"],
+                "metadata": meta
+            })
 
 
     return documents
@@ -117,11 +131,16 @@ def bm25_search(
         filtered_documents = []
 
         for document in documents:
-
-            matches = all(
-                document["metadata"].get(key) == value
-                for key, value in metadata_filter.items()
-            )
+            doc_meta = document.get("metadata", {})
+            matches = True
+            for key, value in metadata_filter.items():
+                doc_val = doc_meta.get(key)
+                # If checking is_latest, fallback to True if missing for backward compatibility
+                if key == "is_latest" and doc_val is None:
+                    doc_val = True
+                if doc_val != value:
+                    matches = False
+                    break
 
             if matches:
                 filtered_documents.append(document)
@@ -129,6 +148,9 @@ def bm25_search(
     else:
 
         filtered_documents = documents
+
+    if not filtered_documents:
+        return []
 
 
     # ----------------------------------------------

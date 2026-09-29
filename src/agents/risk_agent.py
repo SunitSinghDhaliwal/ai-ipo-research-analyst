@@ -52,7 +52,12 @@ class RiskExtractionResult(BaseModel):
 # Specialized Risk Retrieval
 # --------------------------------------------------
 
-def risk_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
+def risk_retrieve(
+    query: str,
+    top_k: int = 6,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Specialized retrieval for IPO Risk Factor queries:
       1. Boosts and enriches queries with domain terms (e.g., 'Risk Factors', 'material adverse effect').
@@ -67,12 +72,15 @@ def risk_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
     if "risk" not in q_lower:
         enriched_query = f"{query} risk factors internal external material adverse effect"
 
+    base_filter = {"ipo_id": ipo_id} if ipo_id else None
     # 2. Retrieve primary candidates with hybrid search
     candidates = retrieve(
         query=enriched_query,
         k=top_k + 4,
-        metadata_filter=None,
-        use_reranker=True
+        metadata_filter=base_filter,
+        use_reranker=True,
+        document_target=document_target,
+        ipo_id=ipo_id
     )
 
     # 3. Sort/prioritize chunks from Section II - Risk Factors or with high relevance
@@ -109,43 +117,38 @@ def risk_retrieve(query: str, top_k: int = 6) -> List[Dict[str, Any]]:
 # Risk System Prompt & Templates
 # --------------------------------------------------
 
-RISK_AGENT_SYSTEM_PROMPT = """You are a specialized IPO Risk Analyst evaluating the Draft Red Herring Prospectus (DRHP) for Maharashtra Oil Extractions Limited.
+RISK_AGENT_SYSTEM_PROMPT = """You are a specialized IPO Risk Analyst evaluating IPO prospectus filings (DRHP / RHP) for the subject company.
 
-Your objective is to provide precise, structured, and strictly grounded assessments of risk factors based ONLY on the retrieved DRHP context provided.
+Your objective is to provide an executive, highly readable, and strictly grounded assessment of key risk factors based ONLY on the retrieved prospectus context provided.
 
-CRITICAL INSTRUCTIONS:
+CRITICAL PRESENTATION RULES (MINIMAL CLUTTER, NO EXCESSIVE HASHTAGS):
+- DO NOT use excessive markdown hashtags (avoid ###, ####) and DO NOT format risks into cramped 7-column spreadsheet tables.
+- Present each distinct risk factor using bold section headers:
+
+**1. [Risk Factor Title / Descriptor]**
+- **Category**: Internal Risk / External Risk (as stated in prospectus)
+- **Underlying Causes & Drivers**: [Direct factual root causes disclosed in the text]
+- **Potential Business & Financial Impact**: [Specific consequences on operations, cash flow, or regulatory standing]
+- **Disclosed Exposure / Metrics**: [Any reported metrics, percentages, revenue concentration, or debt figures]
+- **Filing Citation**: `[Source: <Source ID>, Page <Page Number>]`
+
+CRITICAL GROUNDING RULES:
 1. STRICT FACTUAL GROUNDING:
-   - Answer exclusively using the risk disclosures in the context.
-   - Do NOT assume, infer, extrapolate, or invent risks or potential business hazards.
-
-2. STRUCTURED RISK BREAKDOWN:
-   For every relevant risk factor identified in the context, present:
-   - **Risk Factor**: Clear title or description of the risk as named in the DRHP.
-   - **Category**: Internal Risk vs. External Risk (if stated in the text).
-   - **Causes & Drivers**: Specific root causes disclosed (e.g., monsoon dependence, commodity price cycles, supplier dependence, lack of long-term contracts).
-   - **Potential Impact & Consequences**: Stated consequences on the company's business, financial condition, cash flows, or results of operations.
-   - **Reported Figures & Exposure**: Any exact percentages, revenue shares, or numbers mentioned (e.g., top 5 customers contribution, raw material cost share).
-   - **Source Citation**: Explicit citation in the format `[<Source ID>, Page <Page Number>]`.
-
-3. AVOID INVENTED SEVERITY OR RANKINGS:
-   - Do NOT invent subjective severity ratings (e.g., do not say "Risk Level: High / 9 out of 10" or "This is the most critical risk facing the company") unless the DRHP itself explicitly ranks or labels the risk in that manner.
-
-4. INSUFFICIENT EVIDENCE & HALLUCINATION REFUSAL:
-   - If the user asks about a risk that is not disclosed in the provided DRHP context (e.g., cryptocurrency risks, satellite failures, cybersecurity breaches not in the text, or other unmentioned topics), you MUST refuse:
-     "Insufficient evidence in the provided DRHP context to answer this question."
-   - Explain clearly that no such risk factor is disclosed in the DRHP excerpts provided. Never fabricate risks.
-
-5. MANDATORY CITATIONS & SOURCES TABLE:
-   - Every risk detail must include its bracketed source citation: `[<Source ID>, Page <Page Number>]`.
-   - Conclude your response with a structured markdown table:
-     ### Sources Cited
-     | Source ID | Page | Content Type | Section |
+   - Use exclusively the risk disclosures in the context. Never infer or invent risks.
+2. AVOID INVENTED SEVERITY OR RANKINGS:
+   - Do NOT invent subjective rankings ("High / 9 out of 10") unless explicitly stated in the filing.
+3. INSUFFICIENT EVIDENCE & HALLUCINATION REFUSAL:
+   - If the user asks about a risk not disclosed in the text, clearly state:
+     "Insufficient evidence in the provided prospectus context to answer this question."
+4. MANDATORY CITATIONS:
+   - Every risk detail must cite its source: `[Source: <Source ID>, Page <Page Number>]`.
+   - Do NOT output a raw text table of sources at the end (the UI already renders interactive source cards).
 """
 
 RISK_USER_TEMPLATE = """RESEARCH QUERY:
 {query}
 
-RETRIEVED DRHP RISK CONTEXT:
+RETRIEVED PROSPECTUS RISK CONTEXT:
 {context}
 
 Please provide your rigorous, cited risk factor analysis following the instructions above.
@@ -159,16 +162,54 @@ Please provide your rigorous, cited risk factor analysis following the instructi
 def run_risk_agent(
     query: str,
     top_k: int = 6,
-    llm: Optional[Any] = None
+    llm: Optional[Any] = None,
+    document_target: str = "latest",
+    ipo_id: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Executes the specialized Risk Agent:
-      1. Risk-prioritized hybrid retrieval.
+      1. Risk-prioritized hybrid retrieval with document scope filtering and IPO isolation.
       2. Context building preserving chunk metadata and section hierarchy.
       3. Grounded risk evaluation using the specialized risk system prompt.
     """
-    retrieved_items = risk_retrieve(query=query, top_k=top_k)
-    context_str, sources_metadata = build_context(retrieved_items)
+    retrieved_items = risk_retrieve(
+        query=query,
+        top_k=top_k,
+        document_target=document_target,
+        ipo_id=ipo_id
+    )
+
+    # Safe handling: If query specifically asks for RHP and no RHP evidence is loaded
+    if document_target == "rhp" and not retrieved_items:
+        return {
+            "query": query,
+            "answer": "No RHP evidence is available. The Red Herring Prospectus (RHP) has not been loaded into the knowledge base yet.",
+            "context": "No relevant RHP context was retrieved.",
+            "sources": [],
+            "retrieval_results": []
+        }
+
+    # Safe handling: If query asks for comparative DRHP vs RHP analysis and RHP is missing
+    if document_target == "comparative":
+        has_rhp = any(
+            (isinstance(item, dict) and item.get("filing_partition") == "RHP")
+            or (hasattr(item, "metadata") and item.metadata.get("document_type") == "RHP")
+            for item in retrieved_items
+        )
+        if not has_rhp:
+            context_str, sources_metadata = build_context(retrieved_items, is_comparative=True)
+            return {
+                "query": query,
+                "answer": "A comparison between DRHP and RHP risk factors cannot be performed because RHP evidence is not currently loaded in the knowledge base. Only the Draft Red Herring Prospectus (DRHP) is available.",
+                "context": context_str,
+                "sources": sources_metadata,
+                "retrieval_results": retrieved_items
+            }
+
+    context_str, sources_metadata = build_context(
+        retrieved_items,
+        is_comparative=(document_target == "comparative")
+    )
 
     if llm is None:
         llm = get_chat_llm(temperature=0.0)
@@ -183,8 +224,11 @@ def run_risk_agent(
         ("user", user_prompt)
     ]
 
-    response = llm.invoke(messages)
-    answer = response.content.strip()
+    try:
+        response = llm.invoke(messages)
+        answer = response.content.strip()
+    except Exception as e:
+        answer = f"Risk factor analysis based on retrieved evidence:\n\n{context_str[:600]}...\n\n(Note: LLM generation encountered {e})"
 
     return {
         "query": query,
@@ -205,10 +249,20 @@ def risk_agent_node(
     Updates the state with risk evaluation findings, context, sources, and cited answer.
     """
     query = state["query"]
+    document_target = state.get("document_target", "latest")
+    ipo_id = state.get("ipo_id")
     try:
-        agent_res = run_risk_agent(query=query, top_k=top_k, llm=llm)
+        agent_res = run_risk_agent(
+            query=query,
+            top_k=top_k,
+            llm=llm,
+            document_target=document_target,
+            ipo_id=ipo_id
+        )
         return {
+            "ipo_id": ipo_id,
             "route": "risk",
+            "document_target": document_target,
             "retrieval_results": agent_res["retrieval_results"],
             "context": agent_res["context"],
             "answer": agent_res["answer"],
@@ -217,7 +271,9 @@ def risk_agent_node(
         }
     except Exception as e:
         return {
+            "ipo_id": ipo_id,
             "route": "risk",
+            "document_target": document_target,
             "answer": f"Risk Agent error: {str(e)}",
             "error": str(e)
         }
