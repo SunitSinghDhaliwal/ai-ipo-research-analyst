@@ -409,11 +409,14 @@ async def research(req: ResearchRequest):
         company_name = company_info.get("name", ipo_id)
 
         system_prompt = (
-            f"You are an expert SEBI IPO Research Analyst specializing in {company_name}. "
-            "Your answers must be grounded strictly in the provided prospectus excerpts. "
-            "Always include page citations in the format [source_id, Page X]. "
-            "Never hallucinate facts or extrapolate beyond provided evidence. "
-            "If evidence is insufficient, state that clearly."
+            f"You are an expert SEBI IPO Research Analyst specializing in {company_name}.\n"
+            "Your output must be strictly grounded in the provided prospectus excerpts.\n\n"
+            "OUTPUT FORMATTING RULES (MANDATORY):\n"
+            "1. INLINE CITATIONS: Every factual finding, disclosure, or metric must cite its source in brackets: [source_id, Page X].\n"
+            "2. NO RAW HTML TAGS: Do NOT use raw HTML tags like '<br>', '<br/>', or '<span>' in markdown tables or bullet points. Use standard Markdown linebreaks or clean bullet lists.\n"
+            "3. CLEAN READABLE ARITHMETIC: Format all financial calculations using clean, standard plain-text notation (e.g., '((140,593.8 - 123,181.2) / 123,181.2) × 100 = +14.1%'). Avoid raw LaTeX display code like '\\[', '\\]', '\\frac{}{}', '\\text{}', or '\\approx'.\n"
+            "4. COMPLETE ANALYSIS: Always generate full, completed conclusions and bullet points without cutting off or truncating mid-sentence.\n"
+            "5. ZERO HALLUCINATION: If evidence is insufficient, state: 'Insufficient evidence in the provided prospectus context to answer this question.'"
         )
 
         user_content = (
@@ -436,7 +439,7 @@ async def research(req: ResearchRequest):
                         {"role": "user", "content": user_content}
                     ],
                     temperature=0.1,
-                    max_tokens=int(os.getenv("GROQ_MAX_TOKENS", "1500"))
+                    max_tokens=int(os.getenv("GROQ_MAX_TOKENS", "4096"))
                 )
                 used_model = m_name
                 break

@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPO Research Agent — Page-Cited Prospectus Analysis</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
   <style>
     :root {
       --bg: #FAFAF8;
@@ -638,6 +641,19 @@
       font-family: var(--code-font);
       font-size: 10.5px;
       color: #718096;
+    }
+
+    .math-formula-box {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin: 14px 0;
+      font-family: var(--code-font);
+      font-size: 13.5px;
+      color: var(--text-main);
+      overflow-x: auto;
+      line-height: 1.6;
     }
 
     /* Sources List Section */
@@ -1462,6 +1478,23 @@
       const answerContainer = document.getElementById("answer-content");
       answerContainer.innerHTML = formatMarkdown(data.answer || "No response generated.");
 
+      // Auto-render KaTeX if library is available
+      if (window.renderMathInElement) {
+        try {
+          window.renderMathInElement(answerContainer, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '\\[', right: '\\]', display: true },
+              { left: '$', right: '$', display: false },
+              { left: '\\(', right: '\\)', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch (e) {
+          console.warn("KaTeX render:", e);
+        }
+      }
+
       // Render sources
       const sourcesGrid = document.getElementById("sources-grid");
       const sources = data.sources || [];
@@ -1486,13 +1519,48 @@
       switchView("results");
     }
 
-    // Markdown Formatter (Headers, Lists, Citations, Clean Tables)
+    // Markdown Formatter (Headers, Lists, Citations, Clean Tables, Math)
     function formatMarkdown(text) {
       if (!text) return "";
       let html = escapeHtml(text);
 
+      // Unescape linebreaks emitted in tables or lists
+      html = html.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
       // Clean unicode brackets if LLM emitted them
       html = html.replace(/【/g, '[').replace(/】/g, ']');
+
+      // Render or clean display math \[ ... \]
+      html = html.replace(/\\\[([\s\S]*?)\\\]/g, (match, formula) => {
+        if (window.katex) {
+          try {
+            return `<div class="math-formula-box">${window.katex.renderToString(formula.trim(), { displayMode: true, throwOnError: false })}</div>`;
+          } catch(e) {}
+        }
+        let clean = formula
+          .replace(/\\text\{([^}]+)\}/g, '$1')
+          .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1 / $2)')
+          .replace(/\\times/g, ' × ')
+          .replace(/\\approx/g, ' ≈ ')
+          .replace(/\\pm/g, ' ± ')
+          .replace(/\\%/g, '%')
+          .replace(/\\cdot/g, ' · ')
+          .trim();
+        return `<div class="math-formula-box"><strong>Formula:</strong> ${clean}</div>`;
+      });
+
+      // Render or clean inline math \( ... \)
+      html = html.replace(/\\\(([\s\S]*?)\\\)/g, (match, formula) => {
+        if (window.katex) {
+          try {
+            return window.katex.renderToString(formula.trim(), { displayMode: false, throwOnError: false });
+          } catch(e) {}
+        }
+        return formula
+          .replace(/\\text\{([^}]+)\}/g, '$1')
+          .replace(/\\times/g, ' × ')
+          .replace(/\\approx/g, ' ≈ ');
+      });
 
       // Enhanced Source Citations: [source_id, Page N] or [Source: Page N, source_id]
       html = html.replace(/\[(?:Source:\s*)?([a-zA-Z0-9_\-]+),\s*(?:Page\s*)?(\d+)\]/gi, (match, id, page) => {
