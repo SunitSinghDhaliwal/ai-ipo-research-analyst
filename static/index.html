@@ -1539,7 +1539,7 @@
         }
         let clean = formula
           .replace(/\\text\{([^}]+)\}/g, '$1')
-          .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1 / $2)')
+          .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '(($1) / $2)')
           .replace(/\\times/g, ' × ')
           .replace(/\\approx/g, ' ≈ ')
           .replace(/\\pm/g, ' ± ')
