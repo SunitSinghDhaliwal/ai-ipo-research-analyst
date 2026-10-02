@@ -1,10 +1,13 @@
 # IPO Research Agent
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Visit_App-blue?style=for-the-badge)](https://ai-ipo-research-analyst.vercel.app/)
 [![Tests](https://img.shields.io/badge/tests-62%2F62%20passing-brightgreen)](#running-test-suite)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688)](https://fastapi.tiangolo.com/)
 [![LangGraph](https://img.shields.io/badge/orchestration-LangGraph-orange)](https://github.com/langchain-ai/langgraph)
-[![Deploy on Vercel](https://vercel.com/button)](https://vercel.com/new)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://ai-ipo-research-analyst.vercel.app/)
+
+> **🌐 [Try the Live App → ai-ipo-research-analyst.vercel.app](https://ai-ipo-research-analyst.vercel.app/)**
 
 An **Agentic RAG system** designed for Indian IPO prospectuses (Draft Red Herring Prospectus [DRHP] and Red Herring Prospectus [RHP]). Features **page-cited evidence attribution**, **deterministic financial calculation tools**, **domain-specialized LangGraph agents**, **version-aware comparative analysis**, and **100% cross-IPO tenant isolation**.
 
