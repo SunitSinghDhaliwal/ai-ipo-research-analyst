@@ -16,10 +16,18 @@ An **Agentic RAG system** designed for Indian IPO prospectuses (Draft Red Herrin
 ## Key Highlights & Benchmark Results
 
 * **Two-Stage Hybrid Retrieval**: Combines dense semantic search (**ChromaDB** with `BAAI/bge-base-en-v1.5`), sparse lexical search (**BM25Okapi**), **Reciprocal Rank Fusion (RRF)**, and **Cross-Encoder Reranking** (`BAAI/bge-reranker-base`).
-  * **Hit@5**: **75.0%** (up from 50.0% for standalone BM25, a **+50% relative lift**).
-  * **Hit@10**: **100.0%** across complex prospectus queries.
-* **Deterministic Financial Calculations (0% Arithmetic Hallucination)**: YoY growth, EBITDA margins, PAT margins, and debt-to-equity ratios are executed via a deterministic Python arithmetic engine with strict algebraic audit trails.
-* **LangGraph Multi-Agent Architecture**: 100.0% classification accuracy across an 18-query routing benchmark spanning Financial, Risk, Litigation, Related-Party, and Executive Summary domains.
+  * Evaluated on a hand-labelled set of **16 queries** over the MOEL DRHP (`data/corrected_benchmark_results.json`):
+
+    | Method | Hit@5 | Hit@10 |
+    |---|---|---|
+    | BM25 only | 50.0% (8/16) | 68.8% (11/16) |
+    | Dense only (Chroma) | 68.8% (11/16) | 100% (16/16) |
+    | Hybrid (BM25 + Dense, RRF) | **75.0% (12/16)** | 87.5% (14/16) |
+    | Hybrid + Cross-Encoder Rerank | 62.5% (10/16) | **100% (16/16)** |
+
+  * Hybrid RRF gives the best top-5 hit rate; adding the reranker gives the best top-10 recall but lowered Hit@5 on this small set. The set is small and single-company, so treat these as directional.
+* **Deterministic Financial Calculations (no LLM arithmetic)**: the LLM only extracts reported figures with their page citations; YoY growth, margins and ratios are computed in Python with the formula shown. (Extraction itself can still be wrong, so every figure stays linked to its source page.)
+* **LangGraph Multi-Agent Architecture**: 100.0% classification accuracy on a hand-written 18-query routing benchmark spanning Financial, Risk, Litigation, Related-Party, and Executive Summary domains.
 * **Comparative Version Scoping (DRHP vs. RHP)**: Dual-partition retrieval identifies balance sheet changes, business risk evolutions, and regulatory disclosures between draft and final filings.
 * **100% Cross-IPO Tenant Isolation**: Zero cross-contamination across 10,000+ indexed chunks between distinct IPO entities (e.g. HDB Financial Services vs. Maharashtra Oil Extractions).
 * **Safe Refusal Guardrails**: Refuses speculative questions on unfiled prospectus versions (e.g., MOEL RHP).
@@ -60,6 +68,21 @@ User Query (via Web UI / REST API)
 ```
 
 ---
+
+## Live Demo vs. Full Pipeline
+
+The [live demo](https://ai-ipo-research-analyst.vercel.app/) runs a **lightweight serverless version** (`api/index.py`) so it fits inside Vercel's 250MB function limit:
+
+| | Live demo (Vercel) | Full pipeline (`server.py` / Docker) |
+|---|---|---|
+| Routing | Keyword router | LangGraph LLM router + specialised agents |
+| Retrieval | BM25 over text chunks **and** a separate table store, with section boosting | BM25 + ChromaDB dense search, RRF, cross-encoder reranking |
+| DRHP vs RHP | Version-scoped retrieval; comparative mode pulls evidence from both filings | Same |
+| Calculations | LLM extracts figures → Python computes growth | Deterministic financial calculator agent |
+| Page-cited excerpts & refusals | Yes | Yes |
+| Upload new prospectus | Not available (needs a persistent index) | Yes |
+
+Set `BACKEND_URL` in Vercel to proxy the live UI to a container running the full pipeline.
 
 ## Online Deployment
 

@@ -1082,7 +1082,7 @@
       <div class="loading-container" id="research-loading">
         <div class="spinner"></div>
         <div class="loading-text">Researching IPO prospectuses...</div>
-        <div class="loading-subtext">Retrieving grounded text and table evidence with cross-encoder reranking</div>
+        <div class="loading-subtext">Retrieving page-cited text and table evidence from the filing</div>
       </div>
 
       <!-- Example Questions Section -->
@@ -1134,7 +1134,7 @@
     <div class="view-container" id="view-upload">
       <div class="view-header">
         <h1 class="view-title">Upload New Document</h1>
-        <p class="view-subtitle">Add a new IPO prospectus to the vector knowledge base and sparse BM25 index.</p>
+        <p class="view-subtitle">Add a new IPO prospectus to the vector knowledge base and sparse BM25 index. (Uploads work in the full Docker/local version; the live demo includes two pre-indexed IPOs.)</p>
       </div>
 
       <div class="card">
@@ -1404,10 +1404,14 @@
       return str.replace(/'/g, "\\'");
     }
 
-    function populateAndResearch(text) {
+    function populateAndResearch(text, companyId) {
+      if (companyId && companyId !== state.currentCompanyId) {
+        updateCompanySelection(companyId);
+      }
+      switchView("research");
       const textarea = document.getElementById("research-query-input");
       textarea.value = text;
-      textarea.focus();
+      executeResearch();
     }
 
     // --------------------------------------------------
@@ -1495,6 +1499,24 @@
         }
       }
 
+      // Render Python-verified calculations (deterministic arithmetic, not the LLM)
+      const calcItems = (data.calculation && data.calculation.items) || [];
+      if (calcItems.length) {
+        const rows = calcItems.map(c => `
+          <tr>
+            <td>${escapeHtml(c.metric)}</td>
+            <td>${escapeHtml(c.from_period)} → ${escapeHtml(c.to_period)}</td>
+            <td><code>${escapeHtml(c.formula)}</code></td>
+            <td>Page ${[...new Set(c.citations.map(x => x.page))].join(", ")}</td>
+          </tr>`).join("");
+        answerContainer.innerHTML += `
+          <div class="table-container" style="margin-top:18px;">
+            <div style="font-size:13px; font-weight:600; margin-bottom:6px;">Python-verified calculations</div>
+            <div style="font-size:12px; color:var(--text-light); margin-bottom:8px;">The model only extracted the reported figures; growth rates were computed in Python.</div>
+            <table class="data-table"><thead><tr><th>Metric</th><th>Period</th><th>Calculation</th><th>Source</th></tr></thead><tbody>${rows}</tbody></table>
+          </div>`;
+      }
+
       // Render sources
       const sourcesGrid = document.getElementById("sources-grid");
       const sources = data.sources || [];
@@ -1509,7 +1531,7 @@
               <span class="source-title">${s.document_type || 'Filing'} · Page ${s.page || 'N/A'}</span>
               <span class="source-type-pill">${s.content_type || 'text'}</span>
             </div>
-            <div class="source-section" title="${escapeQuotes(s.section_path || '')}">${s.section_path || 'General Section'}</div>
+            <div class="source-section" title="${escapeHtml(s.section_path || s.section || '')}">${escapeHtml(s.section_path || s.section || 'General Section')}</div>
             <div class="source-id-label">${s.source_id || 'ID'}</div>
             <div class="source-excerpt">${escapeHtml(s.text || '')}</div>
           </div>
@@ -1676,7 +1698,7 @@
       btn.disabled = true;
       btn.innerHTML = `<div class="spinner" style="width:14px;height:14px;margin:0;display:inline-block;"></div> Ingesting & Indexing...`;
       statusBox.className = "upload-status";
-      statusBox.style.display = "none";
+      statusBox.style.display = "";
 
       const formData = new FormData();
       formData.append("file", state.selectedFile);
@@ -1707,6 +1729,9 @@
           `;
           // Refresh company dropdown
           await init();
+        } else if (result.status === "unavailable") {
+          statusBox.className = "upload-status error";
+          statusBox.textContent = "Not available in the live demo: " + result.detail;
         } else {
           statusBox.className = "upload-status error";
           statusBox.textContent = "Upload failed: " + (result.detail || "Server error");
@@ -1735,7 +1760,7 @@
       }
 
       container.innerHTML = state.history.map(item => `
-        <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="populateAndResearch('${escapeQuotes(item.query)}')">
+        <div class="card" style="margin-bottom:12px; cursor:pointer;" onclick="populateAndResearch('${escapeQuotes(item.query)}', '${item.company}')">
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
             <strong style="font-size:14px;">${escapeHtml(item.query)}</strong>
             <span class="route-badge">${item.route}</span>

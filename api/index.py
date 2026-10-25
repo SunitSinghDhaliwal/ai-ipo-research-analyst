@@ -15,6 +15,7 @@ sys.path.insert(0, str(BASE_DIR / "src" / "tools"))
 load_dotenv(BASE_DIR / ".env")
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -138,6 +139,11 @@ KNOWN_COMPANIES = {
 # --------------------------------------------------
 
 _CHUNKS_CACHE: Dict[str, List[Dict[str, Any]]] = {}
+_TABLES_CACHE: Dict[str, List[Dict[str, Any]]] = {}
+_BM25_CACHE: Dict[Any, Any] = {}
+
+EXCERPT_CHARS = 1500
+TABLE_CONTEXT_CHARS = 3000
 
 STOPWORDS = {
     "what", "is", "are", "the", "a", "an", "and", "or", "in", "of", "to", "for", "with",
@@ -146,104 +152,140 @@ STOPWORDS = {
     "hdb", "hdbfs", "financial", "services", "limited", "maharashtra", "oil", "extractions"
 }
 
-def get_processed_chunks() -> List[Dict[str, Any]]:
-    global _CHUNKS_CACHE
-    if "all" in _CHUNKS_CACHE and _CHUNKS_CACHE["all"]:
-        return _CHUNKS_CACHE["all"]
-
-    chunks: List[Dict[str, Any]] = []
-    
+def _processed_dir() -> Optional[Path]:
     # Check inside api/data/processed first (packaged for Vercel serverless), then project root
     api_dir = Path(__file__).resolve().parent
-    candidates = [
-        api_dir / "data" / "processed",
-        BASE_DIR / "data" / "processed"
-    ]
-    
-    processed_dir = None
-    for c_dir in candidates:
+    for c_dir in [api_dir / "data" / "processed", BASE_DIR / "data" / "processed"]:
         if c_dir.exists() and any(c_dir.iterdir()):
-            processed_dir = c_dir
-            break
+            return c_dir
+    return None
 
-    if processed_dir and processed_dir.exists():
-        for item in processed_dir.iterdir():
-            if not item.is_dir():
+
+def _load_json_files(file_name: str) -> List[Dict[str, Any]]:
+    records: List[Dict[str, Any]] = []
+    processed_dir = _processed_dir()
+    if not processed_dir:
+        return records
+    for item in sorted(processed_dir.iterdir()):
+        if not item.is_dir():
+            continue
+        f_path = item / file_name
+        if f_path.exists():
+            try:
+                with open(f_path, "r", encoding="utf-8") as f:
+                    records.extend(json.load(f))
+            except Exception as e:
+                print(f"Error loading {f_path}: {e}")
+    return records
+
+
+def get_processed_chunks() -> List[Dict[str, Any]]:
+    if not _CHUNKS_CACHE.get("all"):
+        _CHUNKS_CACHE["all"] = _load_json_files("text_chunks.json")
+    return _CHUNKS_CACHE["all"]
+
+
+def table_to_text(rows: List[List[Any]]) -> str:
+    """
+    Convert extracted table rows into searchable text that keeps the
+    header + row structure together (same format as the full pipeline).
+    """
+    lines: List[str] = []
+    cleaned_rows = []
+    for row in rows or []:
+        cells = [str(c).strip() if c is not None and str(c).strip() else "-" for c in row]
+        if any(c != "-" for c in cells):
+            cleaned_rows.append(cells)
+    if not cleaned_rows:
+        return ""
+    start = 0
+    if len([c for c in cleaned_rows[0] if c != "-"]) > 1:
+        lines.append("Headers: " + " | ".join(cleaned_rows[0]))
+        start = 1
+    for idx, row in enumerate(cleaned_rows[start:], start=1):
+        lines.append(f"Row {idx}: " + " | ".join(row))
+    return "\n".join(lines)
+
+
+def get_processed_tables() -> List[Dict[str, Any]]:
+    if not _TABLES_CACHE.get("all"):
+        tables = []
+        for t in _load_json_files("tables.json"):
+            text = table_to_text(t.get("rows", []))
+            if len(text) < 40:
                 continue
-            c_file = item / "text_chunks.json"
-            if c_file.exists():
-                try:
-                    with open(c_file, "r", encoding="utf-8") as f:
-                        data = json.load(f)
-                    chunks.extend(data)
-                except Exception as e:
-                    print(f"Error loading {c_file}: {e}")
+            tables.append({
+                "chunk_id": t.get("table_id", "table"),
+                "ipo_id": t.get("ipo_id"),
+                "document_type": t.get("document_type"),
+                "is_latest": t.get("is_latest"),
+                "page": t.get("page"),
+                "content_type": "table",
+                "section_path": "TABLE",
+                "text": text,
+            })
+        _TABLES_CACHE["all"] = tables
+    return _TABLES_CACHE["all"]
 
-    _CHUNKS_CACHE["all"] = chunks
-    return chunks
+
+def _tokenize(text: str) -> List[str]:
+    return re.findall(r"\w+", (text or "").lower())
 
 
-def filter_and_rank_chunks(
-    query: str,
-    ipo_id: str,
-    document_target: str,
-    route: str = "general",
-    top_k: int = 6
-) -> List[Dict[str, Any]]:
-    chunks = get_processed_chunks()
-    if not chunks:
-        return []
-
-    # 1. Filter by IPO and document scope
-    filtered: List[Dict[str, Any]] = []
-    for c in chunks:
-        c_ipo = c.get("ipo_id")
-        if ipo_id and c_ipo != ipo_id:
-            continue
-
-        c_doc_type = (c.get("document_type") or "").upper()
-        if document_target == "drhp" and c_doc_type != "DRHP":
-            continue
-        if document_target == "rhp" and c_doc_type != "RHP":
-            continue
-        if document_target == "latest":
-            is_latest = c.get("is_latest")
-            if is_latest is not None and not is_latest:
-                continue
-        filtered.append(c)
-
-    if not filtered:
-        filtered = [c for c in chunks if not ipo_id or c.get("ipo_id") == ipo_id]
-        if not filtered:
-            return []
-
-    # 2. Keyword token extraction
-    q_words = re.findall(r"\w+", query.lower())
+def _query_tokens(query: str) -> List[str]:
+    q_words = _tokenize(query)
     tokens = [w for w in q_words if len(w) > 2 and w not in STOPWORDS]
     if not tokens:
         tokens = [w for w in q_words if len(w) > 2]
-    if not tokens:
-        tokens = q_words
+    return tokens or q_words
 
-    # 3. BM25 Scoring
-    try:
-        from rank_bm25 import BM25Okapi
-        corpus = [re.findall(r"\w+", c.get("text", "").lower()) for c in filtered]
-        bm25 = BM25Okapi(corpus)
-        scores = bm25.get_scores(tokens)
-    except Exception:
-        scores = [0.0] * len(filtered)
-        for i, c in enumerate(filtered):
-            text = c.get("text", "").lower()
-            scores[i] = sum(text.count(t) for t in tokens)
 
-    # 4. Section and domain boosting
-    scored_candidates = []
-    for i, c in enumerate(filtered):
+def _partition(records: List[Dict[str, Any]], ipo_id: str, doc_scope: str) -> List[Dict[str, Any]]:
+    """
+    Strict company isolation + document version scoping.
+    doc_scope: 'latest' | 'DRHP' | 'RHP'
+    """
+    out = []
+    for c in records:
+        if ipo_id and c.get("ipo_id") != ipo_id:
+            continue
+        d_type = (c.get("document_type") or "").upper()
+        if doc_scope == "latest":
+            if c.get("is_latest") is False:
+                continue
+        elif d_type != doc_scope:
+            continue
+        out.append(c)
+    return out
+
+
+def _bm25_search(kind: str, ipo_id: str, doc_scope: str, query: str, route: str, top_k: int) -> List[Dict[str, Any]]:
+    records = get_processed_tables() if kind == "table" else get_processed_chunks()
+    key = (kind, ipo_id, doc_scope)
+    if key not in _BM25_CACHE:
+        docs = _partition(records, ipo_id, doc_scope)
+        corpus = [_tokenize(d.get("text", "")) for d in docs]
+        try:
+            from rank_bm25 import BM25Okapi
+            index = BM25Okapi(corpus) if corpus else None
+        except Exception:
+            index = None
+        _BM25_CACHE[key] = (docs, corpus, index)
+    docs, corpus, index = _BM25_CACHE[key]
+    if not docs:
+        return []
+
+    tokens = _query_tokens(query)
+    if index is not None:
+        scores = list(index.get_scores(tokens))
+    else:
+        scores = [float(sum(toks.count(t) for t in tokens)) for toks in corpus]
+
+    scored = []
+    for i, c in enumerate(docs):
         score = float(scores[i])
         sec = (c.get("section_path") or c.get("section") or "").upper()
         text_lower = c.get("text", "").lower()
-
         if route == "risk":
             if "RISK" in sec or "SECTION II" in sec:
                 score += 5.0
@@ -257,7 +299,7 @@ def filter_and_rank_chunks(
         elif route == "financial":
             if "FINANCIAL INFORMATION" in sec or "SECTION V" in sec or "RESULTS OF OPERATIONS" in sec:
                 score += 5.0
-            if "revenue from operations" in text_lower or "restated profit" in text_lower:
+            if "revenue from operations" in text_lower or "restated profit" in text_lower or "profit for the" in text_lower:
                 score += 2.0
         elif route == "related_party":
             if "RELATED PARTY" in sec or "PROMOTER" in sec:
@@ -265,15 +307,142 @@ def filter_and_rank_chunks(
         elif route == "summary":
             if "SUMMARY" in sec or "OVERVIEW" in sec or "INTRODUCTION" in sec:
                 score += 3.0
-
         if score > 0:
-            scored_candidates.append((score, c))
+            scored.append((score, i))
 
-    if not scored_candidates:
-        return filtered[:top_k]
+    if not scored:
+        return docs[:top_k] if kind == "text" else []
+    scored.sort(key=lambda x: x[0], reverse=True)
+    return [docs[i] for _, i in scored[:top_k]]
 
-    scored_candidates.sort(key=lambda x: x[0], reverse=True)
-    return [c for _, c in scored_candidates[:top_k]]
+
+def filter_and_rank_chunks(
+    query: str,
+    ipo_id: str,
+    document_target: str,
+    route: str = "general",
+    top_k: int = 6
+) -> List[Dict[str, Any]]:
+    """
+    Route-aware keyword (BM25) retrieval over text chunks and extracted tables.
+      - Financial / summary questions also search the separate table store,
+        so numbers stay attached to their headers and years.
+      - 'comparative' retrieves evidence from BOTH the DRHP and the RHP.
+    """
+    if document_target == "comparative":
+        scopes = ["DRHP", "RHP"]
+    elif document_target in ("drhp", "rhp"):
+        scopes = [document_target.upper()]
+    else:
+        scopes = ["latest"]
+
+    n_tables = 3 if route == "financial" else (2 if route == "summary" else 0)
+    per_scope_text = max(2, (top_k - (n_tables if len(scopes) == 1 else 0)) // len(scopes))
+    per_scope_tables = n_tables if len(scopes) == 1 else (1 if n_tables else 0)
+
+    results: List[Dict[str, Any]] = []
+    for scope in scopes:
+        results.extend(_bm25_search("text", ipo_id, scope, query, route, per_scope_text))
+        if per_scope_tables:
+            results.extend(_bm25_search("table", ipo_id, scope, query, route, per_scope_tables))
+    return results
+
+
+# --------------------------------------------------
+# Deterministic Financial Calculations
+# --------------------------------------------------
+
+def _period_year(period: str) -> Optional[int]:
+    if not period or "month" in period.lower() or "quarter" in period.lower():
+        return None  # skip partial periods for YoY
+    years = re.findall(r"(?:19|20)\d{2}", period)
+    if years:
+        return int(years[-1])
+    short = re.search(r"FY\s*'?(\d{2})\b", period, re.I)
+    return 2000 + int(short.group(1)) if short else None
+
+
+def extract_financial_figures(client: Any, model: str, query: str, context_text: str) -> List[Dict[str, Any]]:
+    """
+    The LLM only EXTRACTS reported figures (with their source + page) as JSON.
+    It never computes anything; all arithmetic happens in Python below.
+    """
+    prompt = (
+        "From the prospectus excerpts below, extract the reported annual figures relevant to the question. "
+        "Only copy numbers that appear verbatim in the excerpts. Do NOT calculate anything.\n"
+        "Return JSON: {\"figures\": [{\"metric\": str, \"period\": str, \"value\": number, \"unit\": str, "
+        "\"source_id\": str, \"page\": int}]}\n"
+        "Use a consistent metric name for the same line item across years (e.g. 'Revenue from operations'). "
+        "Use the period label as written (e.g. 'Fiscal 2025'). Values must be plain numbers without commas.\n\n"
+        f"Question: {query}\n\nExcerpts:\n{context_text}"
+    )
+    try:
+        resp = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            max_tokens=2048,
+            response_format={"type": "json_object"},
+        )
+        data = json.loads(resp.choices[0].message.content or "{}")
+        figures = data.get("figures", []) if isinstance(data, dict) else []
+        clean = []
+        for f in figures:
+            try:
+                clean.append({
+                    "metric": str(f.get("metric", "")).strip(),
+                    "period": str(f.get("period", "")).strip(),
+                    "value": float(str(f.get("value")).replace(",", "")),
+                    "unit": str(f.get("unit", "") or "").strip(),
+                    "source_id": str(f.get("source_id", "") or "").strip(),
+                    "page": f.get("page"),
+                })
+            except (TypeError, ValueError):
+                continue
+        return clean
+    except Exception as e:
+        print(f"Figure extraction skipped: {e}")
+        return []
+
+
+def compute_financial_calculations(figures: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Year-over-year growth between consecutive fiscal years, computed in Python."""
+    by_metric: Dict[str, Dict[int, Dict[str, Any]]] = {}
+    for f in figures:
+        year = _period_year(f["period"])
+        if year is None or not f["metric"]:
+            continue
+        # Only grow absolute amounts; skip figures that are already rates (growth %, margins, ratios)
+        label = f"{f['metric']} {f['unit']}".lower()
+        if "%" in label or re.search(r"\b(growth|margin|ratios?|percent(age)?|return on|yield)\b", label):
+            continue
+        by_metric.setdefault(f["metric"].lower(), {}).setdefault(year, f)
+
+    calcs = []
+    for _, years in by_metric.items():
+        ordered = sorted(years.items())
+        for (y0, f0), (y1, f1) in zip(ordered, ordered[1:]):
+            if y1 - y0 != 1 or f0["unit"].lower() != f1["unit"].lower():
+                continue
+            pct = percentage_change(f0["value"], f1["value"])
+            if pct is None:
+                continue
+            calcs.append({
+                "metric": f1["metric"],
+                "from_period": f0["period"],
+                "to_period": f1["period"],
+                "from_value": f0["value"],
+                "to_value": f1["value"],
+                "unit": f1["unit"],
+                "abs_change": absolute_change(f0["value"], f1["value"]),
+                "change_pct": round(pct, 2),
+                "formula": f"(({f1['value']:,} - {f0['value']:,}) / {f0['value']:,}) x 100 = {pct:+.2f}%",
+                "citations": [
+                    {"source_id": f0["source_id"], "page": f0["page"]},
+                    {"source_id": f1["source_id"], "page": f1["page"]},
+                ],
+            })
+    return calcs
 
 
 # --------------------------------------------------
@@ -350,7 +519,7 @@ async def research(req: ResearchRequest):
         route = "risk"
     elif any(k in q_clean for k in ["litigation", "lawsuit", "legal", "court", "tax dispute", "sebi", "proceedings"]):
         route = "litigation"
-    elif any(k in q_clean for k in ["related party", "promoter", "guarantee", "advance", "rpt"]):
+    elif any(k in q_clean for k in ["related party", "related-party", "related parties", "promoter", "guarantee", "advance", "rpt"]):
         route = "related_party"
     elif any(k in q_clean for k in ["revenue", "profit", "ebitda", "financial", "growth", "margin", "borrowing", "debt", "pat"]):
         route = "financial"
@@ -368,14 +537,19 @@ async def research(req: ResearchRequest):
         doc_type = c.get("document_type", "DRHP")
         sec = c.get("section_path") or c.get("section") or "Section"
         text = c.get("text", "")
+        content_type = c.get("content_type", "text")
+        if content_type == "table":
+            text = text[:TABLE_CONTEXT_CHARS]
         sources.append({
             "source_id": sid,
             "page": page,
             "document_type": doc_type,
             "section": sec,
-            "content_type": "text"
+            "section_path": sec,
+            "content_type": content_type,
+            "text": text[:EXCERPT_CHARS]
         })
-        context_text += f"\n--- [Source: {sid}, Page: {page}, Type: {doc_type}] ---\n{text}\n"
+        context_text += f"\n--- [Source: {sid}, Page: {page}, Type: {doc_type}, Content: {content_type}] ---\n{text}\n"
 
     # Check for Groq API
     api_key = os.getenv("GROQ_API_KEY")
@@ -400,7 +574,7 @@ async def research(req: ResearchRequest):
             configured_model,
             "openai/gpt-oss-120b",
             "openai/gpt-oss-20b",
-            "qwen/qwen3.8-27b"
+            "llama-3.3-70b-versatile"
         ]
         # Deduplicate while preserving order
         unique_models = list(dict.fromkeys([m for m in model_candidates if m]))
@@ -419,10 +593,41 @@ async def research(req: ResearchRequest):
             "5. ZERO HALLUCINATION: If evidence is insufficient, state: 'Insufficient evidence in the provided prospectus context to answer this question.'"
         )
 
+        if target == "comparative":
+            system_prompt += (
+                "\n6. COMPARATIVE SCOPE: Excerpts come from both the DRHP (draft) and the RHP (final). "
+                "Compare them explicitly and say which filing each point comes from. Only describe changes the excerpts show."
+            )
+
+        # Financial questions: LLM extracts figures, Python does ALL the arithmetic
+        calculation = None
+        calc_block = ""
+        if route in ("financial", "summary") and context_text:
+            figures = extract_financial_figures(client, os.getenv("GROQ_EXTRACT_MODEL", "openai/gpt-oss-20b"), query, context_text)
+            calcs = compute_financial_calculations(figures)
+            if calcs:
+                calculation = {"method": "deterministic_python", "items": calcs}
+                calc_lines = [
+                    f"- {c['metric']} {c['from_period']} -> {c['to_period']}: change = {c['abs_change']:,} {c['unit']}; {c['formula']} "
+                    f"[{c['citations'][0]['source_id']}, Page {c['citations'][0]['page']}] "
+                    f"[{c['citations'][1]['source_id']}, Page {c['citations'][1]['page']}]"
+                    for c in calcs
+                ]
+                calc_block = (
+                    "\n\nVERIFIED CALCULATIONS (computed in Python from the cited figures):\n"
+                    + "\n".join(calc_lines)
+                )
+            system_prompt += (
+                "\n7. NO ARITHMETIC: Do not compute any differences, growth rates, margins or ratios yourself. "
+                "Use only the VERIFIED CALCULATIONS provided, copied exactly. If a calculation is not provided, "
+                "report the raw figures with citations and do not derive new percentages."
+            )
+
         user_content = (
             f"Question: {query}\n"
             f"Company: {company_name} (Scope: {target.upper()})\n\n"
-            f"Prospectus Evidence Context:\n{context_text if context_text else 'No specific excerpts retrieved.'}\n\n"
+            f"Prospectus Evidence Context:\n{context_text if context_text else 'No specific excerpts retrieved.'}"
+            f"{calc_block}\n\n"
             "Provide a clear, analytical answer with page citations."
         )
 
@@ -446,8 +651,9 @@ async def research(req: ResearchRequest):
             except Exception as model_err:
                 last_err = model_err
                 err_str = str(model_err).lower()
-                # If model not found or deprecated, try next candidate
-                if "model_not_found" in err_str or "does not exist" in err_str or "404" in err_str:
+                # Model missing/deprecated, or rate-limited on Groq's free tier: try the next model
+                if ("model_not_found" in err_str or "does not exist" in err_str or "404" in err_str
+                        or "429" in err_str or "rate limit" in err_str or "rate_limit" in err_str):
                     continue
                 else:
                     raise model_err
@@ -465,6 +671,7 @@ async def research(req: ResearchRequest):
             document_target=target,
             answer=answer,
             sources=sources,
+            calculation=calculation,
             route_confidence=0.95,
             route_reasoning=f"Handled via {route} pipeline on {company_name} (Model: {used_model})."
         )
@@ -485,9 +692,9 @@ async def research(req: ResearchRequest):
 async def upload_document():
     backend_url = os.getenv("BACKEND_URL")
     if backend_url:
-        return {"status": "info", "message": f"Upload available via dedicated backend at {backend_url}."}
-    return {
-        "status": "info",
-        "message": "Prospectus PDF extraction and OCR table indexing requires a persistent backend container. "
-                   "Run 'python server.py' locally or connect a dedicated container via the BACKEND_URL environment variable."
-    }
+        detail = f"Uploads are handled by the dedicated backend at {backend_url}."
+    else:
+        detail = ("Uploading new prospectuses needs the full version (PDF parsing, embeddings and a persistent index), "
+                  "which runs in Docker or locally with 'python server.py'. This live demo comes with two pre-indexed IPOs: "
+                  "HDB Financial Services (DRHP + RHP) and Maharashtra Oil Extractions (DRHP).")
+    return JSONResponse(status_code=503, content={"status": "unavailable", "detail": detail})
