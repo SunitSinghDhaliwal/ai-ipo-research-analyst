@@ -1,3 +1,4 @@
+import re
 import os
 import sys
 from pathlib import Path
@@ -52,6 +53,53 @@ class RiskExtractionResult(BaseModel):
 # Specialized Risk Retrieval
 # --------------------------------------------------
 
+RISK_HEADING = re.compile(
+    r"(?:^|\n)\s*(\d{1,2})\.\s+(?:If|We|Our|Any|The|There|Changes|Failure|Certain|A |An |Inability|Competition|Dependence|Significant|Most|All|Some|Volatility|Fluctuations|Delays?|Loss|Non-|In )"
+)
+
+
+def first_risk_number(text: str) -> Optional[int]:
+    nums = [int(n) for n in RISK_HEADING.findall(text or "")]
+    return min(nums) if nums else None
+
+
+def top_numbered_risk_chunks(ipo_id: Optional[str], document_target: str, limit: int = 8) -> List[Dict[str, Any]]:
+    """
+    Risk factors are numbered roughly in order of materiality. Return the chunks that
+    start the lowest-numbered risk factors of the risk-factors section for this IPO/filing.
+    """
+    import hybrid_retriever as hr
+    target = (document_target or "latest").lower()
+    found = []
+    for doc in getattr(hr, "documents", []) or []:
+        meta = doc.get("metadata", {})
+        if ipo_id and meta.get("ipo_id") != ipo_id:
+            continue
+        if meta.get("content_type") == "table":
+            continue
+        d_type = (meta.get("document_type") or "").upper()
+        if target == "latest" and meta.get("is_latest") is False:
+            continue
+        if target in ("drhp", "rhp") and d_type != target.upper():
+            continue
+        sec = (meta.get("section_path") or meta.get("section") or "").upper()
+        if "RISK" not in sec:
+            continue
+        n = first_risk_number(doc.get("text", ""))
+        if n is not None and n <= 15:
+            found.append((n, meta.get("page", 0), doc))
+    found.sort(key=lambda x: (x[0], x[1]))
+    out, seen = [], set()
+    for n, _, doc in found:
+        if n in seen:
+            continue
+        seen.add(n)
+        out.append({"document_id": doc["id"], "document": doc, "rrf_score": 0.0})
+        if len(out) >= limit:
+            break
+    return out
+
+
 def risk_retrieve(
     query: str,
     top_k: int = 6,
@@ -83,6 +131,13 @@ def risk_retrieve(
         ipo_id=ipo_id
     )
 
+    # Broad questions ("major/key/top risks"): prospectuses list risk factors roughly in
+    # order of materiality, so also pull the numbered risk headings and favour the first ones.
+    broad = bool(re.search(r"\b(major|key|main|top|biggest|primary|important|significant|principal|overall)\b", q_lower)) \
+        or re.fullmatch(r"\s*what are the risks.*", q_lower) is not None
+    if broad:
+        candidates = list(candidates) + top_numbered_risk_chunks(ipo_id, document_target, limit=top_k + 4)
+
     # 3. Sort/prioritize chunks from Section II - Risk Factors or with high relevance
     def risk_priority_score(item: Dict[str, Any]) -> float:
         meta = extract_source_metadata(item)
@@ -95,6 +150,10 @@ def risk_retrieve(
         text = meta.get("text", "").lower()
         if "risk factor" in text or "internal risk" in text or "external risk" in text:
             score += 1.0
+        if broad and ("RISK" in sec_path or "SECTION II" in sec_path):
+            n = first_risk_number(meta.get("text", ""))
+            if n is not None:
+                score += max(0.0, 8.0 - 0.4 * n)  # risk 1 ranks above risk 2, and so on
         return score
 
     sorted_candidates = sorted(candidates, key=risk_priority_score, reverse=True)

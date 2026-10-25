@@ -266,6 +266,10 @@ async def upload_document(
     if clean_doc_type not in ["DRHP", "RHP"]:
         raise HTTPException(status_code=400, detail="Document type must be 'DRHP' or 'RHP'.")
 
+    # Track whether this filing was already indexed, so a failed upload never deletes good data
+    processed_out_dir = PROJECT_ROOT / "data" / "processed" / f"{clean_ipo_id}_{clean_doc_type.lower()}"
+    existed_before = processed_out_dir.exists()
+
     # 1. Save uploaded PDF
     raw_dir = PROJECT_ROOT / "data" / "raw" / clean_ipo_id / clean_doc_type.lower()
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -304,6 +308,9 @@ async def upload_document(
     except Exception as e:
         import traceback
         traceback.print_exc()
+        # Remove the half-processed filing so it doesn't show up as a searchable company
+        if not existed_before and processed_out_dir.exists():
+            shutil.rmtree(processed_out_dir, ignore_errors=True)
         raise HTTPException(status_code=500, detail=f"Ingestion failed: {str(e)}")
 
 

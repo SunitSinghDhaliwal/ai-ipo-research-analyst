@@ -122,6 +122,8 @@ FINANCIAL_CONCEPT_SYNONYMS: Dict[str, List[str]] = {
         "profit after tax pat",
         "profit after tax",
         "restated profit",
+        "profit for the year",
+        "profit for the period",
         "net profit",
         "pat",
     ],
@@ -214,6 +216,30 @@ def normalize_financial_concept(label: str) -> Optional[str]:
     return None
 
 
+# Row labels that describe ratios/percentages, not absolute amounts.
+# e.g. "PAT Margin", "Revenue growth", "Return on Net Worth", "EPS"
+RATIO_LABEL_PATTERN = re.compile(
+    r"\b(margin|growth|ratio|return on|ro[ace]e?|per share|eps|leverage|yield|cagr|percentage|% of|as a %|times)\b",
+    re.IGNORECASE
+)
+
+
+def is_ratio_label(label: str) -> bool:
+    return bool(RATIO_LABEL_PATTERN.search(label or "")) or "%" in (label or "")
+
+
+def is_peer_comparison_block(lines: List[str]) -> bool:
+    """
+    Detect industry/peer comparison tables (several companies side by side).
+    Their numbers belong to multiple entities, so they must not be mapped to one company's fiscal years.
+    """
+    # Only look at the table's own header rows, not the context metadata (e.g. "Document: DRHP (X Limited)")
+    table_head = [ln for ln in lines if ln.startswith("Headers:") or re.match(r"Row [1-3]:", ln)]
+    head = " ".join(table_head).lower()
+    entity_mentions = len(re.findall(r"\blimited\b|\bltd\b", head))
+    return entity_mentions >= 2 or "peer" in head or "listed industry" in head
+
+
 def normalize_fiscal_period(token: str) -> Optional[str]:
     """
     Standardize period references across prospectuses:
@@ -273,7 +299,7 @@ def enrich_financial_query(query: str) -> str:
     if any(k in q_low for k in ["revenue", "sales", "turnover", "income"]):
         additions.append("revenue from operations restated statement profit loss")
     if any(k in q_low for k in ["profit", "pat", "pbt", "net income", "loss"]):
-        additions.append("restated profit after tax PAT profit for the year")
+        additions.append("summary of restated consolidated statement of profit and loss total income total expenses profit for the year profit after tax")
     if any(k in q_low for k in ["change", "growth", "compare", "trend", "three years", "between", "from fy", "to fy", "across"]):
         additions.append("Fiscal 2026 Fiscal 2025 Fiscal 2024 restated financial statements")
 
@@ -378,10 +404,12 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
             doc_type = filing_match.group(1).strip().upper()
 
         lines = block.splitlines()
+        peer_table = is_peer_comparison_block(lines)
 
         # 2. Identify period sequence from table header lines
         header_periods: List[str] = []
-        for line in lines[:10]:
+        # Table blocks start with ~9 metadata lines (Filing, Source ID, Page, ...), so scan further than that
+        for line in lines[:25]:
             if line.startswith("Headers:") or line.startswith("Row 1:"):
                 # Search for year tokens in the header line
                 matches = re.findall(r"\b(?:fiscal\s*|fy\s*)?(202\d|2\d)\b", line, re.IGNORECASE)
@@ -419,6 +447,8 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
                 continue
 
             raw_label = meaningful_cells[0]
+            if peer_table or is_ratio_label(raw_label):
+                continue
             concept = normalize_financial_concept(raw_label)
             if not concept:
                 continue
@@ -428,11 +458,20 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
             # Extract numeric cells in the row
             num_cells = []
             for c in meaningful_cells[1:]:
+                # Percentage / multiple cells (e.g. "20.06%", "0.36x") sit next to amounts; skip them
+                if "%" in c or re.fullmatch(r"\(?-?[\d.,]+\)?\s*x", c.strip(), re.IGNORECASE):
+                    continue
+                if c.strip().lower() in ("%", "# of times", "times", "₹ millions", "₹ million", "units"):
+                    continue
                 val = parse_financial_number(c)
                 if val is not None:
                     num_cells.append(val)
 
             if not num_cells:
+                continue
+
+            # More numbers than fiscal periods means the columns can't be mapped safely to years
+            if header_periods and len(num_cells) > len(header_periods) + 1:
                 continue
 
             # If header periods match the number of numeric cells, map sequentially
@@ -478,7 +517,7 @@ def extract_financial_findings_from_context(context_str: str) -> List[FinancialF
 
         # 4. Extract explicit narrative text disclosures if table rows did not capture them
         text_matches = re.finditer(
-            r"(revenue from operations|ebitda|profit after tax|total borrowings|total equity)[^.\n]*?(?:increased|decreased|was|to|of)?\s*(?:₹|rs\.?)?\s*([\d,]+(?:\.\d+)?)\s*(?:million|crore)?[^.\n]*?(fiscal\s*202\d|fy\s*202\d|fy2\d|202\d)",
+            r"(revenue from operations|ebitda|profit after tax|profit for the year|total borrowings|total equity)[^.\n]*?(?:increased|decreased|was|to|of)?\s*(?:₹|rs\.?)\s*([\d,]+(?:\.\d+)?)(?!\s*%|[\d.,])\s*(?:million|crore)?[^.\n]*?(fiscal\s*202\d|fy\s*202\d|fy2\d|202\d)",
             block,
             re.IGNORECASE
         )
@@ -894,7 +933,8 @@ CRITICAL INSTRUCTIONS:
    **Financial Performance & Metrics**
    - **Target Period**: <Metric Name> of <Value with unit> in <Period> [Source: <Source ID>, Page <Page Number>]
    - **Comparison / Base Period**: <Metric Name> of <Value with unit> in <Period> [Source: <Source ID>, Page <Page Number>]
-   - **Growth / Change**: <Growth percentage with sign>% (Absolute change: <Value with unit>)
+   - **Growth / Change**: <Growth percentage with sign>% from <Base Period> to <Target Period> (Absolute change: <Value with unit>)
+   - Whenever you state a growth rate anywhere (including the Executive Summary), name BOTH periods it compares, e.g. "+14.56% from FY2025 to FY2026". Never attach a growth rate to the wrong pair of years.
 
    **Analyst Assessment**
    Provide 1-2 professional analyst sentences explaining what this trend indicates based strictly on the text.

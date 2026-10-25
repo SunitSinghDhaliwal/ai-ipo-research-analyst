@@ -150,7 +150,7 @@ REQUIRED OUTPUT STRUCTURE:
 # IPO Research Summary: {company_name}
 
 ## Company Overview
-[Brief overview of the business model, legal background, and core operations based strictly on the evidence]
+[Brief overview of the business model and core operations based ONLY on the BUSINESS OVERVIEW EVIDENCE. Do not infer what the company does from related-party transactions, and keep the direction of any service relationship exactly as the evidence states it.]
 
 ## Financial Snapshot
 * Revenue from Operations: [Disclosed metric with source citation]
@@ -243,6 +243,22 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
     lit_res = run_litigation_agent(f"What outstanding litigation is disclosed for {company_name}?", top_k=3, document_target=doc_target, ipo_id=ipo_id, llm=llm)
     rpt_res = run_related_party_agent(f"What related party transactions are disclosed for {company_name}?", top_k=3, document_target=doc_target, ipo_id=ipo_id, llm=llm)
 
+    # Business overview evidence (what the company actually does), from the business / about-the-company section
+    overview_text = ""
+    overview_sources = []
+    try:
+        ov_items = retrieve(
+            query=f"{company_name} overview of our business we are the largest provider our services customers operations",
+            k=3,
+            metadata_filter={"ipo_id": ipo_id},
+            use_reranker=True,
+            document_target=doc_target if doc_target != "comparative" else "latest",
+            ipo_id=ipo_id
+        )
+        overview_text, overview_sources = build_context(ov_items)
+    except Exception as ov_err:
+        overview_text = f"(Business overview retrieval unavailable: {ov_err})"
+
     # When multiple filings are available (HDBFS), collect comparative evidence from existing financial agent
     comp_evidence = ""
     comp_sources = []
@@ -260,7 +276,7 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
             if sid and sid not in seen_sources:
                 seen_sources.add(sid)
                 all_sources.append(s)
-    for s in comp_sources:
+    for s in overview_sources + comp_sources:
         sid = s.get("source_id")
         if sid and sid not in seen_sources:
             seen_sources.add(sid)
@@ -269,6 +285,7 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
     # 2. Compile grounded evidence for the single summary prompt
     summary_context = (
         f"COMPANY: {company_name} (ID: {ipo_id})\n\n"
+        f"=== BUSINESS OVERVIEW EVIDENCE ===\n{overview_text}\n\n"
         f"=== FINANCIAL EVIDENCE & SNAPSHOT ===\n{fin_res.get('answer', '')}\n\n"
         f"=== KEY RISK FACTORS EVIDENCE ===\n{risk_res.get('answer', '')}\n\n"
         f"=== LITIGATION & LEGAL PROCEEDINGS EVIDENCE ===\n{lit_res.get('answer', '')}\n\n"
@@ -294,7 +311,9 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
 
     try:
         response = llm.invoke(messages)
-        answer = response.content.strip()
+        answer = (response.content or "").strip()
+        if not answer:
+            raise ValueError("LLM returned an empty summary")
     except Exception as e:
         # Fallback to structured compilation of specialist sections if external LLM unavailable
         answer = (
@@ -306,7 +325,8 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
             f"## Related Parties\n{rpt_res.get('answer', 'No related party data available.')}\n\n"
             f"## DRHP → RHP Changes\n{'Material updates analyzed across filings.' if {'DRHP', 'RHP'} <= available_docs else 'No RHP filing available in the knowledge base; comparison not applicable.'}\n\n"
             f"## Key Items Requiring Attention\nKey risk and financial exposure items disclosed in the sections above require standard investor diligence.\n\n"
-            f"*(Note: Direct LLM synthesis fallback applied: {e})*"
+            f"*(Note: this summary was assembled directly from the specialist sections because the AI model was unavailable"
+            f"{' (rate limit reached)' if '429' in str(e) or 'rate' in str(e).lower() else ''}.)*"
         )
 
     return {

@@ -362,7 +362,7 @@ def _period_year(period: str) -> Optional[int]:
     return 2000 + int(short.group(1)) if short else None
 
 
-def extract_financial_figures(client: Any, model: str, query: str, context_text: str) -> List[Dict[str, Any]]:
+def extract_financial_figures(client: Any, model: str, query: str, context_text: str, company_name: str = "the company") -> List[Dict[str, Any]]:
     """
     The LLM only EXTRACTS reported figures (with their source + page) as JSON.
     It never computes anything; all arithmetic happens in Python below.
@@ -370,6 +370,8 @@ def extract_financial_figures(client: Any, model: str, query: str, context_text:
     prompt = (
         "From the prospectus excerpts below, extract the reported annual figures relevant to the question. "
         "Only copy numbers that appear verbatim in the excerpts. Do NOT calculate anything.\n"
+        f"Only extract figures that belong to {company_name} itself: ignore peer / industry comparison tables "
+        "that list other companies, and ignore percentages, margins, ratios and growth rates (absolute amounts only).\n"
         "Return JSON: {\"figures\": [{\"metric\": str, \"period\": str, \"value\": number, \"unit\": str, "
         "\"source_id\": str, \"page\": int}]}\n"
         "Use a consistent metric name for the same line item across years (e.g. 'Revenue from operations'). "
@@ -574,7 +576,7 @@ async def research(req: ResearchRequest):
             configured_model,
             "openai/gpt-oss-120b",
             "openai/gpt-oss-20b",
-            "llama-3.3-70b-versatile"
+            "qwen/qwen3.8-27b"
         ]
         # Deduplicate while preserving order
         unique_models = list(dict.fromkeys([m for m in model_candidates if m]))
@@ -603,7 +605,7 @@ async def research(req: ResearchRequest):
         calculation = None
         calc_block = ""
         if route in ("financial", "summary") and context_text:
-            figures = extract_financial_figures(client, os.getenv("GROQ_EXTRACT_MODEL", "openai/gpt-oss-20b"), query, context_text)
+            figures = extract_financial_figures(client, os.getenv("GROQ_EXTRACT_MODEL", "openai/gpt-oss-20b"), query, context_text, company_name)
             calcs = compute_financial_calculations(figures)
             if calcs:
                 calculation = {"method": "deterministic_python", "items": calcs}
@@ -662,7 +664,8 @@ async def research(req: ResearchRequest):
             raise last_err
 
         msg = completion.choices[0].message
-        answer = msg.content or getattr(msg, "reasoning", None) or "No answer generated."
+        answer = re.sub(r"<think>.*?</think>", "", msg.content or "", flags=re.DOTALL).strip() \
+            or getattr(msg, "reasoning", None) or "No answer generated."
 
         return ResearchResponse(
             query=query,

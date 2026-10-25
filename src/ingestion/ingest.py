@@ -7,6 +7,7 @@ import pymupdf
 import pdfplumber
 
 from table_normalizer import normalize_table
+from text_tables import extract_text_tables
 
 
 # --------------------------------------------------
@@ -103,7 +104,29 @@ def ingest_document(
                 )
                 all_tables.append(normalized_table)
 
-    print(f"Extracted {len(all_tables)} tables.")
+    # Borderless financial tables: pdfplumber often keeps only the ruled header row,
+    # so rebuild label + per-year rows from the page text as well.
+    text_table_count = 0
+    if ipo_id == "moel_ipo":
+        tx_prefix = "moe" if norm_doc_type == "DRHP" else f"moe_{norm_doc_type.lower()}"
+    else:
+        tx_prefix = f"{ipo_id.split('_')[0]}_{norm_doc_type.lower()}"
+    for page_record in pages:
+        for tx_number, rows in enumerate(extract_text_tables(page_record["text"]), start=1):
+            all_tables.append(normalize_table(
+                raw_table=rows,
+                page_number=page_record["page"],
+                table_id=f"{tx_prefix}_p{page_record['page']}_tx{tx_number}",
+                company=company,
+                document_type=norm_doc_type,
+                ipo_id=ipo_id,
+                document_version=document_version,
+                filing_date=filing_date,
+                is_latest=is_latest
+            ))
+            text_table_count += 1
+
+    print(f"Extracted {len(all_tables)} tables ({text_table_count} rebuilt from page text).")
 
     tables_path = out_dir / "tables.json"
     with open(tables_path, "w", encoding="utf-8") as file:

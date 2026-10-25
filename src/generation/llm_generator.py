@@ -1,3 +1,4 @@
+import re
 import os
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
@@ -44,39 +45,78 @@ class ResilientChatGroq:
     Transparent wrapper around ChatGroq that automatically switches to
     GROQ_API_KEY_BACKUP if a 429 rate limit error is encountered.
     """
-    def __init__(self, primary_llm: Any, backup_llm: Optional[Any] = None):
+    # Tried in order when the primary model is rate-limited or returns nothing. Qwen has its own
+    # token quota and doesn't hallucinate tool calls like the gpt-oss models sometimes do.
+    FALLBACK_MODELS = ["qwen/qwen3.8-27b", "openai/gpt-oss-20b"]
+
+    def __init__(self, primary_llm: Any, backup_llm: Optional[Any] = None, schema: Any = None, schema_kwargs: Optional[Dict[str, Any]] = None):
         self.primary_llm = primary_llm
         self.backup_llm = backup_llm
+        self.schema = schema
+        self.schema_kwargs = schema_kwargs or {}
+
+    @staticmethod
+    def _clean(result: Any) -> Any:
+        """Strip <think> reasoning blocks some models (e.g. Qwen3) put in the answer text."""
+        content = getattr(result, "content", None)
+        if isinstance(content, str) and "<think>" in content:
+            result.content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+        return result
+
+    def _usable(self, result: Any) -> bool:
+        """Structured outputs are always usable; chat replies must have non-empty text."""
+        if self.schema is not None:
+            return result is not None
+        content = getattr(result, "content", None)
+        return isinstance(content, str) and content.strip() != ""
 
     def invoke(self, *args: Any, **kwargs: Any) -> Any:
+        primary_error: Optional[Exception] = None
         try:
-            return self.primary_llm.invoke(*args, **kwargs)
+            result = self._clean(self.primary_llm.invoke(*args, **kwargs))
+            if self._usable(result):
+                return result
+            primary_error = ValueError("Primary model returned an empty answer")
         except Exception as e:
-            if "429" in str(e) or "rate_limit" in str(e).lower():
-                # 1. Try backup key if available
-                if self.backup_llm is not None:
-                    try:
-                        return self.backup_llm.invoke(*args, **kwargs)
-                    except Exception:
-                        pass
-                # 2. Try fast secondary model (gpt-oss-20b) with separate token allocation
-                try:
-                    from langchain_groq import ChatGroq
-                    key = os.getenv("GROQ_API_KEY")
-                    fallback_llm = ChatGroq(
-                        model_name="openai/gpt-oss-20b",
-                        api_key=key,
-                        temperature=0.0
-                    )
-                    return fallback_llm.invoke(*args, **kwargs)
-                except Exception as fb_err:
-                    print("FALLBACK_LLM ERROR:", fb_err)
-            raise e
+            primary_error = e
+            retryable = "429" in str(e) or "rate_limit" in str(e).lower()
+            if not retryable:
+                raise e
+
+        # 1. Same model on the backup key (separate quota if it's a different Groq org)
+        if self.backup_llm is not None:
+            try:
+                result = self._clean(self.backup_llm.invoke(*args, **kwargs))
+                if self._usable(result):
+                    return result
+            except Exception as bk_err:
+                print("BACKUP_KEY ERROR:", str(bk_err)[:200])
+
+        # 2. Other models, which have separate token quotas on Groq
+        from langchain_groq import ChatGroq
+        key = os.getenv("GROQ_API_KEY")
+        for fb_model in self.FALLBACK_MODELS:
+            try:
+                fallback_llm = ChatGroq(
+                    model_name=fb_model,
+                    api_key=key,
+                    temperature=0.0,
+                    max_tokens=int(os.getenv("GROQ_MAX_TOKENS", "2048"))
+                )
+                if self.schema is not None:
+                    fallback_llm = fallback_llm.with_structured_output(self.schema, **self.schema_kwargs)
+                print(f"Primary model unavailable ({str(primary_error)[:80]}); falling back to {fb_model}")
+                result = self._clean(fallback_llm.invoke(*args, **kwargs))
+                if self._usable(result):
+                    return result
+            except Exception as fb_err:
+                print(f"FALLBACK_LLM ERROR ({fb_model}):", str(fb_err)[:200])
+        raise primary_error
 
     def with_structured_output(self, schema: Any, **kwargs: Any) -> Any:
         primary_so = self.primary_llm.with_structured_output(schema, **kwargs)
         backup_so = self.backup_llm.with_structured_output(schema, **kwargs) if self.backup_llm is not None else None
-        return ResilientChatGroq(primary_so, backup_so)
+        return ResilientChatGroq(primary_so, backup_so, schema=schema, schema_kwargs=kwargs)
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self.primary_llm, name)
