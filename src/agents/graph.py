@@ -194,6 +194,32 @@ Please produce the structured IPO Research Summary following the instructions ab
 """
 
 
+def _lookup_company(ipo_id: str):
+    """
+    Resolve the company name and filed document types for an IPO from the
+    processed data, so uploaded prospectuses work (not just the two built-in IPOs).
+    """
+    import json
+    processed_dir = Path(__file__).resolve().parent.parent.parent / "data" / "processed"
+    name, docs = None, set()
+    if processed_dir.exists():
+        for item in processed_dir.iterdir():
+            chunks_file = item / "text_chunks.json"
+            if not chunks_file.exists():
+                continue
+            try:
+                with open(chunks_file, "r", encoding="utf-8") as f:
+                    first = (json.load(f) or [{}])[0]
+            except Exception:
+                continue
+            if first.get("ipo_id") == ipo_id:
+                name = name or first.get("company")
+                docs.add((first.get("document_type") or "DRHP").upper())
+    if not name:
+        name = "HDB Financial Services Limited" if ipo_id == "hdbfs_ipo" else "Maharashtra Oil Extractions Limited"
+    return name, docs
+
+
 def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, Any]:
     """
     Day 9 Executive IPO Summary:
@@ -209,7 +235,7 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
     query = state["query"]
     ipo_id = state.get("ipo_id") or "moel_ipo"
     doc_target = state.get("document_target", "latest")
-    company_name = "HDB Financial Services Limited" if ipo_id == "hdbfs_ipo" else "Maharashtra Oil Extractions Limited"
+    company_name, available_docs = _lookup_company(ipo_id)
 
     # 1. Collect outputs from existing specialist agents with zero duplicate retrieval
     fin_res = run_financial_agent(f"What are the financial metrics and revenue of {company_name}?", top_k=3, document_target=doc_target, ipo_id=ipo_id, llm=llm)
@@ -220,7 +246,7 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
     # When multiple filings are available (HDBFS), collect comparative evidence from existing financial agent
     comp_evidence = ""
     comp_sources = []
-    if ipo_id == "hdbfs_ipo":
+    if {"DRHP", "RHP"} <= available_docs:
         comp_res = run_financial_agent(f"Compare financial metrics and updates between DRHP and RHP for {company_name}", top_k=3, document_target="comparative", ipo_id=ipo_id, llm=llm)
         comp_evidence = f"\n=== DRHP vs RHP COMPARATIVE EVIDENCE ===\n{comp_res.get('answer', '')}\n"
         comp_sources = comp_res.get("sources", [])
@@ -278,7 +304,7 @@ def summary_node(state: IPOAgentState, llm: Optional[Any] = None) -> Dict[str, A
             f"## Key Risks\n{risk_res.get('answer', 'No risk data available.')}\n\n"
             f"## Litigation\n{lit_res.get('answer', 'No litigation data available.')}\n\n"
             f"## Related Parties\n{rpt_res.get('answer', 'No related party data available.')}\n\n"
-            f"## DRHP → RHP Changes\n{'Material updates analyzed across filings.' if ipo_id == 'hdbfs_ipo' else 'No RHP filing available in the knowledge base; comparison not applicable.'}\n\n"
+            f"## DRHP → RHP Changes\n{'Material updates analyzed across filings.' if {'DRHP', 'RHP'} <= available_docs else 'No RHP filing available in the knowledge base; comparison not applicable.'}\n\n"
             f"## Key Items Requiring Attention\nKey risk and financial exposure items disclosed in the sections above require standard investor diligence.\n\n"
             f"*(Note: Direct LLM synthesis fallback applied: {e})*"
         )
